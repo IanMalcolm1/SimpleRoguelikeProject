@@ -234,7 +234,7 @@ void GameWindow::renderRecentMessages() {
 
 	MessageLog testLog = MessageLog();
 
-	testLog.sendMessage("Hi, I'm </000255000:Ian/>. Te</000255000:eeeeeeeee/>est.");
+	testLog.sendMessage("Hi, I'm </000255000:Ian/>. Te</000255000:eeeeeeeee/>est. Another </red:test/>");
 
 	GameMessage testMessage = testLog.getRecentMessages()->at(0);
 
@@ -283,8 +283,6 @@ void GameWindow::renderRecentMessages() {
 
 		unformattedIndex++;
 	}
-
-	SDL_SetTextureColorMod(spriteSheet, 255, 255, 255);
 
 	resetRendererAndDrawBorder(viewports.messages);
 }

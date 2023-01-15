@@ -37,6 +37,7 @@ private:
 
 	//TODO: move this functionality to a more global class
 	std::unordered_map<std::string, MyColor> colorMap;
+	void initializeColorMap();
 	MyColor getColorByName(std::string name);
 
 	GameMessage makeGameMessage(std::string rawText);

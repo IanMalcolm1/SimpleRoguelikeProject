@@ -15,6 +15,7 @@ MyColor GameMessage::getColorAtIndex(int index) {
 
 
 MessageLog::MessageLog() {
+	initializeColorMap();
 	//messageFile.open("game_files/message_log.txt", std::ios::in | std::ios::out | std::ios::app);
 
 	//if ( !messageFile.is_open() ) {
@@ -24,6 +25,12 @@ MessageLog::MessageLog() {
 
 MessageLog::~MessageLog() {
 	//messageFile.close();
+}
+
+void MessageLog::initializeColorMap() {
+	colorMap.insert({ "red", MyColor(255, 0, 0) });
+	colorMap.insert({ "green", MyColor(0, 255, 0) });
+	colorMap.insert({ "blue", MyColor(0, 0, 255) });
 }
 
 MyColor MessageLog::getColorByName(std::string name) {
@@ -101,21 +108,21 @@ GameMessage MessageLog::makeGameMessage(std::string rawText) {
 	colorStack.push(MyColor(255, 255, 255));
 
 	std::string newText;
-	int newTextIndex = 0;
+	int newTextIndex = -1;
 
 	int i = 0;
 
 	for (i; i < rawText.size(); i++) {
 		if (rawText[i] == '<' && rawText[i + 1] == '/') {
 			if (newTextIndex != 0) {
-				colorNodes.push_back(MessageColorNode(colorStack.top(), newTextIndex-1));
+				colorNodes.push_back(MessageColorNode(colorStack.top(), newTextIndex));
 			}
 
 			colorStack.push(readColor(i, rawText));
 		}
 
 		else if (rawText[i] == '/' && rawText[i + 1] == '>') {
-			colorNodes.push_back(MessageColorNode(colorStack.top(), newTextIndex-1));
+			colorNodes.push_back(MessageColorNode(colorStack.top(), newTextIndex));
 			colorStack.pop();
 
 			i++;
@@ -127,8 +134,15 @@ GameMessage MessageLog::makeGameMessage(std::string rawText) {
 		}
 	}
 
-	//the final color
-	colorNodes.push_back(MessageColorNode(colorStack.top(), newTextIndex));
+	//the final color, if it's needed
+	if (colorNodes.size() > 0) {
+		if (colorNodes.back().endIndex != newTextIndex) {
+			colorNodes.push_back(MessageColorNode(colorStack.top(), newTextIndex));
+		}
+	}
+	else {
+		colorNodes.push_back(MessageColorNode(colorStack.top(), newTextIndex));
+	}
 
 	return GameMessage(newText, colorNodes);
 }

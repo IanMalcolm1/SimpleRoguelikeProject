@@ -164,6 +164,9 @@
     <ClInclude Include="src\MessageLog\MessageLog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\ErrorLogger\ErrorLogger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\CGA8x8thin.png">
@@ -173,5 +176,6 @@
   <ItemGroup>
     <Text Include="plans.txt" />
     <Text Include="game_files\message_log.txt" />
+    <Text Include="game_files\error_log.txt" />
   </ItemGroup>
 </Project>

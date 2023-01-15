@@ -232,10 +232,11 @@ MapRenderingData GameWindow::calculateMapRenderingDimensions(SDL_Rect viewport, 
 void GameWindow::renderRecentMessages() {
 	SDL_RenderSetViewport(renderer, &viewports.messages);
 
-	std::string testString = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa Ian is testing rendering text"+
-		std::string("to the aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa screen and ")+
-		std::string("probably being dumb about it and he needs a lot of words to ensure that his masterful ")+
-		std::string("(not) algorithm gets some good testing.");
+	MessageLog testLog = MessageLog();
+
+	testLog.sendMessage("Hi, I'm </000255000:Ian/>. Te</000255000:eeeeeeeee/>est.");
+
+	GameMessage testMessage = testLog.getRecentMessages()->at(0);
 
 	//more dimensions
 	int fontSize = 2;
@@ -256,8 +257,10 @@ void GameWindow::renderRecentMessages() {
 	sourceRect.w = sourceRect.h = 8;
 
 	
-	std::string formattedString = makeFormattedMessage(maxLettersPerLine, testString);
+	std::string formattedString = makeFormattedMessage(maxLettersPerLine, testMessage.text);
 
+	int unformattedIndex = 0;
+	MyColor currentColor;
 
 	for (int i = 0; i < formattedString.size(); i++) {
 		char test = formattedString[i];
@@ -271,10 +274,17 @@ void GameWindow::renderRecentMessages() {
 		sourceRect.x = formattedString[i] % 16 * 8;
 		sourceRect.y = formattedString[i] / 16 * 8;
 
+		currentColor = testMessage.getColorAtIndex(unformattedIndex);
+
+		SDL_SetTextureColorMod(spriteSheet, currentColor.r, currentColor.g, currentColor.b);
 		SDL_RenderCopy(renderer, spriteSheet, &sourceRect, &destinationRect);
 
 		destinationRect.x += fontSizePixels;
+
+		unformattedIndex++;
 	}
+
+	SDL_SetTextureColorMod(spriteSheet, 255, 255, 255);
 
 	resetRendererAndDrawBorder(viewports.messages);
 }

@@ -160,6 +160,7 @@
     <ClInclude Include="src\Algorithms\Pathfinding\PathfindingRoute.h" />
     <ClInclude Include="src\Algorithms\Terrain Generation\TerrainGenerators.h" />
     <ClInclude Include="src\Enums\TurnTime.h" />
+    <ClInclude Include="src\ErrorLogger\ErrorLogger.h" />
     <ClInclude Include="src\GameObjects\TileCoordinates.h" />
     <ClInclude Include="src\MessageLog\MessageLog.h" />
     <ClInclude Include="src\Scene\ActorManager\ActorManager.h" />
@@ -188,6 +189,7 @@
     <Image Include="assets\CGA8x8thin.png" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="game_files\error_log.txt" />
     <Text Include="game_files\message_log.txt" />
     <Text Include="plans.txt" />
   </ItemGroup>

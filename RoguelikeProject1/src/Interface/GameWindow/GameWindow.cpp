@@ -6,8 +6,16 @@
 GameWindow::GameWindow(int scale, int wWidth, int wHeight) {
 	mapScale = scale;
 	
-	windowWidth = wWidth;
-	windowHeight = wHeight;
+	screenDimensions.x = screenDimensions.y = 0;
+	screenDimensions.w = wWidth;
+	screenDimensions.h = wHeight;
+
+	viewports.map.x = 1 * screenDimensions.w / 5;
+	viewports.map.y = 0;
+	viewports.map.h = 4 * screenDimensions.h / 5;
+	viewports.map.w = 4 * screenDimensions.w / 5;
+
+	updateMapViewports();
 
 	window = NULL;
 	renderer = NULL;
@@ -44,7 +52,7 @@ bool GameWindow::initialize() {
 	window = SDL_CreateWindow(
 		"Testing things out",
 		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-		windowWidth, windowHeight, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
+		screenDimensions.w, screenDimensions.h, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
 	);
 
 	if (window == NULL) {
@@ -69,25 +77,15 @@ void GameWindow::setState(GameWindowState state) { this->state = state; }
 
 
 void GameWindow::renderMap(std::shared_ptr<MapDisplay> map) {
-	SDL_Rect viewport;
-	/* Messages at Bottom of Screen
-	viewport.x = viewport.y = 0;
-	viewport.h = 8 * windowHeight / 10;
-	viewport.w = windowWidth;
-	*/
-	viewport.x = viewport.y = 0;
-	viewport.h = 4 * windowHeight / 5;
-	viewport.w = 4 * windowWidth / 5;
-
-	SDL_RenderSetViewport(renderer, &viewport);
+	SDL_RenderSetViewport(renderer, &viewports.map);
 
 	//number of pixels to one side of a tile
 	int scaleSize = mapScale * 8;
 
 	MapRenderingData renderingData;
-	renderingData = calculateMapRenderingDimensions(viewport, map->getWidth(), map->getHeight(), map->getFocusTile());
+	renderingData = calculateMapRenderingDimensions(viewports.map, map->getWidth(), map->getHeight(), map->getFocusTile());
 
-	displayedTilesMap->clearAndSetDimensions(viewport, renderingData, map->getWidth());
+	displayedTilesMap->clearAndSetDimensions(viewports.map, renderingData, map->getWidth());
 
 	//for SDL_RenderCopy()
 	SDL_Rect srcrect = { 0,0,8,8 };
@@ -148,16 +146,7 @@ void GameWindow::renderMap(std::shared_ptr<MapDisplay> map) {
 		}
 	}
 
-	//set renderer back to black and color mod back to normal
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-	SDL_SetTextureColorMod(spriteSheet, 255, 255, 255);
-
-	//reset viewport
-	SDL_Rect fullScreen;
-	fullScreen.x = fullScreen.y = 0;
-	fullScreen.w = windowWidth;
-	fullScreen.h = windowHeight;
-	SDL_RenderSetViewport(renderer, &fullScreen);
+	resetRendererAndDrawBorder(viewports.map);
 }
 
 
@@ -241,19 +230,12 @@ MapRenderingData GameWindow::calculateMapRenderingDimensions(SDL_Rect viewport, 
 //		colored text. Use stack to allow nested colors? (Maybe superflous and relatively performance
 //		intensive) Either way, first 3 chars after beginning char should be treated as rgb values.
 void GameWindow::renderRecentMessages() {
-	SDL_Rect messagesViewport;
-	messagesViewport.x = 3;
-	messagesViewport.y = 4 * windowHeight / 5;
-	messagesViewport.h = 1 * windowHeight / 5 - 3;
-	messagesViewport.w = 4 * windowWidth / 5 - 3;
+	SDL_RenderSetViewport(renderer, &viewports.messages);
 
-	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-	SDL_RenderDrawRect(renderer, &messagesViewport);
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-
-	SDL_RenderSetViewport(renderer, &messagesViewport);
-
-	std::string testString = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa Ian is testing rendering text to the aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa screen and probably being dumb about it and he needs a lot of words to ensure that his masterful (not) algorithm gets some good testing.";
+	std::string testString = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa Ian is testing rendering text"+
+		std::string("to the aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa screen and ")+
+		std::string("probably being dumb about it and he needs a lot of words to ensure that his masterful ")+
+		std::string("(not) algorithm gets some good testing.");
 
 	//more dimensions
 	int fontSize = 2;
@@ -262,7 +244,7 @@ void GameWindow::renderRecentMessages() {
 	int margin = 30;
 	int halfMargin = margin / 2;
 	int lineSpacing = fontSize;
-	int maxLettersPerLine = (messagesViewport.w - margin) / fontSizePixels;
+	int maxLettersPerLine = (viewports.messages.w - margin) / fontSizePixels;
 
 	//rendering rectangles
 	SDL_Rect destinationRect;
@@ -294,13 +276,9 @@ void GameWindow::renderRecentMessages() {
 		destinationRect.x += fontSizePixels;
 	}
 
-	//reset viewport
-	SDL_Rect fullScreen;
-	fullScreen.x = fullScreen.y = 0;
-	fullScreen.w = windowWidth;
-	fullScreen.h = windowHeight;
-	SDL_RenderSetViewport(renderer, &fullScreen);
+	resetRendererAndDrawBorder(viewports.messages);
 }
+
 
 std::string GameWindow::makeFormattedMessage(int maxLettersPerLine, std::string message) {
 	int index = maxLettersPerLine-1;
@@ -343,14 +321,61 @@ std::string GameWindow::makeFormattedMessage(int maxLettersPerLine, std::string 
 }
 
 
+void GameWindow::renderPlayerInfo() {
+	//TODO: draw player info, lol
+
+	resetRendererAndDrawBorder(viewports.playerInfo);
+}
+
+
+void GameWindow::updateMapViewports() {
+	int screenBorderSpacing = 5;
+	int viewportSpacing = 8;
+
+	/* x-axis */
+	viewports.playerInfo.x = screenBorderSpacing;
+	viewports.playerInfo.w = (1 * screenDimensions.w / 5) - (screenBorderSpacing + viewportSpacing/2);
+
+	viewports.map.x = (1 * screenDimensions.w / 5) + (viewportSpacing/2);
+	viewports.map.w = (4 * screenDimensions.w / 5) - (screenBorderSpacing + viewportSpacing/2);
+
+	viewports.messages.x = (1 * screenDimensions.w / 5) + (viewportSpacing/2);
+	viewports.messages.w = (4 * screenDimensions.w / 5) - (screenBorderSpacing + viewportSpacing/2);
+
+	/* y-axis */
+	viewports.playerInfo.y = screenBorderSpacing;
+	viewports.playerInfo.h = screenDimensions.h - (2*screenBorderSpacing);
+
+	viewports.map.y = screenBorderSpacing;
+	viewports.map.h = (4 * screenDimensions.h / 5) - (screenBorderSpacing + viewportSpacing/2);
+
+	viewports.messages.y = (4 * screenDimensions.h / 5) + (viewportSpacing/2);
+	viewports.messages.h = (1 * screenDimensions.h / 5) - (screenBorderSpacing + viewportSpacing/2);
+}
+
+
+void GameWindow::resetRendererAndDrawBorder(SDL_Rect& currentViewport) {
+	SDL_RenderSetViewport(renderer, &screenDimensions);
+
+	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+	SDL_RenderDrawRect(renderer, &currentViewport);
+
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+	SDL_SetTextureColorMod(spriteSheet, 255, 255, 255);
+}
+
+
+
 void GameWindow::update(std::shared_ptr<MapDisplay> mapDisplay) {
 	SDL_RenderClear(renderer);
 
 	renderMap(mapDisplay);
 	renderRecentMessages();
+	renderPlayerInfo();
 
 	SDL_RenderPresent(renderer);
 }
+
 
 void GameWindow::changeMapScale(int offset) {
 	mapScale += offset;
@@ -358,7 +383,10 @@ void GameWindow::changeMapScale(int offset) {
 	else if (mapScale > 24) { mapScale = 24;  }
 }
 
+
 void GameWindow::updateWindowDimensions(int width, int height) {
-	windowWidth = width;
-	windowHeight = height;
+	screenDimensions.w = width;
+	screenDimensions.h = height;
+
+	updateMapViewports();
 }

@@ -1,8 +1,5 @@
 #include "MessageLog.h"
 
-std::string GameMessage::toString() {
-	return text + "\t" + std::to_string(color.r) + std::to_string(color.g) + std::to_string(color.b);
-}
 
 MessageLog::MessageLog() {
 	logFile.open("game_files/message_log.txt", std::ios::in | std::ios::out | std::ios::app);
@@ -12,15 +9,17 @@ MessageLog::MessageLog() {
 	}
 }
 
-
 MessageLog::~MessageLog() {
 	logFile.close();
 }
 
 
-void MessageLog::sendNormalMessage(std::string message) {
-	GameMessage gameMessage = GameMessage(message, { 255,255,255 });
-	logFile << gameMessage.toString() << "\n";
+void MessageLog::logGameplayMessage(std::string message) {
+	//TODO: add color formatting (use <colorname> or <255255255> to start color section and </>
+	//		to end color section. convert <colorname> to rgb values and use char 255 to indicate
+	//		start/end of colored section
 
-	recentMessages.push_back(gameMessage);
+	logFile << message << "\n";
+
+	recentMessages.push_back(message);
 }

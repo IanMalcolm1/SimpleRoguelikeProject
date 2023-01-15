@@ -15,14 +15,20 @@ enum GameWindowState {
 	WINDOW_STATE_CHARACTER_SHEET
 };
 
+struct MapViewports {
+	SDL_Rect map;
+	SDL_Rect messages;
+	SDL_Rect playerInfo;
+};
+
 class GameWindow {
 private:
 	GameWindowState state = WINDOW_STATE_MAP;
 
-	int mapScale;
+	SDL_Rect screenDimensions;
+	MapViewports viewports;
 
-	int windowWidth;
-	int windowHeight;
+	int mapScale;
 
 	SDL_Window* window;
 	SDL_Renderer* renderer;
@@ -36,6 +42,11 @@ private:
 
 	void renderRecentMessages();
 	std::string makeFormattedMessage(int maxLettersPerLine, std::string message);
+
+	void renderPlayerInfo();
+
+	void updateMapViewports();
+	void resetRendererAndDrawBorder(SDL_Rect& currentViewport);
 
 public:
 	GameWindow(int scale = 10, int windowWidth = 1600, int windowHeight = 1200);

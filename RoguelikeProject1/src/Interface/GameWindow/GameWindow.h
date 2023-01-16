@@ -22,6 +22,16 @@ struct MapViewports {
 	SDL_Rect playerInfo;
 };
 
+
+struct TextRenderingSpecifications {
+	int fontSizePixels;
+	int margin;
+	int lineSpacing;
+	int messageSpacing;
+	int maxLettersPerLine;
+};
+
+
 class GameWindow {
 private:
 	DebugLogger debugLogger;
@@ -39,12 +49,16 @@ private:
 
 	std::unique_ptr<DisplayedTilesMap> displayedTilesMap;
 
-	//Renders a buffer map. Current return type is temporary.
+	std::shared_ptr<GameLog> messageLog;
+
+
+
 	void renderMap(std::shared_ptr<MapDisplay> mapDisplay);
 	MapRenderingData calculateMapRenderingDimensions(SDL_Rect viewport, int mapWidthTiles, int mapHeightTiles, TileCoordinates focusTile);
 
 	void renderRecentMessages();
-	std::string makeFormattedMessage(int maxLettersPerLine, std::string message);
+	std::pair<std::string, int> makeFormattedMessage(int maxLettersPerLine, std::string message);
+	void renderIndividualMessage(GameMessage message, TextRenderingSpecifications specs, SDL_Rect& destinationRect);
 
 	void renderPlayerInfo();
 
@@ -52,7 +66,7 @@ private:
 	void resetRendererAndDrawBorder(SDL_Rect& currentViewport);
 
 public:
-	GameWindow(int scale = 10, int windowWidth = 1600, int windowHeight = 1200);
+	GameWindow(std::shared_ptr<GameLog> messageLog, int scale = 10, int windowWidth = 1600, int windowHeight = 1200);
 	~GameWindow();
 
 	GameWindowState getState();

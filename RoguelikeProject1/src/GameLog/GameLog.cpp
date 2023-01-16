@@ -15,10 +15,10 @@ MyColor GameMessage::getColorAtIndex(int index) {
 }
 
 
-GameLog::GameLog() {
-	initializeColorMap();
-
+GameLog::GameLog(std::shared_ptr<ColorMap> colorMap) {
 	debugLogger = std::make_unique<DebugLogger>();
+
+	this->colorMap = colorMap;
 
 	messageFile = std::make_unique<std::fstream>();
 	messageFile->open("game_files/message_log.txt", std::ios::in | std::ios::out | std::ios::app);
@@ -30,22 +30,6 @@ GameLog::GameLog() {
 
 GameLog::~GameLog() {
 	messageFile->close();
-}
-
-void GameLog::initializeColorMap() {
-	colorMap.insert({ "red", MyColor(255, 0, 0) });
-	colorMap.insert({ "green", MyColor(0, 255, 0) });
-	colorMap.insert({ "blue", MyColor(0, 0, 255) });
-}
-
-MyColor GameLog::getColorByName(std::string name) {
-	try {
-		return colorMap.at(name);
-	}
-	catch (std::out_of_range e) {
-		debugLogger->log("Game message format error: Color name '"+name+"' is unrecognized");
-		return MyColor(255, 255, 255);
-	}
 }
 
 int GameLog::readColorRGBValue(int& index, std::string& text) {
@@ -80,7 +64,7 @@ MyColor GameLog::readColorByColorName(int& index, std::string& text) {
 
 	while (index < text.size()) {
 		if (text[index] == ':') {
-			return getColorByName(colorName);
+			return colorMap->getColorByName(colorName);
 		}
 		else {
 			colorName.push_back(text[index]);
@@ -115,11 +99,9 @@ GameMessage GameLog::makeGameMessage(std::string rawText) {
 	std::string newText;
 	int newTextIndex = -1;
 
-	int i = 0;
-
-	for (i; i < rawText.size(); i++) {
+	for (int i = 0; i < rawText.size(); i++) {
 		if (rawText[i] == '<' && rawText[i + 1] == '/') {
-			if (newTextIndex != 0) {
+			if (newTextIndex != -1) {
 				colorNodes.push_back(MessageColorNode(colorStack.top(), newTextIndex));
 			}
 

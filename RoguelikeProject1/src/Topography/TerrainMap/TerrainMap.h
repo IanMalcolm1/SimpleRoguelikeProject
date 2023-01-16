@@ -1,7 +1,7 @@
 #ifndef TERRAINMAP_H
 #define TERRAINMAP_H
 
-#include "../../GameObjects/TileGraphics.h"
+#include "../../GraphicsThings/TileDisplay.h"
 #include <memory>
 
 

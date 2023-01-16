@@ -3,7 +3,7 @@
 #include "AI.h"
 #include "../Abilities/Ability.h"
 #include "../Items/Item.h"
-#include "../TileGraphics.h"
+#include "../../GraphicsThings/TileDisplay.h"
 #include "../../Enums/TurnTime.h"
 #include "../../Algorithms/Pathfinding/PathfindingRoute.h"
 

@@ -9,7 +9,10 @@ Game::Game() {
 	isRunning = false;
 	millisecsPrevFrame = 0;
 
-	gameWindow = std::make_shared<GameWindow>();
+	std::shared_ptr<ColorMap> colorMap = std::make_shared<ColorMap>();
+	messageLog = std::make_shared<GameLog>(colorMap);
+
+	gameWindow = std::make_shared<GameWindow>(messageLog);
 
 	//temporary
 	scene = std::make_shared<Scene>();

@@ -23,19 +23,16 @@ private:
 
 	//input
 	std::unique_ptr<InputManager> inputManager;
-
-	//will need a proper map system in the future
+	
 	std::shared_ptr<Scene> scene;
 
-	//also temporary
-	DisplayedTilesMap* displayedTiles;
+	std::shared_ptr<GameLog> messageLog;
 
 public:
 	Game();
 	~Game();
 	bool Initialize();
 	void Run();
-	void ProcessInput();
 	void Update();
 };
 

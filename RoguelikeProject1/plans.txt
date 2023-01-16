@@ -1,8 +1,7 @@
 _____________________________________________________________________________________________
 TODOS:
 Current:
-Message log integration
-Debug logger class that other classes can hold
+Message log scrolling
 
 Near:
 Make system for different UI screens. (Each one has an input processing function and a rendering

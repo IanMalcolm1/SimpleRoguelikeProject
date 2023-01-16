@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include "../../GameObjects/TileGraphics.h"
+#include "../../GraphicsThings/TileDisplay.h"
 #include "../../GameObjects/TileCoordinates.h"
 
 

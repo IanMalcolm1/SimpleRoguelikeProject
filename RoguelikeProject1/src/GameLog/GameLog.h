@@ -4,16 +4,17 @@
 #include <string>
 #include <fstream>
 #include <chrono>
-#include "../GameObjects/TileGraphics.h"
+#include "../GraphicsThings/MyColor.h"
 #include "../DebugLogger/DebugLogger.h"
 #include <unordered_map>
+#include "../GraphicsThings/ColorMap.h"
 
 
 struct MessageColorNode {
 	MyColor color;
 	uint16_t endIndex;
 
-	MessageColorNode(MyColor color, uint8_t endIndex) : color(color), endIndex(endIndex) {};
+	MessageColorNode(MyColor color, uint16_t endIndex) : color(color), endIndex(endIndex) {};
 };
 
 
@@ -38,10 +39,7 @@ private:
 
 	std::vector<GameMessage> recentMessages;
 
-	//TODO: move this functionality to a more global class?
-	std::unordered_map<std::string, MyColor> colorMap;
-	void initializeColorMap();
-	MyColor getColorByName(std::string name);
+	std::shared_ptr<ColorMap> colorMap;
 
 	GameMessage makeGameMessage(std::string rawText);
 	MyColor readColor(int& index, std::string& text);
@@ -52,7 +50,7 @@ private:
 	MyColor readColorByColorName(int& index, std::string& text);
 
 public:
-	GameLog();
+	GameLog(std::shared_ptr<ColorMap> colorMap);
 	~GameLog();
 
 	/*

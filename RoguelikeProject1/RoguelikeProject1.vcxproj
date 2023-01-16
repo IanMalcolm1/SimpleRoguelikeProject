@@ -138,6 +138,7 @@
     <ClCompile Include="src\DebugLogger\DebugLogger.cpp" />
     <ClCompile Include="src\GameObjects\Actors\AI.cpp" />
     <ClCompile Include="src\GameLog\GameLog.cpp" />
+    <ClCompile Include="src\GraphicsThings\GraphicsThings.cpp" />
     <ClCompile Include="src\Scene\ActorManager\ActorManager.cpp" />
     <ClCompile Include="src\Scene\ActorManager\AIStateLogic.cpp" />
     <ClCompile Include="src\Scene\ActorPool\ActorPool.cpp" />
@@ -147,7 +148,6 @@
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\GameObjects\Actors\Actor.cpp" />
     <ClCompile Include="src\GameObjects\Items\Item.cpp" />
-    <ClCompile Include="src\GameObjects\TileGraphics.cpp" />
     <ClCompile Include="src\Interface\DisplayInformation\DisplayedTilesMap.cpp" />
     <ClCompile Include="src\Interface\GameWindow\GameWindow.cpp" />
     <ClCompile Include="src\Interface\InputManager\InputManager.cpp" />
@@ -160,10 +160,14 @@
     <ClInclude Include="src\Algorithms\Pathfinding\Pathfinding.h" />
     <ClInclude Include="src\Algorithms\Pathfinding\PathfindingRoute.h" />
     <ClInclude Include="src\Algorithms\Terrain Generation\TerrainGenerators.h" />
+    <ClInclude Include="src\GraphicsThings\ColorMap.h" />
     <ClInclude Include="src\Enums\TurnTime.h" />
     <ClInclude Include="src\DebugLogger\DebugLogger.h" />
     <ClInclude Include="src\GameObjects\TileCoordinates.h" />
     <ClInclude Include="src\GameLog\GameLog.h" />
+    <ClInclude Include="src\GraphicsThings\MyColor.h" />
+    <ClInclude Include="src\GraphicsThings\Palette.h" />
+    <ClInclude Include="src\GraphicsThings\TileDisplay.h" />
     <ClInclude Include="src\Scene\ActorManager\ActorManager.h" />
     <ClInclude Include="src\Scene\ActorPool\ActorPool.h" />
     <ClInclude Include="src\Scene\TurnQueue\TurnQueue.h" />
@@ -174,7 +178,6 @@
     <ClInclude Include="src\GameObjects\Actors\AI.h" />
     <ClInclude Include="src\GameObjects\GeneralComponents\Description.h" />
     <ClInclude Include="src\GameObjects\Items\Item.h" />
-    <ClInclude Include="src\GameObjects\TileGraphics.h" />
     <ClInclude Include="src\Topography\MapDisplay\MapDisplay.h" />
     <ClInclude Include="src\Topography\LocalMap\LocalMap.h" />
     <ClInclude Include="src\Topography\TerrainMap\TerrainMap.h" />

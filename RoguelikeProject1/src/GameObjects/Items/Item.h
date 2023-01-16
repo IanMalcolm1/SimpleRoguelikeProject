@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../TileGraphics.h"
+#include "../../GraphicsThings/TileDisplay.h"
 
 class Item {
 private:

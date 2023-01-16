@@ -3,7 +3,7 @@
 #include <SDL_image.h>
 #include <stdio.h>
 
-GameWindow::GameWindow(int scale, int wWidth, int wHeight) {
+GameWindow::GameWindow(std::shared_ptr<GameLog> messageLog, int scale, int wWidth, int wHeight) {
 	mapScale = scale;
 	
 	screenDimensions.x = screenDimensions.y = 0;
@@ -22,6 +22,17 @@ GameWindow::GameWindow(int scale, int wWidth, int wHeight) {
 	spriteSheet = NULL;
 
 	displayedTilesMap = std::make_unique<DisplayedTilesMap>();
+
+	this->messageLog = messageLog;
+
+	//TODO: remove these
+	messageLog->sendMessage("Hi, I'm </000255000:Ian/>. Te</000255000:eeeeeeeee/>est. Another </red:test/>. Now I have more </lightblue:colors/>!");
+	messageLog->sendMessage("</red:Message 2. Going to make this reeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaallllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllly loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong!!!!!!!!!!!!!!!!!!/>");
+	messageLog->sendMessage("</orange:Message 3/>");
+	messageLog->sendMessage("</yellow:Message 4/>");
+	messageLog->sendMessage("</green:Message 5/>");
+	messageLog->sendMessage("</blue:Message 6/>");
+	messageLog->sendMessage("</purple:Message 7/>");
 }
 
 GameWindow::~GameWindow() {
@@ -232,74 +243,55 @@ MapRenderingData GameWindow::calculateMapRenderingDimensions(SDL_Rect viewport, 
 void GameWindow::renderRecentMessages() {
 	SDL_RenderSetViewport(renderer, &viewports.messages);
 
-	std::unique_ptr<GameLog> testLog = std::make_unique<GameLog>();
+	if (messageLog->getRecentMessages()->size() == 0) {
+		return;
+	}
 
-	testLog->sendMessage("Hi, I'm </000255000:Ian/>. Te</000255000:eeeeeeeee/>est. Another </red:test/>");
-
-	GameMessage testMessage = testLog->getRecentMessages()->at(0);
-
-	//more dimensions
 	int fontSize = 2;
-	int fontSizePixels = fontSize*8;
 
-	int margin = 30;
-	int halfMargin = margin / 2;
-	int lineSpacing = fontSize;
-	int maxLettersPerLine = (viewports.messages.w - margin) / fontSizePixels;
+	TextRenderingSpecifications specs;
 
-	//rendering rectangles
+	specs.fontSizePixels = fontSize*8;
+	specs.margin = 16;
+	specs.lineSpacing = specs.fontSizePixels/4;
+	specs.messageSpacing = specs.fontSizePixels/2;
+	specs.maxLettersPerLine = (viewports.messages.w - 2*specs.margin) / specs.fontSizePixels;
+
 	SDL_Rect destinationRect;
-	destinationRect.w = fontSizePixels;
-	destinationRect.h = fontSizePixels;
-	destinationRect.y = destinationRect.x = halfMargin;
+	destinationRect.w = specs.fontSizePixels;
+	destinationRect.h = specs.fontSizePixels;
+	destinationRect.x = specs.margin;
+	destinationRect.y = viewports.messages.h - (specs.margin);
 
-	SDL_Rect sourceRect;
-	sourceRect.w = sourceRect.h = 8;
+	std::vector<GameMessage>* recentMessages = messageLog->getRecentMessages();
 
-	
-	std::string formattedString = makeFormattedMessage(maxLettersPerLine, testMessage.text);
-
-	int unformattedIndex = 0;
-	MyColor currentColor;
-
-	for (int i = 0; i < formattedString.size(); i++) {
-		char test = formattedString[i];
-
-		if (test == '\n') {
-			destinationRect.y += fontSizePixels + lineSpacing;
-			destinationRect.x = halfMargin;
-			continue;
+	for (int i = 0; i < recentMessages->size(); i++) {
+		if (destinationRect.y < -specs.fontSizePixels) {
+			break;
 		}
 
-		sourceRect.x = formattedString[i] % 16 * 8;
-		sourceRect.y = formattedString[i] / 16 * 8;
-
-		currentColor = testMessage.getColorAtIndex(unformattedIndex);
-
-		SDL_SetTextureColorMod(spriteSheet, currentColor.r, currentColor.g, currentColor.b);
-		SDL_RenderCopy(renderer, spriteSheet, &sourceRect, &destinationRect);
-
-		destinationRect.x += fontSizePixels;
-
-		unformattedIndex++;
+		renderIndividualMessage(recentMessages->at(i), specs, destinationRect);
 	}
 
 	resetRendererAndDrawBorder(viewports.messages);
 }
 
 
-std::string GameWindow::makeFormattedMessage(int maxLettersPerLine, std::string message) {
+std::pair<std::string, int> GameWindow::makeFormattedMessage(int maxLettersPerLine, std::string message) {
+	int lines = 1;
 	int index = maxLettersPerLine-1;
 
 	while (index < (int)message.size()) {
 
 		if (message[index] == ASYM_SPACE) {
 			message[index] = '\n';
+			lines++;
 		}
 
 		else if (message[index + 1] == ASYM_SPACE) {
 			index++;
 			message[index] = '\n';
+			lines++;
 		}
 
 		else {
@@ -308,16 +300,19 @@ std::string GameWindow::makeFormattedMessage(int maxLettersPerLine, std::string 
 				index--;
 				if (message[index] == ASYM_SPACE) {
 					message[index] = '\n';
+					lines++;
 					break;
 				}
 				else if (prevIndex - index == maxLettersPerLine) {
 					message.insert(message.begin() + prevIndex+1, '\n');
+					lines++;
 					index = prevIndex + 1;
 					break;
 				}
 			}
 			if (index == 0) {
 				message.insert(message.begin() + prevIndex+1, '\n');
+				lines++;
 				index = prevIndex + 1;
 			}
 		}
@@ -325,7 +320,50 @@ std::string GameWindow::makeFormattedMessage(int maxLettersPerLine, std::string 
 		index += maxLettersPerLine;
 	}
 
-	return message;
+	return std::make_pair(message, lines);
+}
+
+void GameWindow::renderIndividualMessage(GameMessage message, TextRenderingSpecifications specs, SDL_Rect& destinationRect) {
+	SDL_Rect sourceRect;
+	sourceRect.w = sourceRect.h = 8;
+
+	std::pair<std::string, int> messageTextAndNumberOfLines = makeFormattedMessage(specs.maxLettersPerLine, message.text);
+
+	std::string formattedText = messageTextAndNumberOfLines.first;
+	int lines = messageTextAndNumberOfLines.second;
+
+	int unformattedIndex = 0;
+	MyColor currentColor;
+
+	destinationRect.x = specs.margin;
+
+	destinationRect.y -= lines * specs.fontSizePixels + (lines - 1) * specs.lineSpacing;
+
+	int startY = destinationRect.y;
+
+	for (int i = 0; i < formattedText.size(); i++) {
+		char test = formattedText[i];
+
+		if (test == '\n') {
+			destinationRect.y += specs.fontSizePixels + specs.lineSpacing;
+			destinationRect.x = specs.margin;
+			continue;
+		}
+
+		sourceRect.x = formattedText[i] % 16 * 8;
+		sourceRect.y = formattedText[i] / 16 * 8;
+
+		currentColor = message.getColorAtIndex(unformattedIndex);
+
+		SDL_SetTextureColorMod(spriteSheet, currentColor.r, currentColor.g, currentColor.b);
+		SDL_RenderCopy(renderer, spriteSheet, &sourceRect, &destinationRect);
+
+		destinationRect.x += specs.fontSizePixels;
+
+		unformattedIndex++;
+	}
+
+	destinationRect.y = startY - specs.messageSpacing - specs.lineSpacing;
 }
 
 

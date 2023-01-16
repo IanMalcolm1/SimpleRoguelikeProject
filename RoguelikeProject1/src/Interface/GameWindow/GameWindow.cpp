@@ -232,11 +232,11 @@ MapRenderingData GameWindow::calculateMapRenderingDimensions(SDL_Rect viewport, 
 void GameWindow::renderRecentMessages() {
 	SDL_RenderSetViewport(renderer, &viewports.messages);
 
-	MessageLog testLog = MessageLog();
+	std::unique_ptr<GameLog> testLog = std::make_unique<GameLog>();
 
-	testLog.sendMessage("Hi, I'm </000255000:Ian/>. Te</000255000:eeeeeeeee/>est. Another </red:test/>");
+	testLog->sendMessage("Hi, I'm </000255000:Ian/>. Te</000255000:eeeeeeeee/>est. Another </red:test/>");
 
-	GameMessage testMessage = testLog.getRecentMessages()->at(0);
+	GameMessage testMessage = testLog->getRecentMessages()->at(0);
 
 	//more dimensions
 	int fontSize = 2;

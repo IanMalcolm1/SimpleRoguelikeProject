@@ -1,10 +1,12 @@
 _____________________________________________________________________________________________
 TODOS:
 Current:
-Message log viewport and rendering
+Message log integration
+Debug logger class that other classes can hold
 
-Ongoing:
-Use smart pointers where possible
+Near:
+Make system for different UI screens. (Each one has an input processing function and a rendering
+function. Will be owned by both the game screen and the classes they represent.)
 
 Next:
 Decide whether to kill the Scene class, or make the current ActorManager class the scene class.
@@ -12,6 +14,7 @@ Also maybe put AI stuff within actors... Will lead to cyclic dependencies, but m
 such a bad thing???
 
 Later:
+Remove all (or most) printf statements
 Start implementing an EC model
 Add player character
 Add basic creatures

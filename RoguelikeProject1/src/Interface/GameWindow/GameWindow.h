@@ -5,7 +5,8 @@
 #include <SDL_image.h>
 #include "../../Topography/LocalMap/LocalMap.h"
 #include "../DisplayInformation/DisplayedTilesMap.h"
-#include "../../MessageLog/MessageLog.h"
+#include "../../GameLog/GameLog.h"
+#include "../../DebugLogger/DebugLogger.h"
 
 
 enum GameWindowState {
@@ -23,6 +24,8 @@ struct MapViewports {
 
 class GameWindow {
 private:
+	DebugLogger debugLogger;
+
 	GameWindowState state = WINDOW_STATE_MAP;
 
 	SDL_Rect screenDimensions;

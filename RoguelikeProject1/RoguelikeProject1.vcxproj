@@ -135,8 +135,9 @@
     <ClCompile Include="src\Algorithms\Pathfinding\Pathfinding.cpp" />
     <ClCompile Include="src\Algorithms\Pathfinding\PathfindingRoute.cpp" />
     <ClCompile Include="src\Algorithms\Terrain Generation\TerrainGenerators.cpp" />
+    <ClCompile Include="src\DebugLogger\DebugLogger.cpp" />
     <ClCompile Include="src\GameObjects\Actors\AI.cpp" />
-    <ClCompile Include="src\MessageLog\MessageLog.cpp" />
+    <ClCompile Include="src\GameLog\GameLog.cpp" />
     <ClCompile Include="src\Scene\ActorManager\ActorManager.cpp" />
     <ClCompile Include="src\Scene\ActorManager\AIStateLogic.cpp" />
     <ClCompile Include="src\Scene\ActorPool\ActorPool.cpp" />
@@ -160,9 +161,9 @@
     <ClInclude Include="src\Algorithms\Pathfinding\PathfindingRoute.h" />
     <ClInclude Include="src\Algorithms\Terrain Generation\TerrainGenerators.h" />
     <ClInclude Include="src\Enums\TurnTime.h" />
-    <ClInclude Include="src\ErrorLogger\ErrorLogger.h" />
+    <ClInclude Include="src\DebugLogger\DebugLogger.h" />
     <ClInclude Include="src\GameObjects\TileCoordinates.h" />
-    <ClInclude Include="src\MessageLog\MessageLog.h" />
+    <ClInclude Include="src\GameLog\GameLog.h" />
     <ClInclude Include="src\Scene\ActorManager\ActorManager.h" />
     <ClInclude Include="src\Scene\ActorPool\ActorPool.h" />
     <ClInclude Include="src\Scene\TurnQueue\TurnQueue.h" />
@@ -189,7 +190,7 @@
     <Image Include="assets\CGA8x8thin.png" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="game_files\error_log.txt" />
+    <Text Include="game_files\debug_log.txt" />
     <Text Include="game_files\message_log.txt" />
     <Text Include="plans.txt" />
   </ItemGroup>

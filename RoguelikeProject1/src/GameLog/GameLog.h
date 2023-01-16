@@ -5,6 +5,7 @@
 #include <fstream>
 #include <chrono>
 #include "../GameObjects/TileGraphics.h"
+#include "../DebugLogger/DebugLogger.h"
 #include <unordered_map>
 
 
@@ -29,13 +30,15 @@ public:
 };
 
 
-class MessageLog {
+class GameLog {
 private:
-	//std::fstream messageFile;
+	std::unique_ptr<DebugLogger> debugLogger;
+
+	std::unique_ptr<std::fstream> messageFile;
 
 	std::vector<GameMessage> recentMessages;
 
-	//TODO: move this functionality to a more global class
+	//TODO: move this functionality to a more global class?
 	std::unordered_map<std::string, MyColor> colorMap;
 	void initializeColorMap();
 	MyColor getColorByName(std::string name);
@@ -49,8 +52,8 @@ private:
 	MyColor readColorByColorName(int& index, std::string& text);
 
 public:
-	MessageLog();
-	~MessageLog();
+	GameLog();
+	~GameLog();
 
 	/*
 	By default text is white.

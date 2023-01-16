@@ -20,9 +20,6 @@ Game::Game() {
 }
 
 Game::~Game() {
-	gameWindow->~GameWindow();
-	gameWindow = NULL;
-
 	printf("Game destructor called.\n");
 }
 

@@ -28,7 +28,6 @@ private:
 public:
 	DisplayedTilesMap() : viewport(), startTile(), widthDisplayedTiles(0), heightDisplayedTiles(0), 
 		widthBaseMap(0) {};
-	~DisplayedTilesMap() {};
 
 	void clearAndSetDimensions(SDL_Rect viewport, MapRenderingData renderingData, int baseMapWidth);
 	void pushTile(SDL_Rect* rect);

@@ -2,6 +2,7 @@ ________________________________________________________________________________
 TODOS:
 Current:
 Message log scrolling
+Fix bresenham line implementation
 
 Near:
 Make system for different UI screens. (Each one has an input processing function and a rendering

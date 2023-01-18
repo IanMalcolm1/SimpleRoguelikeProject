@@ -25,7 +25,7 @@ GameWindow::GameWindow(std::shared_ptr<GameLog> messageLog, int scale, int wWidt
 
 	this->messageLog = messageLog;
 
-	//TODO: remove these
+	//TODO: remove this line and everything below it in the function
 	messageLog->sendMessage("Hi, I'm </000255000:Ian/>. Te</000255000:eeeeeeeee/>est. Another </red:test/>. Now I have more </lightblue:colors/>!");
 	messageLog->sendMessage("</red:Message 2. Going to make this reeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaallllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllly loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong!!!!!!!!!!!!!!!!!!/>");
 	messageLog->sendMessage("</orange:Message 3/>");
@@ -33,6 +33,9 @@ GameWindow::GameWindow(std::shared_ptr<GameLog> messageLog, int scale, int wWidt
 	messageLog->sendMessage("</green:Message 5/>");
 	messageLog->sendMessage("</blue:Message 6/>");
 	messageLog->sendMessage("</purple:Message 7/>");
+	messageLog->sendMessage("</gold:The golden message/>");
+
+	textSpecs = TextRenderingSpecifications(2, 16);
 }
 
 GameWindow::~GameWindow() {
@@ -247,30 +250,22 @@ void GameWindow::renderRecentMessages() {
 		return;
 	}
 
-	int fontSize = 2;
-
-	TextRenderingSpecifications specs;
-
-	specs.fontSizePixels = fontSize*8;
-	specs.margin = 16;
-	specs.lineSpacing = specs.fontSizePixels/4;
-	specs.messageSpacing = specs.fontSizePixels/2;
-	specs.maxLettersPerLine = (viewports.messages.w - 2*specs.margin) / specs.fontSizePixels;
+	textSpecs.maxLettersPerLine = (viewports.messages.w - 2*textSpecs.margin) / textSpecs.fontSizePixels;
 
 	SDL_Rect destinationRect;
-	destinationRect.w = specs.fontSizePixels;
-	destinationRect.h = specs.fontSizePixels;
-	destinationRect.x = specs.margin;
-	destinationRect.y = viewports.messages.h - (specs.margin);
+	destinationRect.w = textSpecs.fontSizePixels;
+	destinationRect.h = textSpecs.fontSizePixels;
+	destinationRect.x = textSpecs.margin;
+	destinationRect.y = viewports.messages.h - (textSpecs.margin) + textSpecs.scrollOffset;
 
 	std::vector<GameMessage>* recentMessages = messageLog->getRecentMessages();
 
 	for (int i = 0; i < recentMessages->size(); i++) {
-		if (destinationRect.y < -specs.fontSizePixels) {
+		if (destinationRect.y < -textSpecs.fontSizePixels) {
 			break;
 		}
 
-		renderIndividualMessage(recentMessages->at(i), specs, destinationRect);
+		renderIndividualMessage(recentMessages->at(i), destinationRect);
 	}
 
 	resetRendererAndDrawBorder(viewports.messages);
@@ -323,11 +318,11 @@ std::pair<std::string, int> GameWindow::makeFormattedMessage(int maxLettersPerLi
 	return std::make_pair(message, lines);
 }
 
-void GameWindow::renderIndividualMessage(GameMessage message, TextRenderingSpecifications specs, SDL_Rect& destinationRect) {
+void GameWindow::renderIndividualMessage(GameMessage message, SDL_Rect& destinationRect) {
 	SDL_Rect sourceRect;
 	sourceRect.w = sourceRect.h = 8;
 
-	std::pair<std::string, int> messageTextAndNumberOfLines = makeFormattedMessage(specs.maxLettersPerLine, message.text);
+	std::pair<std::string, int> messageTextAndNumberOfLines = makeFormattedMessage(textSpecs.maxLettersPerLine, message.text);
 
 	std::string formattedText = messageTextAndNumberOfLines.first;
 	int lines = messageTextAndNumberOfLines.second;
@@ -335,9 +330,9 @@ void GameWindow::renderIndividualMessage(GameMessage message, TextRenderingSpeci
 	int unformattedIndex = 0;
 	MyColor currentColor;
 
-	destinationRect.x = specs.margin;
+	destinationRect.x = textSpecs.margin;
 
-	destinationRect.y -= lines * specs.fontSizePixels + (lines - 1) * specs.lineSpacing;
+	destinationRect.y -= lines * textSpecs.fontSizePixels + (lines - 1) * textSpecs.lineSpacing;
 
 	int startY = destinationRect.y;
 
@@ -345,8 +340,8 @@ void GameWindow::renderIndividualMessage(GameMessage message, TextRenderingSpeci
 		char test = formattedText[i];
 
 		if (test == '\n') {
-			destinationRect.y += specs.fontSizePixels + specs.lineSpacing;
-			destinationRect.x = specs.margin;
+			destinationRect.y += textSpecs.fontSizePixels + textSpecs.lineSpacing;
+			destinationRect.x = textSpecs.margin;
 			continue;
 		}
 
@@ -358,12 +353,12 @@ void GameWindow::renderIndividualMessage(GameMessage message, TextRenderingSpeci
 		SDL_SetTextureColorMod(spriteSheet, currentColor.r, currentColor.g, currentColor.b);
 		SDL_RenderCopy(renderer, spriteSheet, &sourceRect, &destinationRect);
 
-		destinationRect.x += specs.fontSizePixels;
+		destinationRect.x += textSpecs.fontSizePixels;
 
 		unformattedIndex++;
 	}
 
-	destinationRect.y = startY - specs.messageSpacing - specs.lineSpacing;
+	destinationRect.y = startY - textSpecs.messageSpacing - textSpecs.lineSpacing;
 }
 
 
@@ -427,6 +422,21 @@ void GameWindow::changeMapScale(int offset) {
 	mapScale += offset;
 	if (mapScale < 1) { mapScale = 1; }
 	else if (mapScale > 24) { mapScale = 24;  }
+}
+
+void GameWindow::changeMessagesScrollOffset(int offset) {
+	textSpecs.scrollOffset += 4*offset;
+	textSpecs.scrollOffset = (textSpecs.scrollOffset > 0) ? textSpecs.scrollOffset : 0;
+}
+
+void GameWindow::processMouseScroll(int x, int y, int scrollOffset) {
+	SDL_Point point = { x,y };
+	if (SDL_PointInRect(&point, &viewports.map)) {
+		changeMapScale(scrollOffset);
+	}
+	else if (SDL_PointInRect(&point, &viewports.messages)) {
+		changeMessagesScrollOffset(scrollOffset);
+	}
 }
 
 

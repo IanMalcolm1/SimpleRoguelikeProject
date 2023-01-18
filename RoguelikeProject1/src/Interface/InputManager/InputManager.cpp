@@ -40,6 +40,9 @@ void InputManager::setScene(std::shared_ptr<Scene> scene) {
 bool InputManager::processInput() {
 	bool returner = true;
 	SDL_Event sdlEvent;
+
+	int x, y;
+	SDL_GetMouseState(&x, &y);
 	
 
 	while (SDL_PollEvent(&sdlEvent)) {
@@ -50,7 +53,7 @@ bool InputManager::processInput() {
 
 		case SDL_MOUSEWHEEL:
 			//zooming in/out
-			gameWindow->changeMapScale(sdlEvent.wheel.y);
+			gameWindow->processMouseScroll(x, y, sdlEvent.wheel.y);
 			break;
 
 		case SDL_QUIT: //user closes window using the red x
@@ -64,10 +67,6 @@ bool InputManager::processInput() {
 			break;
 		}
 	}
-
-	int x, y;
-
-	SDL_GetMouseState(&x, &y);
 
 	scene->setMouseTile(gameWindow->findMapTileFromScreenCoordinates(x, y));
 

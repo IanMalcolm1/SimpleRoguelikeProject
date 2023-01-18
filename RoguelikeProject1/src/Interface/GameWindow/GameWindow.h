@@ -24,11 +24,22 @@ struct MapViewports {
 
 
 struct TextRenderingSpecifications {
+	int fontSize;
 	int fontSizePixels;
 	int margin;
 	int lineSpacing;
 	int messageSpacing;
 	int maxLettersPerLine;
+	int scrollOffset;
+
+	TextRenderingSpecifications() : fontSize(0), fontSizePixels(0), margin(0), lineSpacing(0),
+		messageSpacing(0), maxLettersPerLine(0), scrollOffset(0) {};
+
+	TextRenderingSpecifications(int fontSize, int margin = 16) : fontSize(fontSize), 
+		fontSizePixels(8*fontSize), margin(margin), lineSpacing(fontSizePixels/4),
+		messageSpacing(fontSizePixels/2), scrollOffset(0), maxLettersPerLine(0) {};
+	
+	void changeFontSize(int fontSize);
 };
 
 
@@ -51,6 +62,9 @@ private:
 
 	std::shared_ptr<GameLog> messageLog;
 
+	//TODO: remove this
+	TextRenderingSpecifications textSpecs;
+
 
 
 	void renderMap(std::shared_ptr<MapDisplay> mapDisplay);
@@ -58,12 +72,15 @@ private:
 
 	void renderRecentMessages();
 	std::pair<std::string, int> makeFormattedMessage(int maxLettersPerLine, std::string message);
-	void renderIndividualMessage(GameMessage message, TextRenderingSpecifications specs, SDL_Rect& destinationRect);
+	void renderIndividualMessage(GameMessage message, SDL_Rect& destinationRect);
 
 	void renderPlayerInfo();
 
 	void updateMapViewports();
 	void resetRendererAndDrawBorder(SDL_Rect& currentViewport);
+
+	void changeMessagesScrollOffset(int offset);
+	void changeMapScale(int offset);
 
 public:
 	GameWindow(std::shared_ptr<GameLog> messageLog, int scale = 10, int windowWidth = 1600, int windowHeight = 1200);
@@ -75,7 +92,7 @@ public:
 	bool initialize();
 	void update(std::shared_ptr<MapDisplay> mapDisplay);
 
-	void changeMapScale(int offset);
+	void processMouseScroll(int x, int y, int scrollOffset);
 	void updateWindowDimensions(int width, int height);
 
 	inline TileCoordinates findMapTileFromScreenCoordinates(int x, int y) {

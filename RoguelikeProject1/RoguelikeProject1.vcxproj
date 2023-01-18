@@ -155,6 +155,9 @@
     <ClCompile Include="src\Topography\LocalMap\LocalMap.cpp" />
     <ClCompile Include="src\Topography\MapDisplay\MapDisplay.cpp" />
     <ClCompile Include="src\Topography\TerrainMap\TerrainMap.cpp" />
+    <ClCompile Include="src\UIScreens\MapUI\MapUI.cpp" />
+    <ClCompile Include="src\UIScreens\MessagesUI\MessagesUI.cpp" />
+    <ClCompile Include="src\UIScreens\UIHelpers\TextRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Algorithms\Pathfinding\Pathfinding.h" />
@@ -188,6 +191,9 @@
     <ClInclude Include="src\Interface\GameWindow\GameWindow.h" />
     <ClInclude Include="src\Interface\InputManager\InputManager.h" />
     <ClInclude Include="src\Scene\Scene.h" />
+    <ClInclude Include="src\UIScreens\MapUI\MapUI.h" />
+    <ClInclude Include="src\UIScreens\MessagesUI\MessagesUI.h" />
+    <ClInclude Include="src\UIScreens\UIHelpers\TextRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\CGA8x8thin.png" />

@@ -3,7 +3,7 @@
 #include <SDL_image.h>
 #include <stdio.h>
 
-GameWindow::GameWindow(std::shared_ptr<GameLog> messageLog, int scale, int wWidth, int wHeight) {
+GameWindow::GameWindow(int scale, int wWidth, int wHeight) {
 	mapScale = scale;
 	
 	screenDimensions.x = screenDimensions.y = 0;
@@ -22,20 +22,6 @@ GameWindow::GameWindow(std::shared_ptr<GameLog> messageLog, int scale, int wWidt
 	spriteSheet = NULL;
 
 	displayedTilesMap = std::make_unique<DisplayedTilesMap>();
-
-	this->messageLog = messageLog;
-
-	//TODO: remove this line and everything below it in the function
-	messageLog->sendMessage("Hi, I'm </000255000:Ian/>. Te</000255000:eeeeeeeee/>est. Another </red:test/>. Now I have more </lightblue:colors/>!");
-	messageLog->sendMessage("</red:Message 2. Going to make this reeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaallllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllly loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong!!!!!!!!!!!!!!!!!!/>");
-	messageLog->sendMessage("</orange:Message 3/>");
-	messageLog->sendMessage("</yellow:Message 4/>");
-	messageLog->sendMessage("</green:Message 5/>");
-	messageLog->sendMessage("</blue:Message 6/>");
-	messageLog->sendMessage("</purple:Message 7/>");
-	messageLog->sendMessage("</gold:The golden message/>");
-
-	textSpecs = TextRenderingSpecifications(2, 16);
 }
 
 GameWindow::~GameWindow() {
@@ -51,7 +37,7 @@ GameWindow::~GameWindow() {
 	SDL_Quit();
 }
 
-bool GameWindow::initialize() {
+bool GameWindow::initialize(std::shared_ptr<GameLog> messageLog) {
 	bool success = true;
 
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -81,6 +67,9 @@ bool GameWindow::initialize() {
 		printf("Couldn't find spritesheet, I guess. Error: %s\n", IMG_GetError());
 		success = false;
 	}
+
+	//UI screens
+	messagesUI = std::make_unique<MessagesUI>(renderer, spriteSheet, messageLog);
 
 	return success;
 }
@@ -240,127 +229,11 @@ MapRenderingData GameWindow::calculateMapRenderingDimensions(SDL_Rect viewport, 
 }
 
 
-//TODO: include color support. Use start and end characters to indicated beginnings and ends of 
-//		colored text. Use stack to allow nested colors? (Maybe superflous and relatively performance
-//		intensive) Either way, first 3 chars after beginning char should be treated as rgb values.
 void GameWindow::renderRecentMessages() {
-	SDL_RenderSetViewport(renderer, &viewports.messages);
-
-	if (messageLog->getRecentMessages()->size() == 0) {
-		return;
-	}
-
-	textSpecs.maxLettersPerLine = (viewports.messages.w - 2*textSpecs.margin) / textSpecs.fontSizePixels;
-
-	SDL_Rect destinationRect;
-	destinationRect.w = textSpecs.fontSizePixels;
-	destinationRect.h = textSpecs.fontSizePixels;
-	destinationRect.x = textSpecs.margin;
-	destinationRect.y = viewports.messages.h - (textSpecs.margin) + textSpecs.scrollOffset;
-
-	std::vector<GameMessage>* recentMessages = messageLog->getRecentMessages();
-
-	for (int i = 0; i < recentMessages->size(); i++) {
-		if (destinationRect.y < -textSpecs.fontSizePixels) {
-			break;
-		}
-
-		renderIndividualMessage(recentMessages->at(i), destinationRect);
-	}
+	messagesUI->render(viewports.messages);
 
 	resetRendererAndDrawBorder(viewports.messages);
 }
-
-
-std::pair<std::string, int> GameWindow::makeFormattedMessage(int maxLettersPerLine, std::string message) {
-	int lines = 1;
-	int index = maxLettersPerLine-1;
-
-	while (index < (int)message.size()) {
-
-		if (message[index] == ASYM_SPACE) {
-			message[index] = '\n';
-			lines++;
-		}
-
-		else if (message[index + 1] == ASYM_SPACE) {
-			index++;
-			message[index] = '\n';
-			lines++;
-		}
-
-		else {
-			int prevIndex = index;
-			while (index > 0) {
-				index--;
-				if (message[index] == ASYM_SPACE) {
-					message[index] = '\n';
-					lines++;
-					break;
-				}
-				else if (prevIndex - index == maxLettersPerLine) {
-					message.insert(message.begin() + prevIndex+1, '\n');
-					lines++;
-					index = prevIndex + 1;
-					break;
-				}
-			}
-			if (index == 0) {
-				message.insert(message.begin() + prevIndex+1, '\n');
-				lines++;
-				index = prevIndex + 1;
-			}
-		}
-
-		index += maxLettersPerLine;
-	}
-
-	return std::make_pair(message, lines);
-}
-
-void GameWindow::renderIndividualMessage(GameMessage message, SDL_Rect& destinationRect) {
-	SDL_Rect sourceRect;
-	sourceRect.w = sourceRect.h = 8;
-
-	std::pair<std::string, int> messageTextAndNumberOfLines = makeFormattedMessage(textSpecs.maxLettersPerLine, message.text);
-
-	std::string formattedText = messageTextAndNumberOfLines.first;
-	int lines = messageTextAndNumberOfLines.second;
-
-	int unformattedIndex = 0;
-	MyColor currentColor;
-
-	destinationRect.x = textSpecs.margin;
-
-	destinationRect.y -= lines * textSpecs.fontSizePixels + (lines - 1) * textSpecs.lineSpacing;
-
-	int startY = destinationRect.y;
-
-	for (int i = 0; i < formattedText.size(); i++) {
-		char test = formattedText[i];
-
-		if (test == '\n') {
-			destinationRect.y += textSpecs.fontSizePixels + textSpecs.lineSpacing;
-			destinationRect.x = textSpecs.margin;
-			continue;
-		}
-
-		sourceRect.x = formattedText[i] % 16 * 8;
-		sourceRect.y = formattedText[i] / 16 * 8;
-
-		currentColor = message.getColorAtIndex(unformattedIndex);
-
-		SDL_SetTextureColorMod(spriteSheet, currentColor.r, currentColor.g, currentColor.b);
-		SDL_RenderCopy(renderer, spriteSheet, &sourceRect, &destinationRect);
-
-		destinationRect.x += textSpecs.fontSizePixels;
-
-		unformattedIndex++;
-	}
-
-	destinationRect.y = startY - textSpecs.messageSpacing - textSpecs.lineSpacing;
-}
-
 
 void GameWindow::renderPlayerInfo() {
 	//TODO: draw player info, lol
@@ -424,18 +297,13 @@ void GameWindow::changeMapScale(int offset) {
 	else if (mapScale > 24) { mapScale = 24;  }
 }
 
-void GameWindow::changeMessagesScrollOffset(int offset) {
-	textSpecs.scrollOffset += 4*offset;
-	textSpecs.scrollOffset = (textSpecs.scrollOffset > 0) ? textSpecs.scrollOffset : 0;
-}
-
 void GameWindow::processMouseScroll(int x, int y, int scrollOffset) {
 	SDL_Point point = { x,y };
 	if (SDL_PointInRect(&point, &viewports.map)) {
 		changeMapScale(scrollOffset);
 	}
 	else if (SDL_PointInRect(&point, &viewports.messages)) {
-		changeMessagesScrollOffset(scrollOffset);
+		messagesUI->changeScrollOffset(scrollOffset);
 	}
 }
 

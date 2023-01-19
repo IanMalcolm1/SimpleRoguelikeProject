@@ -9,10 +9,17 @@ Game::Game() {
 	isRunning = false;
 	millisecsPrevFrame = 0;
 
-	std::shared_ptr<ColorMap> colorMap = std::make_shared<ColorMap>();
-	messageLog = std::make_shared<GameLog>(colorMap);
+	messageLog = std::make_shared<GameLog>();
+	messageLog->sendMessage("Hi, I'm </000255000:Ian/>. Te</000255000:eeeeeeeee/>est. Another </red:test/>. Now I have more </lightblue:colors/>!");
+	messageLog->sendMessage("</red:Message 2. Going to make this reeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaallllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllly loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong!!!!!!!!!!!!!!!!!!/>");
+	messageLog->sendMessage("</orange:Message 3/>");
+	messageLog->sendMessage("</yellow:Message 4/>");
+	messageLog->sendMessage("</green:Message 5/>");
+	messageLog->sendMessage("</blue:Message 6/>");
+	messageLog->sendMessage("</purple:Message 7/>");
+	messageLog->sendMessage("</gold:The golden message/>");
 
-	gameWindow = std::make_shared<GameWindow>(messageLog);
+	gameWindow = std::make_shared<GameWindow>();
 
 	//temporary
 	scene = std::make_shared<Scene>();
@@ -30,7 +37,7 @@ bool Game::Initialize() {
 	isRunning = true;
 	bool success;
 
-	success = gameWindow->initialize();
+	success = gameWindow->initialize(messageLog);
 
 	return success;
 }

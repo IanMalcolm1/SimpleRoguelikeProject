@@ -138,6 +138,7 @@
     <ClCompile Include="src\DebugLogger\DebugLogger.cpp" />
     <ClCompile Include="src\GameObjects\Actors\AI.cpp" />
     <ClCompile Include="src\GameLog\GameLog.cpp" />
+    <ClCompile Include="src\GraphicsThings\GameText\GameText.cpp" />
     <ClCompile Include="src\GraphicsThings\GraphicsThings.cpp" />
     <ClCompile Include="src\Scene\ActorManager\ActorManager.cpp" />
     <ClCompile Include="src\Scene\ActorManager\AIStateLogic.cpp" />
@@ -168,6 +169,7 @@
     <ClInclude Include="src\DebugLogger\DebugLogger.h" />
     <ClInclude Include="src\GameObjects\TileCoordinates.h" />
     <ClInclude Include="src\GameLog\GameLog.h" />
+    <ClInclude Include="src\GraphicsThings\GameText\GameText.h" />
     <ClInclude Include="src\GraphicsThings\MyColor.h" />
     <ClInclude Include="src\GraphicsThings\Palette.h" />
     <ClInclude Include="src\GraphicsThings\TileDisplay.h" />

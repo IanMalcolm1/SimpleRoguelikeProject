@@ -19,7 +19,7 @@ GameWindow::GameWindow(int scale, int wWidth, int wHeight) {
 
 	window = NULL;
 	renderer = NULL;
-	spriteSheet = NULL;
+	spritesheet = NULL;
 
 	displayedTilesMap = std::make_unique<DisplayedTilesMap>();
 }
@@ -27,8 +27,8 @@ GameWindow::GameWindow(int scale, int wWidth, int wHeight) {
 GameWindow::~GameWindow() {
 	printf("Window destructor called.\n");
 
-	SDL_DestroyTexture(spriteSheet);
-	spriteSheet = NULL;
+	SDL_DestroyTexture(spritesheet);
+	spritesheet = NULL;
 
 	SDL_DestroyWindow(window);
 	window = NULL;
@@ -62,14 +62,14 @@ bool GameWindow::initialize(std::shared_ptr<GameLog> messageLog) {
 
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
-	spriteSheet = IMG_LoadTexture(renderer, "./assets/CGA8x8thin.png");
-	if (spriteSheet == NULL) {
+	spritesheet = IMG_LoadTexture(renderer, "./assets/CGA8x8thin.png");
+	if (spritesheet == NULL) {
 		printf("Couldn't find spritesheet, I guess. Error: %s\n", IMG_GetError());
 		success = false;
 	}
 
 	//UI screens
-	messagesUI = std::make_unique<MessagesUI>(renderer, spriteSheet, messageLog);
+	messagesUI = std::make_unique<MessagesUI>(messageLog);
 
 	return success;
 }
@@ -88,6 +88,7 @@ void GameWindow::renderMap(std::shared_ptr<MapDisplay> map) {
 	MapRenderingData renderingData;
 	renderingData = calculateMapRenderingDimensions(viewports.map, map->getWidth(), map->getHeight(), map->getFocusTile());
 
+	//this just keeps track of what tiles get rendered where
 	displayedTilesMap->clearAndSetDimensions(viewports.map, renderingData, map->getWidth());
 
 	//for SDL_RenderCopy()
@@ -95,7 +96,6 @@ void GameWindow::renderMap(std::shared_ptr<MapDisplay> map) {
 	SDL_Rect dstrect = { 0,0, scaleSize, scaleSize };
 
 	int currentIndex;
-
 
 	for (int x = renderingData.startTile.x; x < renderingData.endTile.x; x++) {
 		for (int y = renderingData.startTile.y; y < renderingData.endTile.y; y++) {
@@ -115,36 +115,32 @@ void GameWindow::renderMap(std::shared_ptr<MapDisplay> map) {
 				continue;
 			}
 
-			srcrect.x = tile->symbol % 16 * 8;
-			srcrect.y = tile->symbol / 16 * 8;
-
-
-			//background
+			//tile background
 			SDL_SetRenderDrawColor(renderer, tile->backColor.r, tile->backColor.g, tile->backColor.b, 255);
-
 			SDL_RenderFillRect(renderer, &dstrect);
 
-			//foreground
+			//tile foreground
 			if (!map->isVisible(currentIndex)) {
-				SDL_SetTextureColorMod(spriteSheet, 100, 100, 100);
+				SDL_SetTextureColorMod(spritesheet, 100, 100, 100);
 			}
 			else {
-				SDL_SetTextureColorMod(spriteSheet, tile->symbolColor.r, tile->symbolColor.g,
+				SDL_SetTextureColorMod(spritesheet, tile->symbolColor.r, tile->symbolColor.g,
 					tile->symbolColor.b);
 			}
 
-			//render
-			SDL_RenderCopy(renderer, spriteSheet, &srcrect, &dstrect);
+			srcrect.x = tile->symbol % 16 * 8;
+			srcrect.y = tile->symbol / 16 * 8;
 
+			SDL_RenderCopy(renderer, spritesheet, &srcrect, &dstrect);
 
-			//focus tile reticle
+			//reticles
 			if (map->hasReticle(currentIndex)) {
 				srcrect.x = ASYM_RETICLE % 16 * 8;
 				srcrect.y = ASYM_RETICLE / 16 * 8;
 
-				SDL_SetTextureColorMod(spriteSheet, 255, 255, 255);
+				SDL_SetTextureColorMod(spritesheet, 255, 255, 255);
 
-				SDL_RenderCopy(renderer, spriteSheet, &srcrect, &dstrect);
+				SDL_RenderCopy(renderer, spritesheet, &srcrect, &dstrect);
 			}
 		}
 	}
@@ -230,7 +226,7 @@ MapRenderingData GameWindow::calculateMapRenderingDimensions(SDL_Rect viewport, 
 
 
 void GameWindow::renderRecentMessages() {
-	messagesUI->render(viewports.messages);
+	messagesUI->render(renderer, spritesheet, viewports.messages);
 
 	resetRendererAndDrawBorder(viewports.messages);
 }
@@ -275,7 +271,7 @@ void GameWindow::resetRendererAndDrawBorder(SDL_Rect& currentViewport) {
 	SDL_RenderDrawRect(renderer, &currentViewport);
 
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-	SDL_SetTextureColorMod(spriteSheet, 255, 255, 255);
+	SDL_SetTextureColorMod(spritesheet, 255, 255, 255);
 }
 
 
@@ -283,11 +279,27 @@ void GameWindow::resetRendererAndDrawBorder(SDL_Rect& currentViewport) {
 void GameWindow::update(std::shared_ptr<MapDisplay> mapDisplay) {
 	SDL_RenderClear(renderer);
 
+	int startTime, mapTime, messagesTime, playerTime, renderingTime;
+	startTime = SDL_GetTicks();
+
 	renderMap(mapDisplay);
+	mapTime = SDL_GetTicks();
+
 	renderRecentMessages();
+	messagesTime = SDL_GetTicks();
+
 	renderPlayerInfo();
+	playerTime = SDL_GetTicks();
 
 	SDL_RenderPresent(renderer);
+	renderingTime = SDL_GetTicks();
+
+	renderingTime -= playerTime;
+	playerTime -= messagesTime;
+	messagesTime -= mapTime;
+	mapTime -= startTime;
+
+	printf("Map: %ims\nMessages: %ims\nPlayer: %ims\nRendering: %ims\n\n", mapTime, messagesTime, playerTime, renderingTime);
 }
 
 

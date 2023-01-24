@@ -1,7 +1,10 @@
 #include "MessagesUI.h"
+#include "../UIHelpers/TextRenderer.h"
 
 
-void MessagesUI::render(SDL_Rect& viewport) {
+void MessagesUI::render(SDL_Renderer* renderer, SDL_Texture* spritesheet, SDL_Rect& viewport) {
+	TextRenderer textRenderer = TextRenderer(renderer, spritesheet);
+
 	SDL_RenderSetViewport(renderer, &viewport);
 
 	if (messageLog->getRecentMessages()->size() == 0) {
@@ -23,7 +26,7 @@ void MessagesUI::render(SDL_Rect& viewport) {
 			break;
 		}
 
-		textRenderer->renderMessage(textSpecs, recentMessages->at(i), destinationRect);
+		textRenderer.renderMessage(textSpecs, recentMessages->at(i), destinationRect);
 	}
 }
 

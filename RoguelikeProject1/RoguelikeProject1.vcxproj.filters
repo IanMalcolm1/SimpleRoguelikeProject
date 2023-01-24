@@ -93,6 +93,9 @@
     <ClCompile Include="src\UIScreens\UIHelpers\TextRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\GraphicsThings\GameText\GameText.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Game.h">
@@ -195,6 +198,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\UIScreens\UIHelpers\TextRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GraphicsThings\GameText\GameText.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

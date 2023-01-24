@@ -12,19 +12,11 @@ private:
 
 	TextRenderingSpecifications textSpecs;
 
-	std::unique_ptr<TextRenderer> textRenderer;
-
-	SDL_Renderer* renderer;
-	SDL_Texture* spritesheet;
-
 public:
-	MessagesUI(SDL_Renderer* renderer, SDL_Texture* spritesheet, std::shared_ptr<GameLog> messageLog,
-		int fontSize = 2) :
-		renderer(renderer), spritesheet(spritesheet), messageLog(messageLog),
-		textSpecs(TextRenderingSpecifications(fontSize)),
-		textRenderer(std::make_unique<TextRenderer>(renderer, spritesheet)) {};
+	MessagesUI(std::shared_ptr<GameLog> messageLog,	int fontSize = 2) :
+		messageLog(messageLog), textSpecs(TextRenderingSpecifications(fontSize)) {};
 
-	void render(SDL_Rect& viewport);
+	void render(SDL_Renderer* renderer,	SDL_Texture* spritesheet, SDL_Rect& viewport);
 
 	void changeScrollOffset(int offset);
 	void modifyFontSize(int modification);

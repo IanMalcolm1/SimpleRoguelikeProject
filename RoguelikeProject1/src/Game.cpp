@@ -44,24 +44,21 @@ bool Game::Initialize() {
 
 void Game::Run() {
 	while (isRunning) {
-		//wasting time between frames
+		millisecsPrevFrame = SDL_GetTicks();
+
+		Update();
+
+		int difference = (SDL_GetTicks() - millisecsPrevFrame);
+		printf("Time: %ims\n", difference);
 		int timeToWait = MILLISECS_PER_FRAME - (SDL_GetTicks() - millisecsPrevFrame);
 		if (timeToWait > 0 && timeToWait <= MILLISECS_PER_FRAME) {
 			SDL_Delay(timeToWait);
 		}
-
-		Update();
-
-		millisecsPrevFrame = SDL_GetTicks();
 	}
 }
 
 
 void Game::Update() {
-	//difference in ticks from last frame converted to seconds
-	double deltaTime = (SDL_GetTicks() - millisecsPrevFrame) / 1000.0f;
-
-
 	gameWindow->update(scene->getMapDisplay());
 
 	isRunning = inputManager->processInput();

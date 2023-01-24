@@ -47,5 +47,3 @@ public:
 
 	TileCoordinates findMapTileFromScreenCoords(int x, int y);
 };
-=======
->>>>>>> parent of ccaf4f0 (Updated SDL version. Save point before I make MapUI class)

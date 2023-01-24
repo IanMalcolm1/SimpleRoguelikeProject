@@ -35,7 +35,7 @@ private:
 
 	SDL_Window* window;
 	SDL_Renderer* renderer;
-	SDL_Texture* spriteSheet;
+	SDL_Texture* spritesheet;
 
 	MapUI mapUI;
 	MessagesUI messagesUI;

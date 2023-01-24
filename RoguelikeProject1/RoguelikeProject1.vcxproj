@@ -71,8 +71,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\dev\SDL\SDL2_image-2.6.2\include;C:\dev\SDL\SDL2-2.24.0\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\dev\SDL\SDL2_image-2.6.2\lib\x64;C:\dev\SDL\SDL2-2.24.0\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\dev\SDL\SDL2_image-2.6.2\include;C:\dev\SDL\SDL2-2.26.2\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\dev\SDL\SDL2_image-2.6.2\lib\x64;C:\dev\SDL\SDL2-2.26.2\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -202,6 +202,10 @@
     <Text Include="game_files\debug_log.txt" />
     <Text Include="game_files\message_log.txt" />
     <Text Include="plans.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SDL2.dll" />
+    <None Include="SDL2_image.dll" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

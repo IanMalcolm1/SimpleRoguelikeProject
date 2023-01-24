@@ -57,15 +57,7 @@ void Game::Run() {
 
 
 void Game::Update() {
-<<<<<<< HEAD
 	gameWindow->update();
-=======
-	//difference in ticks from last frame converted to seconds
-	double deltaTime = (SDL_GetTicks() - millisecsPrevFrame) / 1000.0f;
-
-
-	gameWindow->update(scene->getMapDisplay());
->>>>>>> parent of ccaf4f0 (Updated SDL version. Save point before I make MapUI class)
 
 	isRunning = inputManager->processInput();
 

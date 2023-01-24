@@ -1,7 +1,6 @@
 #include "MessagesUI.h"
 
 
-<<<<<<< HEAD
 void MessagesUI::initialize(SDL_Renderer* renderer, SDL_Texture* spritesheet) {
 	this->renderer = renderer;
 	this->spritesheet = spritesheet;
@@ -10,8 +9,6 @@ void MessagesUI::initialize(SDL_Renderer* renderer, SDL_Texture* spritesheet) {
 }
 
 
-=======
->>>>>>> parent of ccaf4f0 (Updated SDL version. Save point before I make MapUI class)
 void MessagesUI::render(SDL_Rect& viewport) {
 	SDL_RenderSetViewport(renderer, &viewport);
 
@@ -34,7 +31,7 @@ void MessagesUI::render(SDL_Rect& viewport) {
 			break;
 		}
 
-		textRenderer->renderMessage(textSpecs, recentMessages->at(i), destinationRect);
+		textRenderer.renderMessage(textSpecs, recentMessages->at(i), destinationRect);
 	}
 }
 

@@ -18,20 +18,14 @@ GameWindow::GameWindow(std::shared_ptr<LocalMap> map, std::shared_ptr<GameLog> l
 
 	window = NULL;
 	renderer = NULL;
-<<<<<<< HEAD
 	spritesheet = NULL;
-=======
-	spriteSheet = NULL;
-
-	displayedTilesMap = std::make_unique<DisplayedTilesMap>();
->>>>>>> parent of ccaf4f0 (Updated SDL version. Save point before I make MapUI class)
 }
 
 GameWindow::~GameWindow() {
 	printf("Window destructor called.\n");
 
-	SDL_DestroyTexture(spriteSheet);
-	spriteSheet = NULL;
+	SDL_DestroyTexture(spritesheet);
+	spritesheet = NULL;
 
 	SDL_DestroyWindow(window);
 	window = NULL;
@@ -65,19 +59,15 @@ bool GameWindow::initialize() {
 
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
-	spriteSheet = IMG_LoadTexture(renderer, "./assets/CGA8x8thin.png");
-	if (spriteSheet == NULL) {
+	spritesheet = IMG_LoadTexture(renderer, "./assets/CGA8x8thin.png");
+	if (spritesheet == NULL) {
 		printf("Couldn't find spritesheet, I guess. Error: %s\n", IMG_GetError());
 		success = false;
 	}
 
 	//UI screens
-<<<<<<< HEAD
 	messagesUI.initialize(renderer, spritesheet);
 	mapUI.initialize(renderer, spritesheet);
-=======
-	messagesUI = std::make_unique<MessagesUI>(renderer, spriteSheet, messageLog);
->>>>>>> parent of ccaf4f0 (Updated SDL version. Save point before I make MapUI class)
 
 	return success;
 }
@@ -86,91 +76,14 @@ bool GameWindow::initialize() {
 GameWindowState GameWindow::getState() { return state; }
 void GameWindow::setState(GameWindowState state) { this->state = state; }
 
-<<<<<<< HEAD
 void GameWindow::renderMap() {
 	mapUI.render(viewports.map);
-=======
-
-void GameWindow::renderMap(std::shared_ptr<MapDisplay> map) {
-	SDL_RenderSetViewport(renderer, &viewports.map);
-
-	//number of pixels to one side of a tile
-	int scaleSize = mapScale * 8;
-
-	MapRenderingData renderingData;
-	renderingData = calculateMapRenderingDimensions(viewports.map, map->getWidth(), map->getHeight(), map->getFocusTile());
-
-	displayedTilesMap->clearAndSetDimensions(viewports.map, renderingData, map->getWidth());
-
-	//for SDL_RenderCopy()
-	SDL_Rect srcrect = { 0,0,8,8 };
-	SDL_Rect dstrect = { 0,0, scaleSize, scaleSize };
-
-	int currentIndex;
-
-
-	for (int x = renderingData.startTile.x; x < renderingData.endTile.x; x++) {
-		for (int y = renderingData.startTile.y; y < renderingData.endTile.y; y++) {
-			currentIndex = y * map->getWidth() + x;
-			TileDisplay* tile = map->getDisplay(currentIndex);
-
-			dstrect.x = renderingData.pixelOffsetX + x * scaleSize;
-			dstrect.y = renderingData.pixelOffsetY + y * scaleSize;
-
-			//keep track of where tile is being displayed
-			displayedTilesMap->pushTile(&dstrect);
-
-			//unseen tiles are rendered black
-			if ( !map->hasBeenSeen(currentIndex)) {
-				SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-				SDL_RenderFillRect(renderer, &dstrect);
-				continue;
-			}
-
-			srcrect.x = tile->symbol % 16 * 8;
-			srcrect.y = tile->symbol / 16 * 8;
-
-
-			//background
-			SDL_SetRenderDrawColor(renderer, tile->backColor.r, tile->backColor.g, tile->backColor.b, 255);
-
-			SDL_RenderFillRect(renderer, &dstrect);
-
-			//foreground
-			if (!map->isVisible(currentIndex)) {
-				SDL_SetTextureColorMod(spriteSheet, 100, 100, 100);
-			}
-			else {
-				SDL_SetTextureColorMod(spriteSheet, tile->symbolColor.r, tile->symbolColor.g,
-					tile->symbolColor.b);
-			}
-
-			//render
-			SDL_RenderCopy(renderer, spriteSheet, &srcrect, &dstrect);
-
-
-			//focus tile reticle
-			if (map->hasReticle(currentIndex)) {
-				srcrect.x = ASYM_RETICLE % 16 * 8;
-				srcrect.y = ASYM_RETICLE / 16 * 8;
-
-				SDL_SetTextureColorMod(spriteSheet, 255, 255, 255);
-
-				SDL_RenderCopy(renderer, spriteSheet, &srcrect, &dstrect);
-			}
-		}
-	}
->>>>>>> parent of ccaf4f0 (Updated SDL version. Save point before I make MapUI class)
 
 	resetRendererAndDrawBorder(viewports.map);
 }
 
 void GameWindow::renderRecentMessages() {
-<<<<<<< HEAD
 	messagesUI.render(viewports.messages);
-=======
-	messagesUI->render(viewports.messages);
->>>>>>> parent of ccaf4f0 (Updated SDL version. Save point before I make MapUI class)
 
 	resetRendererAndDrawBorder(viewports.messages);
 }
@@ -215,7 +128,7 @@ void GameWindow::resetRendererAndDrawBorder(SDL_Rect& currentViewport) {
 	SDL_RenderDrawRect(renderer, &currentViewport);
 
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-	SDL_SetTextureColorMod(spriteSheet, 255, 255, 255);
+	SDL_SetTextureColorMod(spritesheet, 255, 255, 255);
 }
 
 
@@ -223,20 +136,25 @@ void GameWindow::resetRendererAndDrawBorder(SDL_Rect& currentViewport) {
 void GameWindow::update() {
 	SDL_RenderClear(renderer);
 
-<<<<<<< HEAD
 	int startTime, mapTime, messagesTime, playerTime, renderingTime;
 	startTime = SDL_GetTicks();
 
 	renderMap();
 	mapTime = SDL_GetTicks();
 
-=======
-	renderMap(mapDisplay);
->>>>>>> parent of ccaf4f0 (Updated SDL version. Save point before I make MapUI class)
 	renderRecentMessages();
+	messagesTime = SDL_GetTicks();
+
 	renderPlayerInfo();
+	playerTime = SDL_GetTicks();
 
 	SDL_RenderPresent(renderer);
+	renderingTime = SDL_GetTicks();
+
+	renderingTime -= playerTime;
+	playerTime -= messagesTime;
+	messagesTime -= mapTime;
+	mapTime -= startTime;
 }
 
 void GameWindow::processMouseScroll(int x, int y, int scrollOffset) {

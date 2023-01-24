@@ -24,9 +24,6 @@
     <ClCompile Include="src\Interface\GameWindow\GameWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Interface\DisplayInformation\DisplayedTilesMap.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Interface\InputManager\InputManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -93,9 +90,6 @@
     <ClCompile Include="src\UIScreens\UIHelpers\TextRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GraphicsThings\GameText\GameText.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Game.h">
@@ -105,9 +99,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Components\Renderable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Interface\DisplayInformation\DisplayedTilesMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Interface\InputManager\InputManager.h">
@@ -198,9 +189,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\UIScreens\UIHelpers\TextRenderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GraphicsThings\GameText\GameText.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -43,6 +43,8 @@ bool InputManager::processInput() {
 
 	int x, y;
 	SDL_GetMouseState(&x, &y);
+
+	scene->setMouseTile(gameWindow->processMouseLocation(x, y));
 	
 
 	while (SDL_PollEvent(&sdlEvent)) {
@@ -67,8 +69,6 @@ bool InputManager::processInput() {
 			break;
 		}
 	}
-
-	scene->setMouseTile(gameWindow->findMapTileFromScreenCoordinates(x, y));
 
 	return returner;
 }

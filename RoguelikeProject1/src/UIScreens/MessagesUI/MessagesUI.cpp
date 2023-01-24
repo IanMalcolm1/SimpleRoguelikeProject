@@ -1,10 +1,18 @@
 #include "MessagesUI.h"
-#include "../UIHelpers/TextRenderer.h"
 
 
-void MessagesUI::render(SDL_Renderer* renderer, SDL_Texture* spritesheet, SDL_Rect& viewport) {
-	TextRenderer textRenderer = TextRenderer(renderer, spritesheet);
+<<<<<<< HEAD
+void MessagesUI::initialize(SDL_Renderer* renderer, SDL_Texture* spritesheet) {
+	this->renderer = renderer;
+	this->spritesheet = spritesheet;
 
+	textRenderer.initialize(renderer, spritesheet);
+}
+
+
+=======
+>>>>>>> parent of ccaf4f0 (Updated SDL version. Save point before I make MapUI class)
+void MessagesUI::render(SDL_Rect& viewport) {
 	SDL_RenderSetViewport(renderer, &viewport);
 
 	if (messageLog->getRecentMessages()->size() == 0) {
@@ -26,7 +34,7 @@ void MessagesUI::render(SDL_Renderer* renderer, SDL_Texture* spritesheet, SDL_Re
 			break;
 		}
 
-		textRenderer.renderMessage(textSpecs, recentMessages->at(i), destinationRect);
+		textRenderer->renderMessage(textSpecs, recentMessages->at(i), destinationRect);
 	}
 }
 

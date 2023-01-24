@@ -19,10 +19,9 @@ Game::Game() {
 	messageLog->sendMessage("</purple:Message 7/>");
 	messageLog->sendMessage("</gold:The golden message/>");
 
-	gameWindow = std::make_shared<GameWindow>();
-
-	//temporary
 	scene = std::make_shared<Scene>();
+
+	gameWindow = std::make_shared<GameWindow>(scene->getMap(), messageLog);
 
 	inputManager = std::make_unique<InputManager>(gameWindow, scene);
 
@@ -37,29 +36,36 @@ bool Game::Initialize() {
 	isRunning = true;
 	bool success;
 
-	success = gameWindow->initialize(messageLog);
+	success = gameWindow->initialize();
 
 	return success;
 }
 
 void Game::Run() {
 	while (isRunning) {
-		millisecsPrevFrame = SDL_GetTicks();
-
-		Update();
-
-		int difference = (SDL_GetTicks() - millisecsPrevFrame);
-		printf("Time: %ims\n", difference);
+		//wasting time between frames
 		int timeToWait = MILLISECS_PER_FRAME - (SDL_GetTicks() - millisecsPrevFrame);
 		if (timeToWait > 0 && timeToWait <= MILLISECS_PER_FRAME) {
 			SDL_Delay(timeToWait);
 		}
+
+		Update();
+
+		millisecsPrevFrame = SDL_GetTicks();
 	}
 }
 
 
 void Game::Update() {
+<<<<<<< HEAD
+	gameWindow->update();
+=======
+	//difference in ticks from last frame converted to seconds
+	double deltaTime = (SDL_GetTicks() - millisecsPrevFrame) / 1000.0f;
+
+
 	gameWindow->update(scene->getMapDisplay());
+>>>>>>> parent of ccaf4f0 (Updated SDL version. Save point before I make MapUI class)
 
 	isRunning = inputManager->processInput();
 

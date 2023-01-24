@@ -2,7 +2,6 @@
 #define INPUTMANAGER_H
 
 #include "../GameWindow/GameWindow.h"
-#include "../DisplayInformation/DisplayedTilesMap.h"
 #include "../../Enums/PlayerCommands.h"
 #include "../../Scene/Scene.h"
 #include <unordered_map>

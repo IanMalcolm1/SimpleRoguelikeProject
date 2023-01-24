@@ -1,6 +1,13 @@
 #include "TextRenderer.h"
 #include "../../Enums/AsciiSymbols.h"
 
+
+void TextRenderer::initialize(SDL_Renderer* renderer, SDL_Texture* spritesheet) {
+	this->renderer = renderer;
+	this->spritesheet = spritesheet;
+}
+
+
 std::pair<std::string, int> TextRenderer::makeFormattedMessage(int maxLettersPerLine, std::string message) {
 	int lines = 1;
 	int index = maxLettersPerLine - 1;
@@ -82,8 +89,8 @@ void TextRenderer::renderMessage(TextRenderingSpecifications specs, GameText mes
 
 		currentColor = message.getColorAtIndex(unformattedIndex);
 
-		SDL_SetTextureColorMod(spriteSheet, currentColor.r, currentColor.g, currentColor.b);
-		SDL_RenderCopy(renderer, spriteSheet, &sourceRect, &destinationRect);
+		SDL_SetTextureColorMod(spritesheet, currentColor.r, currentColor.g, currentColor.b);
+		SDL_RenderCopy(renderer, spritesheet, &sourceRect, &destinationRect);
 
 		destinationRect.x += specs.fontSizePixels;
 

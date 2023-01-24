@@ -10,6 +10,7 @@ struct MapDisplayTile {
 	bool isVisible;
 	bool hasBeenSeen;
 	bool hasReticle;
+	bool dirty;
 };
 
 
@@ -35,7 +36,6 @@ public:
 	TileCoordinates getFocusTile();
 	void setFocusTile(TileCoordinates tile);
 
-	//returns whether the tile at the given coordinates is visible to the player
 	bool isVisible(int index);
 	bool hasBeenSeen(int index);
 	bool hasReticle(int index);
@@ -43,4 +43,7 @@ public:
 	void setVisibility(int index, bool value);
 	void setSeen(int index, bool value);
 	void setHasReticle(int index, bool value);
+
+	bool isDirty(int index);
+	inline void setDirty(int index, bool value) { tiles[index].dirty = value; }
 };

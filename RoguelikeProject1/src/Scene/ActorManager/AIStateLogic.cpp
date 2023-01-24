@@ -47,7 +47,9 @@ int ActorManager::testerLogic(Actor* actor) {
 
 	Pathfinding::bresenhamLine(actor->getLocation(), visibleTiles->at(newTileIndex), map.get(), actor->getCurrentRoute());
 
-	moveActor(actor, currentRoute->getNextTile());
+	if (currentRoute->hasNextTile()) {
+		moveActor(actor, currentRoute->getNextTile());
+	}
 
 	return actor->getStats()->baseMoveSpeed;
 }

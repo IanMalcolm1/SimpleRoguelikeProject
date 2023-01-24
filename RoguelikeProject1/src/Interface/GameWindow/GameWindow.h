@@ -4,10 +4,10 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include "../../Topography/LocalMap/LocalMap.h"
-#include "../DisplayInformation/DisplayedTilesMap.h"
 #include "../../GameLog/GameLog.h"
 #include "../../DebugLogger/DebugLogger.h"
 #include "../../UIScreens/MessagesUI/MessagesUI.h"
+#include "../../UIScreens/MapUI/MapUI.h"
 
 
 enum GameWindowState {
@@ -33,44 +33,36 @@ private:
 	SDL_Rect screenDimensions;
 	MapViewports viewports;
 
-	int mapScale;
-
 	SDL_Window* window;
 	SDL_Renderer* renderer;
-	SDL_Texture* spritesheet;
+	SDL_Texture* spriteSheet;
 
-	std::unique_ptr<DisplayedTilesMap> displayedTilesMap;
-	std::unique_ptr<MessagesUI> messagesUI;
+	MapUI mapUI;
+	MessagesUI messagesUI;
 
 
-	void renderMap(std::shared_ptr<MapDisplay> mapDisplay);
-	MapRenderingData calculateMapRenderingDimensions(SDL_Rect viewport, int mapWidthTiles, int mapHeightTiles, TileCoordinates focusTile);
-
+	void renderMap();
 	void renderRecentMessages();
-
 	void renderPlayerInfo();
 
 	void updateMapViewports();
 	void resetRendererAndDrawBorder(SDL_Rect& currentViewport);
 
-	void changeMapScale(int offset);
-
 public:
-	GameWindow(int scale = 10, int windowWidth = 1600, int windowHeight = 1200);
+	GameWindow(std::shared_ptr<LocalMap> map, std::shared_ptr<GameLog> log,
+		int windowWidth = 1600, int windowHeight = 1200);
 	~GameWindow();
 
 	GameWindowState getState();
 	void setState(GameWindowState state);
 
-	bool initialize(std::shared_ptr<GameLog> messageLog);
-	void update(std::shared_ptr<MapDisplay> mapDisplay);
+	bool initialize();
+	void update();
 
 	void processMouseScroll(int x, int y, int scrollOffset);
 	void updateWindowDimensions(int width, int height);
 
-	inline TileCoordinates findMapTileFromScreenCoordinates(int x, int y) {
-		return displayedTilesMap->findTileFromScreenCoordinates(x, y);
-	}
+	TileCoordinates processMouseLocation(int x, int y);
 };
 
 #endif

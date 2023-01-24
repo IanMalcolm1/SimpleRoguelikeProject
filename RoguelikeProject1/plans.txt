@@ -1,33 +1,22 @@
 _____________________________________________________________________________________________
 TODOS:
 Current:
+Message log scrolling
+Fix bresenham line implementation
+
+Near:
 Make system for different UI screens. (Each one has an input processing function and a rendering
 function. Will be owned by both the game screen and the classes they represent.)
-Improve rendering performance
-
-RENDERING PERFORMANCE PLAN:
-Render to a texture that contains the entire map before rendering a portion of this texture to
-the screen. Will remove need to redraw the entire visible screen when player isn't moving. This
-should help when the map isn't moving (aka when the view is super zoomed out, or the player's in
-a corner).
-Will need a system to make tiles dirty/not dirty to reduce number of updates to the overarching
-texture. Every time the mapDisplay is told to edit a tile's display, it should mark that tile as
-dirty. When the UI walks through the visible tiles it will only update each tile if it's dirty.
-When it updates a tile on the overarching texture, it will unflag its dirty bit.
-
-UI PLAN:
-UI's will do rendering and initial input processing (because they will hold the relevant info for
-mouse support). They will hold pointers to the classes they represent and read from them/update them
-as necessary.
 
 Next:
 Decide whether to kill the Scene class, or make the current ActorManager class the scene class.
-Also maybe put AI stuff within actors? Will lead to cyclic dependencies, but maybe that's not
-such a bad thing? Would certainly help to declutter the ActorManager class.
+Also maybe put AI stuff within actors... Will lead to cyclic dependencies, but maybe that's not
+such a bad thing???
 
 Later:
 Remove all (or most) printf statements
-Show player info character
+Start implementing an EC model
+Add player character
 Add basic creatures
 Better generation
 

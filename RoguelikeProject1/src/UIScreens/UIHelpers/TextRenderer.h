@@ -26,13 +26,14 @@ struct TextRenderingSpecifications {
 class TextRenderer {
 private:
 	SDL_Renderer* renderer;
-	SDL_Texture* spriteSheet;
+	SDL_Texture* spritesheet;
 
 	std::pair<std::string, int> makeFormattedMessage(int maxLettersPerLine, std::string message);
 
 public:
-	TextRenderer(SDL_Renderer* renderer, SDL_Texture* spriteSheet) : renderer(renderer),
-		spriteSheet(spriteSheet) {};
+	TextRenderer() : renderer(NULL), spritesheet(NULL) {};
+
+	void initialize(SDL_Renderer* renderer, SDL_Texture* spriteSheet);
 
 	void renderMessage(TextRenderingSpecifications specs, GameText message, SDL_Rect& destinationRect);
 };

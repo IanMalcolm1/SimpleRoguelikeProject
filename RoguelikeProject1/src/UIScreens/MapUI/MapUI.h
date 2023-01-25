@@ -34,6 +34,8 @@ private:
 	void calcDataForAxis(SDL_Rect& viewport, char axis);
 
 	void renderTile(int index, SDL_Rect dstrect);
+	//Uses SDL_RenderCopy() rather than normal SDL_RenderFillRect which is incredibly slow
+	void fillRectImproved(SDL_Rect& destination, MyColor color);
 
 public:
 	MapUI(std::shared_ptr<LocalMap> map) : map(map), renderer(NULL), spritesheet(NULL),

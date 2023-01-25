@@ -1,23 +1,13 @@
 _____________________________________________________________________________________________
 TODOS:
 Current:
-Message log scrolling
-Fix bresenham line implementation
 
-Near:
-Make system for different UI screens. (Each one has an input processing function and a rendering
-function. Will be owned by both the game screen and the classes they represent.)
-
-Next:
-Decide whether to kill the Scene class, or make the current ActorManager class the scene class.
-Also maybe put AI stuff within actors... Will lead to cyclic dependencies, but maybe that's not
-such a bad thing???
 
 Later:
 Remove all (or most) printf statements
 Start implementing an EC model
-Add player character
-Add basic creatures
+Add player character screen
+Add better creatures
 Better generation
 
 Eventually:

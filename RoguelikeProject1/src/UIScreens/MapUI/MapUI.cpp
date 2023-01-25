@@ -172,8 +172,7 @@ void MapUI::renderTile(int index, SDL_Rect dstrect) {
 	}
 
 	//tile background
-	SDL_SetRenderDrawColor(renderer, tile->backColor.r, tile->backColor.g, tile->backColor.b, 255);
-	SDL_RenderFillRect(renderer, &dstrect);
+	fillRectImproved(dstrect, tile->backColor);
 
 	//tile foreground
 	if (!mapDisplay->isVisible(index)) {
@@ -194,10 +193,18 @@ void MapUI::renderTile(int index, SDL_Rect dstrect) {
 		srcrect.x = ASYM_RETICLE % 16 * 8;
 		srcrect.y = ASYM_RETICLE / 16 * 8;
 
-		SDL_SetTextureColorMod(spritesheet, 255, 255, 255);
+		//SDL_SetTextureColorMod(spritesheet, 255, 255, 255);
 
 		SDL_RenderCopy(renderer, spritesheet, &srcrect, &dstrect);
 	}
+}
+
+
+void MapUI::fillRectImproved(SDL_Rect& destination, MyColor color) {
+	SDL_Rect sourcePixel = {88, 104, 1, 1}; //this is just a random pixel from the spritesheet
+
+	SDL_SetTextureColorMod(spritesheet, color.r, color.g, color.b);
+	SDL_RenderCopy(renderer, spritesheet, &sourcePixel, &destination);
 }
 
 

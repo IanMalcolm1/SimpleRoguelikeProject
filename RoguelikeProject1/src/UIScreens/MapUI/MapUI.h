@@ -31,6 +31,7 @@ private:
 	SDL_Texture* spritesheet;
 
 	void calculateMapRenderingData(SDL_Rect& viewport);
+	void calcDataForAxis(SDL_Rect& viewport, char axis);
 
 	void renderTile(int index, SDL_Rect dstrect);
 

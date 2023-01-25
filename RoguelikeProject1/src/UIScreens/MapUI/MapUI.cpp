@@ -21,8 +21,8 @@ void MapUI::render(SDL_Rect& viewport) {
 
 	int index;
 
-	for (int x = rData.startTile.x; x < rData.endTile.x; x++) {
-		for (int y = rData.startTile.y; y < rData.endTile.y; y++) {
+	for (int x = rData.startTile.x; x <= rData.endTile.x; x++) {
+		for (int y = rData.startTile.y; y <= rData.endTile.y; y++) {
 			index = y * mapDisplay->getWidth() + x;
 
 			if (mapDisplay->isDirty(index)) {
@@ -33,16 +33,32 @@ void MapUI::render(SDL_Rect& viewport) {
 		}
 	}
 
+	
 
 	SDL_SetRenderTarget(renderer, NULL);
 
 	SDL_RenderSetViewport(renderer, &viewport);
 
 	SDL_RenderCopy(renderer, mapTexture, &rData.srcRect, &rData.dstRect);
+
+	//temporary
+	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+	SDL_RenderDrawRect(renderer, &rData.dstRect);
 }
 
 
 void MapUI::calculateMapRenderingData(SDL_Rect& viewport) {
+	calcDataForAxis(viewport, 'x');
+	calcDataForAxis(viewport, 'y');
+
+	rData.srcRect.x = rData.startTile.x * 8;
+	rData.srcRect.y = rData.startTile.y * 8;
+	rData.srcRect.w = (1 + rData.endTile.x - rData.startTile.x) * 8;
+	rData.srcRect.h = (1 + rData.endTile.y - rData.startTile.y) * 8;
+}
+
+
+void MapUI::calcDataForAxis(SDL_Rect& viewport, char axis) {
 	/*
 	Intent:
 	The below algorithm ensures we see as many tiles as possible given the scale of the
@@ -50,78 +66,96 @@ void MapUI::calculateMapRenderingData(SDL_Rect& viewport) {
 	'camera' on the focused tile if that tile is too close to one edge and doing so would
 	create empty space. Of course, if the map display would be smaller than the window's
 	dimensions (aka, when we're really zoomed out), we can't really avoid empty space and
-	just center the map.
+	just center the map in its viewport.
+	Also trying for perfect pixel scaling, which is part of why there are so many heuristics.
 	*/
 
-	TileCoordinates focusTile = mapDisplay->getFocusTile();
+	const int scaleSize = rData.scaleSize;
+	const int mapWidthTiles = map->getWidth();
+	const int mapHeightTiles = map->getHeight();
+	const int mapWidthPixels = mapWidthTiles * scaleSize;
+	const int mapHeightPixels = mapHeightTiles * scaleSize;
 
-	int mapWidthTiles = map->getWidth();
-	int mapHeightTiles = map->getHeight();
+	int viewportLength;
+	int focusTileCoord;
 
-	int mapWidthPixels = mapWidthTiles * rData.scaleSize;
-	int mapHeightPixels = mapHeightTiles * rData.scaleSize;
+	int* destinationStart;
+	int* destinationLength;
+	int16_t* startTileCoord;
+	int16_t* endTileCoord;
 
-	//x-axis
-	if (mapWidthPixels <= viewport.w) {
-		rData.dstRect.x = (viewport.w - mapWidthPixels) / 2;
-		rData.startTile.x = 0;
-		rData.endTile.x = mapWidthTiles;
-	}
-	else if (rData.scaleSize * (mapWidthTiles - focusTile.x) < (viewport.w / 2)) {
-		rData.dstRect.x = viewport.w - mapWidthPixels;
-		rData.startTile.x = -rData.dstRect.x / rData.scaleSize;
-		rData.endTile.x = mapWidthTiles;
-	}
-	else if (rData.scaleSize * focusTile.x > (viewport.w / 2)) {
-		rData.dstRect.x = ((viewport.w - rData.scaleSize) / 2) - (rData.scaleSize * focusTile.x);
-		rData.startTile.x = -rData.dstRect.x / rData.scaleSize;
-		rData.endTile.x = (-rData.dstRect.x + viewport.w) / rData.scaleSize;
-		if (rData.endTile.x < mapWidthTiles && (-rData.dstRect.x + viewport.w) % rData.scaleSize > 0) {
-			rData.endTile.x++;
-		}
+	if (axis == 'x') {
+		viewportLength = viewport.w;
+		focusTileCoord = mapDisplay->getFocusTile().x;
+
+		destinationStart = &rData.dstRect.x;
+		destinationLength = &rData.dstRect.w;
+
+		startTileCoord = &rData.startTile.x;
+		endTileCoord = &rData.endTile.x;
 	}
 	else {
-		rData.startTile.x = 0;
-		rData.endTile.x = (-rData.dstRect.x + viewport.w) / rData.scaleSize;
-		if (rData.endTile.x < mapWidthTiles && (-rData.dstRect.x + viewport.w) % rData.scaleSize > 0) {
-			rData.endTile.x++;
-		}
+		viewportLength = viewport.h;
+		focusTileCoord = mapDisplay->getFocusTile().y;
+
+		destinationStart = &rData.dstRect.y;
+		destinationLength = &rData.dstRect.h;
+
+		startTileCoord = &rData.startTile.y;
+		endTileCoord = &rData.endTile.y;
 	}
 
-	//y-axis
-	if (mapHeightPixels < viewport.h) {
-		rData.dstRect.y = (viewport.h - mapHeightPixels) / 2;
-		rData.endTile.y = mapHeightTiles;
-		rData.startTile.y = 0;
+
+	if (mapHeightPixels < viewportLength) {
+		(*destinationStart) = (viewportLength - mapHeightPixels) / 2;
+		(*endTileCoord) = mapHeightTiles;
+		(*startTileCoord) = 0;
+
+		(*destinationLength) = mapHeightTiles * scaleSize;
 	}
-	else if (rData.scaleSize * (mapHeightTiles - focusTile.y) < (viewport.h / 2)) {
-		rData.dstRect.y = viewport.h - mapHeightPixels;
-		rData.startTile.y = -rData.dstRect.y / rData.scaleSize;
-		rData.endTile.y = mapHeightTiles;
+
+	else if (-scaleSize/2 + scaleSize * (mapHeightTiles - focusTileCoord) < (viewportLength / 2)) {
+		(*endTileCoord) = mapHeightTiles;
+
+		if (viewportLength % scaleSize == 0) { (*destinationStart) = 0; }
+		else { (*destinationStart) = (viewportLength % scaleSize) - scaleSize; }
+
+		(*destinationLength) = viewportLength - (*destinationStart);
+		(*startTileCoord) = mapHeightTiles - (*destinationLength) / scaleSize;
 	}
-	else if (rData.scaleSize * focusTile.y > (viewport.h / 2)) {
-		rData.dstRect.y = ((viewport.h - rData.scaleSize) / 2) - (rData.scaleSize * focusTile.y);
-		rData.startTile.y = -rData.dstRect.y / rData.scaleSize;
-		rData.endTile.y = (-rData.dstRect.y + viewport.h) / rData.scaleSize;
-		if (rData.endTile.y < mapHeightTiles && (-rData.dstRect.y + viewport.h) % rData.scaleSize > 0) {
-			rData.endTile.y++;
+
+	else if ((scaleSize * focusTileCoord + scaleSize/2) < (viewportLength / 2)) {
+		(*destinationStart) = 0;
+		(*startTileCoord) = 0;
+
+		if (viewportLength && scaleSize == 0) {
+			(*endTileCoord) = viewportLength / scaleSize;
 		}
+		else {
+			(*endTileCoord) = viewportLength / scaleSize + 1;
+		}
+
+		(*destinationLength) = (*endTileCoord) * scaleSize + scaleSize;
 	}
+
 	else {
-		rData.startTile.y = 0;
-		rData.endTile.y = (-rData.dstRect.y + viewport.h) / rData.scaleSize;
-		if (rData.endTile.y < mapHeightTiles && (-rData.dstRect.y + viewport.h) % rData.scaleSize > 0) {
-			rData.endTile.y++;
+		int portionBehindFocusTile = viewportLength / 2 - scaleSize / 2;
+		int tilesBeyondFocusTile;
+		if (portionBehindFocusTile % scaleSize == 0) {
+			tilesBeyondFocusTile = portionBehindFocusTile / scaleSize;
+			(*startTileCoord) = focusTileCoord - tilesBeyondFocusTile;
 		}
+		else {
+			int roundOff = (scaleSize - portionBehindFocusTile % scaleSize);
+			tilesBeyondFocusTile = (portionBehindFocusTile + roundOff) / scaleSize;
+			(*startTileCoord) = focusTileCoord - tilesBeyondFocusTile;
+		}
+
+		(*endTileCoord) = focusTileCoord + tilesBeyondFocusTile;
+
+		(*destinationStart) = (viewportLength/2) - (scaleSize/2 + tilesBeyondFocusTile*scaleSize);
+		(*destinationLength) = (1 + (*endTileCoord) - (*startTileCoord)) * scaleSize;
 	}
-
-	rData.srcRect.x = rData.startTile.x % mapWidthTiles;
-	rData.srcRect.y = rData.startTile.y / mapWidthTiles;
-	rData.srcRect.w = (rData.endTile.x - rData.startTile.x) * 8;
-	rData.srcRect.h = (rData.endTile.y - rData.startTile.y) * 8;
-
-	rData.dstRect.w = (rData.endTile.x - rData.startTile.x) * rData.scaleSize;
-	rData.dstRect.h = (rData.endTile.y - rData.startTile.y) * rData.scaleSize;
 }
 
 

@@ -155,6 +155,8 @@ void GameWindow::update() {
 	playerTime -= messagesTime;
 	messagesTime -= mapTime;
 	mapTime -= startTime;
+
+	printf("Map: %i\nMessages: %i\nPlayer: %i\nRendering: %i\n", mapTime, messagesTime, playerTime, renderingTime);
 }
 
 void GameWindow::processMouseScroll(int x, int y, int scrollOffset) {

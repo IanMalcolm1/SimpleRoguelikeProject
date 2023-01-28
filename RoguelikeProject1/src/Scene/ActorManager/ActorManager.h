@@ -6,7 +6,6 @@
 #include <SDL_stdinc.h>
 
 
-//TODO: Make array of logic function pointers, update runLogic to use them
 struct ActorManager {
 private:
 	std::shared_ptr<LocalMap> map;

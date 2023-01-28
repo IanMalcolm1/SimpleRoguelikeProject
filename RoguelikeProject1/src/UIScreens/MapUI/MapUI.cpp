@@ -33,8 +33,6 @@ void MapUI::render(SDL_Rect& viewport) {
 		}
 	}
 
-	
-
 	SDL_SetRenderTarget(renderer, NULL);
 
 	SDL_RenderSetViewport(renderer, &viewport);
@@ -162,27 +160,30 @@ void MapUI::renderTile(int index, SDL_Rect dstrect) {
 
 	//unseen tiles are rendered black
 	if (!mapDisplay->hasBeenSeen(index)) {
-		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-		SDL_RenderFillRect(renderer, &dstrect);
-		return;
+		fillRectImproved(dstrect, { 0,0,0 });
+	}
+
+	//remembered but not visible tiles are faded
+	if (!mapDisplay->isVisible(index)) {
+		fillRectImproved(dstrect, { 0,0,0 });
+		SDL_SetTextureAlphaMod(spritesheet, 64);
+	}
+	else {
+		SDL_SetTextureAlphaMod(spritesheet, 255);
 	}
 
 	//tile background
 	fillRectImproved(dstrect, tile->backColor);
 
 	//tile foreground
-	if (!mapDisplay->isVisible(index)) {
-		SDL_SetTextureColorMod(spritesheet, 100, 100, 100);
-	}
-	else {
-		SDL_SetTextureColorMod(spritesheet, tile->symbolColor.r, tile->symbolColor.g,
-			tile->symbolColor.b);
-	}
+	SDL_SetTextureColorMod(spritesheet, tile->symbolColor.r, tile->symbolColor.g, tile->symbolColor.b);
 
 	srcrect.x = tile->symbol % 16 * 8;
 	srcrect.y = tile->symbol / 16 * 8;
-
 	SDL_RenderCopy(renderer, spritesheet, &srcrect, &dstrect);
+
+	//reset opacity
+	SDL_SetTextureAlphaMod(spritesheet, 255);
 
 	//reticles
 	if (mapDisplay->hasReticle(index)) {

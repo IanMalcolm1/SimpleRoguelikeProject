@@ -40,10 +40,6 @@ void MapUI::render(SDL_Rect& viewport) {
 	SDL_RenderSetViewport(renderer, &viewport);
 
 	SDL_RenderCopy(renderer, mapTexture, &rData.srcRect, &rData.dstRect);
-
-	//temporary
-	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-	SDL_RenderDrawRect(renderer, &rData.dstRect);
 }
 
 
@@ -193,7 +189,7 @@ void MapUI::renderTile(int index, SDL_Rect dstrect) {
 		srcrect.x = ASYM_RETICLE % 16 * 8;
 		srcrect.y = ASYM_RETICLE / 16 * 8;
 
-		//SDL_SetTextureColorMod(spritesheet, 255, 255, 255);
+		SDL_SetTextureColorMod(spritesheet, 255, 255, 255);
 
 		SDL_RenderCopy(renderer, spritesheet, &srcrect, &dstrect);
 	}
@@ -216,24 +212,27 @@ void MapUI::changeScale(int offset) {
 	rData.scaleSize = rData.scale * 8;
 }
 
-//TODO
+
 TileCoordinates MapUI::findMapTileFromScreenCoords(int x, int y) {
-	TileCoordinates returnCoords = TileCoordinates(-1, -1);
+	TileCoordinates returnCoords = { -1,-1 };
 
 	SDL_Point point = { x,y };
-	if (SDL_PointInRect(&point, &rData.dstRect)) {
+	if (!SDL_PointInRect(&point, &rData.dstRect)) {
 		return returnCoords;
 	}
 
+	x -= rData.dstRect.x;
+	y -= rData.dstRect.y;
+
 	if (x % rData.scaleSize == 0) {
 		returnCoords.x = x / rData.scaleSize;
-		returnCoords.x += rData.startTile.x - 1;
+		returnCoords.x += rData.startTile.x-1;
 	}
 	else {
 		returnCoords.x = x / rData.scaleSize;
 		returnCoords.x += rData.startTile.x;
 	}
-	int tileY = rData.startTile.y + y / rData.scaleSize;
+	returnCoords.y = rData.startTile.y + y / rData.scaleSize;
 
 	return returnCoords;
 }

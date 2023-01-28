@@ -6,12 +6,12 @@ Current:
 Later:
 Remove all (or most) printf statements
 Start implementing an EC model
-Add player character screen
+Add player screen
 Add better creatures
 Better generation
 
 Eventually:
-Figure out if lua helps with storing monster types (which I think it does, so figure out lua)
+Look into lua
 Add viewports for message log and basic character info
 Add openable UI screens
 Add save functionality

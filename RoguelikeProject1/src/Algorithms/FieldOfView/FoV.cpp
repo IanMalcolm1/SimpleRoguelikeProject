@@ -56,7 +56,6 @@ Row::Row(int depth, Slope startSlope, Slope endSlope) {
 	_endSlope = endSlope;
 }
 
-//TODO: figure out why we round...
 void Row::getTilesRange(int& start, int& end) {
 	start = (int)floor(_startSlope.multiply(_depth) + 0.5);
 

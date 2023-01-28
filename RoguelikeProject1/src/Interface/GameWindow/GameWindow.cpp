@@ -133,6 +133,7 @@ void GameWindow::resetRendererAndDrawBorder(SDL_Rect& currentViewport) {
 
 
 
+//TODO: remove tests?
 void GameWindow::update() {
 	SDL_RenderClear(renderer);
 
@@ -156,7 +157,7 @@ void GameWindow::update() {
 	messagesTime -= mapTime;
 	mapTime -= startTime;
 
-	printf("Map: %i\nMessages: %i\nPlayer: %i\nRendering: %i\n", mapTime, messagesTime, playerTime, renderingTime);
+	//printf("Map: %i\nMessages: %i\nPlayer: %i\nRendering: %i\n", mapTime, messagesTime, playerTime, renderingTime);
 }
 
 void GameWindow::processMouseScroll(int x, int y, int scrollOffset) {
@@ -181,6 +182,8 @@ void GameWindow::updateWindowDimensions(int width, int height) {
 TileCoordinates GameWindow::processMouseLocation(int x, int y) {
 	SDL_Point point = { x,y };
 	if (SDL_PointInRect(&point, &viewports.map)) {
+		x -= viewports.map.x;
+		y -= viewports.map.y;
 		return mapUI.findMapTileFromScreenCoords(x,y);
 	}
 

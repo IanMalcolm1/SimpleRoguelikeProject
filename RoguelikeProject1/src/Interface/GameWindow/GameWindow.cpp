@@ -123,17 +123,17 @@ void GameWindow::updateMapViewports() {
 
 void GameWindow::resetRendererAndDrawBorder(SDL_Rect& currentViewport) {
 	SDL_RenderSetViewport(renderer, &screenDimensions);
-
+	
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 	SDL_RenderDrawRect(renderer, &currentViewport);
 
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+	SDL_SetTextureAlphaMod(spritesheet, 255);
 	SDL_SetTextureColorMod(spritesheet, 255, 255, 255);
 }
 
 
-
-//TODO: remove tests?
+//TODO: remove tests
 void GameWindow::update() {
 	SDL_RenderClear(renderer);
 
@@ -160,13 +160,14 @@ void GameWindow::update() {
 	//printf("Map: %i\nMessages: %i\nPlayer: %i\nRendering: %i\n", mapTime, messagesTime, playerTime, renderingTime);
 }
 
+
 void GameWindow::processMouseScroll(int x, int y, int scrollOffset) {
 	SDL_Point point = { x,y };
 	if (SDL_PointInRect(&point, &viewports.map)) {
-		mapUI.changeScale(scrollOffset);
+		mapUI.processMouseScroll(scrollOffset);
 	}
 	else if (SDL_PointInRect(&point, &viewports.messages)) {
-		messagesUI.changeScrollOffset(scrollOffset);
+		messagesUI.processMouseScroll(scrollOffset);
 	}
 }
 

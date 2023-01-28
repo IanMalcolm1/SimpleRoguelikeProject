@@ -65,11 +65,9 @@ void MapUI::calcDataForAxis(SDL_Rect& viewport, char axis) {
 	*/
 
 	const int scaleSize = rData.scaleSize;
-	const int mapWidthTiles = map->getWidth();
-	const int mapHeightTiles = map->getHeight();
-	const int mapWidthPixels = mapWidthTiles * scaleSize;
-	const int mapHeightPixels = mapHeightTiles * scaleSize;
 
+	int mapLengthTiles;
+	int mapLengthPixels;
 	int viewportLength;
 	int focusTileCoord;
 
@@ -79,6 +77,8 @@ void MapUI::calcDataForAxis(SDL_Rect& viewport, char axis) {
 	int16_t* endTileCoord;
 
 	if (axis == 'x') {
+		mapLengthTiles = map->getWidth();
+		mapLengthPixels = mapLengthTiles * scaleSize;
 		viewportLength = viewport.w;
 		focusTileCoord = mapDisplay->getFocusTile().x;
 
@@ -89,6 +89,8 @@ void MapUI::calcDataForAxis(SDL_Rect& viewport, char axis) {
 		endTileCoord = &rData.endTile.x;
 	}
 	else {
+		mapLengthTiles = map->getHeight();
+		mapLengthPixels = mapLengthTiles * scaleSize;
 		viewportLength = viewport.h;
 		focusTileCoord = mapDisplay->getFocusTile().y;
 
@@ -100,25 +102,28 @@ void MapUI::calcDataForAxis(SDL_Rect& viewport, char axis) {
 	}
 
 
-	if (mapHeightPixels < viewportLength) {
-		(*destinationStart) = (viewportLength - mapHeightPixels) / 2;
-		(*endTileCoord) = mapHeightTiles;
+	if (mapLengthPixels < viewportLength) {
+		//Center map in camera
+		(*destinationStart) = (viewportLength - mapLengthPixels) / 2;
+		(*endTileCoord) = mapLengthTiles;
 		(*startTileCoord) = 0;
 
-		(*destinationLength) = mapHeightTiles * scaleSize;
+		(*destinationLength) = mapLengthTiles * scaleSize;
 	}
 
-	else if (-scaleSize/2 + scaleSize * (mapHeightTiles - focusTileCoord) < (viewportLength / 2)) {
-		(*endTileCoord) = mapHeightTiles;
+	else if ((scaleSize * (mapLengthTiles - focusTileCoord) - scaleSize/2) < (viewportLength/2)) {
+		//Snap camera to bottom or right edge
+		(*endTileCoord) = mapLengthTiles;
 
 		if (viewportLength % scaleSize == 0) { (*destinationStart) = 0; }
 		else { (*destinationStart) = (viewportLength % scaleSize) - scaleSize; }
 
 		(*destinationLength) = viewportLength - (*destinationStart);
-		(*startTileCoord) = mapHeightTiles - (*destinationLength) / scaleSize;
+		(*startTileCoord) = mapLengthTiles - (*destinationLength) / scaleSize;
 	}
 
-	else if ((scaleSize * focusTileCoord + scaleSize/2) < (viewportLength / 2)) {
+	else if ((scaleSize * focusTileCoord + scaleSize/2) < (viewportLength/2)) {
+		//Snap camera to top or left edge
 		(*destinationStart) = 0;
 		(*startTileCoord) = 0;
 
@@ -133,6 +138,7 @@ void MapUI::calcDataForAxis(SDL_Rect& viewport, char axis) {
 	}
 
 	else {
+		//Center camera on focus tile
 		int portionBehindFocusTile = viewportLength / 2 - scaleSize / 2;
 		int tilesBeyondFocusTile;
 		if (portionBehindFocusTile % scaleSize == 0) {
@@ -155,12 +161,12 @@ void MapUI::calcDataForAxis(SDL_Rect& viewport, char axis) {
 
 void MapUI::renderTile(int index, SDL_Rect dstrect) {
 	TileDisplay* tile = mapDisplay->getDisplay(index);
-
 	SDL_Rect srcrect = { 0,0,8,8 };
 
 	//unseen tiles are rendered black
 	if (!mapDisplay->hasBeenSeen(index)) {
 		fillRectImproved(dstrect, { 0,0,0 });
+		return;
 	}
 
 	//remembered but not visible tiles are faded
@@ -182,9 +188,6 @@ void MapUI::renderTile(int index, SDL_Rect dstrect) {
 	srcrect.y = tile->symbol / 16 * 8;
 	SDL_RenderCopy(renderer, spritesheet, &srcrect, &dstrect);
 
-	//reset opacity
-	SDL_SetTextureAlphaMod(spritesheet, 255);
-
 	//reticles
 	if (mapDisplay->hasReticle(index)) {
 		srcrect.x = ASYM_RETICLE % 16 * 8;
@@ -194,6 +197,8 @@ void MapUI::renderTile(int index, SDL_Rect dstrect) {
 
 		SDL_RenderCopy(renderer, spritesheet, &srcrect, &dstrect);
 	}
+
+	SDL_SetTextureAlphaMod(spritesheet, 255); //resets opacity
 }
 
 
@@ -205,10 +210,10 @@ void MapUI::fillRectImproved(SDL_Rect& destination, MyColor color) {
 }
 
 
-void MapUI::changeScale(int offset) {
+void MapUI::processMouseScroll(int offset) {
 	rData.scale += offset;
 	if (rData.scale < 1) { rData.scale = 1; }
-	else if (rData.scale > 24) { rData.scale = 24; }
+	else if (rData.scale > 20) { rData.scale = 20; }
 
 	rData.scaleSize = rData.scale * 8;
 }

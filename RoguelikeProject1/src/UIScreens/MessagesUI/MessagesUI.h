@@ -26,6 +26,6 @@ public:
 
 	void render(SDL_Rect& viewport);
 
-	void changeScrollOffset(int offset);
+	void processMouseScroll(int offset);
 	void modifyFontSize(int modification);
 };

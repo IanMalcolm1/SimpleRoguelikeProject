@@ -46,7 +46,7 @@ public:
 
 	void render(SDL_Rect& viewport);
 
-	void changeScale(int offset);
+	void processMouseScroll(int offset); //changes scale 
 
 	TileCoordinates findMapTileFromScreenCoords(int x, int y);
 };

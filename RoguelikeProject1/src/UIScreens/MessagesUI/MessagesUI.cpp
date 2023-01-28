@@ -35,8 +35,8 @@ void MessagesUI::render(SDL_Rect& viewport) {
 	}
 }
 
-void MessagesUI::changeScrollOffset(int offset) {
-	textSpecs.scrollOffset += 4 * offset;
+void MessagesUI::processMouseScroll(int offset) {
+	textSpecs.scrollOffset += offset * textSpecs.fontSizePixels;
 	textSpecs.scrollOffset = (textSpecs.scrollOffset > 0) ? textSpecs.scrollOffset : 0;
 }
 

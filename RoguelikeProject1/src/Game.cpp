@@ -19,6 +19,8 @@ Game::Game() {
 	messageLog->sendMessage("</purple:Message 7/>");
 	messageLog->sendMessage("</gold:The golden message/>");
 
+	terrainGenerator = TerrainGenerators();
+
 	scene = std::make_shared<Scene>();
 
 	gameWindow = std::make_shared<GameWindow>(scene->getMap(), messageLog);
@@ -35,6 +37,8 @@ Game::~Game() {
 bool Game::Initialize() {
 	isRunning = true;
 	bool success;
+
+	terrainGenerator.rectangleRooms(scene.get(), 20, 20);
 
 	success = gameWindow->initialize();
 

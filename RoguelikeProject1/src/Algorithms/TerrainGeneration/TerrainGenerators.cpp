@@ -1,8 +1,10 @@
 #include "TerrainGenerators.h"
 #include <random>
 
-void TerrainGenerators::rectangleRooms(std::shared_ptr<LocalMap> map, std::shared_ptr<ActorManager> actorManager, int numRectangles, int maxSideLength) {
+void TerrainGenerators::rectangleRooms(Scene* scene, int numRectangles, int maxSideLength) {
 	srand(time(0));
+
+	LocalMap* map = scene->getMap();
 
 	int width = map->getWidth();
 	int height = map->getHeight();
@@ -73,6 +75,6 @@ void TerrainGenerators::rectangleRooms(std::shared_ptr<LocalMap> map, std::share
 		prevCenterY = currCenterY;
 	}
 
-	actorManager->createPlayerAt({ prevCenterX, prevCenterY });
-	actorManager->createActorAt({prevCenterX-1, prevCenterY});
+	scene->createPlayerAt({ prevCenterX, prevCenterY });
+	scene->createActorAt({prevCenterX-1, prevCenterY});
 }

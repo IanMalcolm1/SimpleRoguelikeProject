@@ -134,16 +134,15 @@
   <ItemGroup>
     <ClCompile Include="src\Algorithms\Pathfinding\Pathfinding.cpp" />
     <ClCompile Include="src\Algorithms\Pathfinding\PathfindingRoute.cpp" />
-    <ClCompile Include="src\Algorithms\Terrain Generation\TerrainGenerators.cpp" />
+    <ClCompile Include="src\Algorithms\TerrainGeneration\TerrainGenerators.cpp" />
     <ClCompile Include="src\DebugLogger\DebugLogger.cpp" />
     <ClCompile Include="src\GameObjects\Actors\AI.cpp" />
     <ClCompile Include="src\GameLog\GameLog.cpp" />
     <ClCompile Include="src\GraphicsThings\GameText\GameText.cpp" />
     <ClCompile Include="src\GraphicsThings\GraphicsThings.cpp" />
-    <ClCompile Include="src\Scene\ActorManager\ActorManager.cpp" />
-    <ClCompile Include="src\Scene\ActorManager\AIStateLogic.cpp" />
-    <ClCompile Include="src\Scene\ActorPool\ActorPool.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
+    <ClCompile Include="src\Scene\AIStateLogic.cpp" />
+    <ClCompile Include="src\Scene\ActorPool\ActorPool.cpp" />
     <ClCompile Include="src\Scene\TurnQueue\TurnQueue.cpp" />
     <ClCompile Include="src\Algorithms\FieldOfView\FoV.cpp" />
     <ClCompile Include="src\Game.cpp" />
@@ -162,7 +161,7 @@
   <ItemGroup>
     <ClInclude Include="src\Algorithms\Pathfinding\Pathfinding.h" />
     <ClInclude Include="src\Algorithms\Pathfinding\PathfindingRoute.h" />
-    <ClInclude Include="src\Algorithms\Terrain Generation\TerrainGenerators.h" />
+    <ClInclude Include="src\Algorithms\TerrainGeneration\TerrainGenerators.h" />
     <ClInclude Include="src\GraphicsThings\ColorMap.h" />
     <ClInclude Include="src\Enums\TurnTime.h" />
     <ClInclude Include="src\DebugLogger\DebugLogger.h" />
@@ -172,7 +171,7 @@
     <ClInclude Include="src\GraphicsThings\MyColor.h" />
     <ClInclude Include="src\GraphicsThings\Palette.h" />
     <ClInclude Include="src\GraphicsThings\TileDisplay.h" />
-    <ClInclude Include="src\Scene\ActorManager\ActorManager.h" />
+    <ClInclude Include="src\Scene\Scene.h" />
     <ClInclude Include="src\Scene\ActorPool\ActorPool.h" />
     <ClInclude Include="src\Scene\TurnQueue\TurnQueue.h" />
     <ClInclude Include="src\Algorithms\FieldOfView\FoV.h" />
@@ -190,7 +189,6 @@
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\Interface\GameWindow\GameWindow.h" />
     <ClInclude Include="src\Interface\InputManager\InputManager.h" />
-    <ClInclude Include="src\Scene\Scene.h" />
     <ClInclude Include="src\UIScreens\MapUI\MapUI.h" />
     <ClInclude Include="src\UIScreens\MessagesUI\MessagesUI.h" />
     <ClInclude Include="src\UIScreens\UIHelpers\TextRenderer.h" />

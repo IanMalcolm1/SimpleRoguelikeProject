@@ -12,13 +12,13 @@ Actor* ActorPool::getPlayer() {
 
 Actor* ActorPool::insert(Actor actor) {
 	int index;
-	if (reusableIDs.size() == 0) {
+	if (reusableIndices.size() == 0) {
 		index = dirtySlots;
 		dirtySlots++;
 	}
 	else {
-		index = reusableIDs.back();
-		reusableIDs.pop_back();
+		index = reusableIndices.back();
+		reusableIndices.pop_back();
 	}
 
 	actor.setPoolIndex(index);
@@ -32,5 +32,5 @@ void ActorPool::kill(Actor* actor) {
 	int index = actor->getPoolIndex();
 	actors[index] = Actor();
 
-	reusableIDs.push_back(index);
+	reusableIndices.push_back(index);
 }

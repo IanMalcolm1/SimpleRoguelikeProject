@@ -49,7 +49,7 @@ private:
 	void resetRendererAndDrawBorder(SDL_Rect& currentViewport);
 
 public:
-	GameWindow(std::shared_ptr<LocalMap> map, std::shared_ptr<GameLog> log,
+	GameWindow(LocalMap* map, std::shared_ptr<GameLog> log,
 		int windowWidth = 1600, int windowHeight = 1200);
 	~GameWindow();
 

@@ -11,11 +11,13 @@
 class ActorPool {
 private:
 	std::array<Actor, MAX_ACTORS> actors;
-	int dirtySlots = 1;
+	int dirtySlots;
 
-	std::vector<int16_t> reusableIDs;
+	std::vector<int16_t> reusableIndices;
 	
 public:
+	ActorPool() : dirtySlots(1) {};
+
 	void setPlayer(Actor player);
 	Actor* getPlayer();
 	Actor* insert(Actor actor);

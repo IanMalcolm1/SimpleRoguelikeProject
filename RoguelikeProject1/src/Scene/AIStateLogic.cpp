@@ -1,14 +1,14 @@
-#include "ActorManager.h"
-#include "../../Algorithms/FieldOfView/FoV.h"
-#include "../../Algorithms/Pathfinding/Pathfinding.h"
+#include "Scene.h"
+#include "../Algorithms/FieldOfView/FoV.h"
+#include "../Algorithms/Pathfinding/Pathfinding.h"
 #include <random>
 #include <functional>
 
 
-int ActorManager::performAction(Actor* actor) {
+int Scene::performAction(Actor* actor) {
 	AIStateID actorState = actor->getState();
 
-	FoV::calcActorFoV(map.get(), actor);
+	FoV::calcActorFoV(&map, actor);
 
 
 	switch (actorState) {
@@ -18,12 +18,12 @@ int ActorManager::performAction(Actor* actor) {
 	return testerLogic(actor); //temporary
 }
 
-int ActorManager::testerLogic(Actor* actor) {
+int Scene::testerLogic(Actor* actor) {
 	PathfindingRoute* currentRoute = actor->getCurrentRoute();
 
 	if (currentRoute->hasNextTile()) {
 		TileCoordinates newTile = currentRoute->getNextTile();
-		if (map->isTraversibleAt(newTile)) {
+		if (map.isTraversibleAt(newTile)) {
 			moveActor(actor, newTile);
 			return FULL_TURN_TIME;
 		}
@@ -43,9 +43,9 @@ int ActorManager::testerLogic(Actor* actor) {
 	do {
 		newTileIndex = rand() % visibleTiles->size();
 		newLocation = visibleTiles->at(newTileIndex);
-	} while (!map->isTraversibleAt(newLocation));
+	} while (!map.isTraversibleAt(newLocation));
 
-	Pathfinding::bresenhamLine(actor->getLocation(), visibleTiles->at(newTileIndex), map.get(), actor->getCurrentRoute());
+	Pathfinding::bresenhamLine(actor->getLocation(), visibleTiles->at(newTileIndex), &map, actor->getCurrentRoute());
 
 	if (currentRoute->hasNextTile()) {
 		moveActor(actor, currentRoute->getNextTile());

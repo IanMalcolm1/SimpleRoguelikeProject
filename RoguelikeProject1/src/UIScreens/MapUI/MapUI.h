@@ -21,7 +21,7 @@ struct MapRenderingData {
 
 class MapUI {
 private:
-	std::shared_ptr<LocalMap> map;
+	LocalMap* map;
 	MapDisplay* mapDisplay; //get from map. holds display information for tiles
 	MapRenderingData rData; //keeps track of which tiles have been rendered where
 
@@ -38,7 +38,7 @@ private:
 	void fillRectImproved(SDL_Rect& destination, MyColor color);
 
 public:
-	MapUI(std::shared_ptr<LocalMap> map) : map(map), renderer(NULL), spritesheet(NULL),
+	MapUI(LocalMap* map) : map(map), renderer(NULL), spritesheet(NULL),
 		mapTexture(NULL), mapDisplay(mapDisplay = map->getMapDisplay().get()),
 		rData(MapRenderingData()) {}
 

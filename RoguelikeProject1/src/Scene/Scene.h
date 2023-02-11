@@ -1,26 +1,32 @@
 #pragma once
 
 #include "../Topography/LocalMap/LocalMap.h"
-#include "ActorManager/ActorManager.h"
-#include "../Enums/PlayerCommands.h"
+#include "ActorPool/ActorPool.h"
+#include "TurnQueue/TurnQueue.h"
 #include <SDL_stdinc.h>
 
 
-class Scene {
+struct Scene {
 private:
-	std::shared_ptr<LocalMap> map;
+	LocalMap map;
+	ActorPool actorPool;
+	TurnQueue turnQueue;
 
-	std::shared_ptr<ActorManager> actorManager;
+	int performAction(Actor* actor);
+	int testerLogic(Actor* actor);
 
 public:
-	Scene();
+	Scene() : map(LocalMap(100, 100)), actorPool(ActorPool()), turnQueue(TurnQueue()) {};
 
-	std::shared_ptr<MapDisplay> getMapDisplay();
-	void updateMapDisplay();
-
-	std::shared_ptr<LocalMap> getMap();
+	LocalMap* getMap();
 
 	void processCommand(PlayerCommand command, Uint16 modification);
+	void setMouseTile(TileCoordinates location);
+	void updateMapDisplay();
 
-	void setMouseTile(TileCoordinates coordinates);
+	void runTurn();
+	void createPlayerAt(TileCoordinates location);
+	void createActorAt(TileCoordinates location);
+	void destroyActor(Actor* actor);
+	void moveActor(Actor* actor, TileCoordinates newLocation);
 };

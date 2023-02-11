@@ -3,7 +3,7 @@
 #include <SDL_image.h>
 #include <stdio.h>
 
-GameWindow::GameWindow(std::shared_ptr<LocalMap> map, std::shared_ptr<GameLog> log,
+GameWindow::GameWindow(LocalMap* map, std::shared_ptr<GameLog> log,
 	int windowWidth, int windowHeight) : mapUI(map), messagesUI(log) {
 	screenDimensions.x = screenDimensions.y = 0;
 	screenDimensions.w = windowWidth;

@@ -51,16 +51,13 @@
     <ClCompile Include="src\Scene\ActorPool\ActorPool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Algorithms\TerrainGeneration\TerrainGenerators.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\Scene\Scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Algorithms\Terrain Generation\TerrainGenerators.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scene\ActorManager\ActorManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scene\ActorManager\AIStateLogic.cpp">
+    <ClCompile Include="src\Scene\AIStateLogic.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\GameObjects\Actors\AI.cpp">
@@ -88,6 +85,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\UIScreens\UIHelpers\TextRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GraphicsThings\GameText\GameText.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -143,16 +143,13 @@
     <ClInclude Include="src\Scene\TurnQueue\TurnQueue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Scene\Scene.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Enums\TurnTime.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Algorithms\Terrain Generation\TerrainGenerators.h">
+    <ClInclude Include="src\Algorithms\TerrainGeneration\TerrainGenerators.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Scene\ActorManager\ActorManager.h">
+    <ClInclude Include="src\Scene\Scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Algorithms\Pathfinding\Pathfinding.h">
@@ -191,6 +188,9 @@
     <ClInclude Include="src\UIScreens\UIHelpers\TextRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\GraphicsThings\GameText\GameText.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\CGA8x8thin.png">
@@ -201,5 +201,9 @@
     <Text Include="plans.txt" />
     <Text Include="game_files\message_log.txt" />
     <Text Include="game_files\debug_log.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SDL2.dll" />
+    <None Include="SDL2_image.dll" />
   </ItemGroup>
 </Project>

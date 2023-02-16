@@ -161,13 +161,13 @@ void GameWindow::update() {
 }
 
 
-void GameWindow::processMouseScroll(int x, int y, int scrollOffset) {
+void GameWindow::processMouseScroll(int x, int y, int scrollOffset, bool ctrlDown) {
 	SDL_Point point = { x,y };
 	if (SDL_PointInRect(&point, &viewports.map)) {
-		mapUI.processMouseScroll(scrollOffset);
+		mapUI.processMouseScroll(scrollOffset, ctrlDown);
 	}
 	else if (SDL_PointInRect(&point, &viewports.messages)) {
-		messagesUI.processMouseScroll(scrollOffset);
+		messagesUI.processMouseScroll(scrollOffset, ctrlDown);
 	}
 }
 

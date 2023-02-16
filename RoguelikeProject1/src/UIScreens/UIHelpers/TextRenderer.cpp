@@ -8,9 +8,9 @@ void TextRenderer::initialize(SDL_Renderer* renderer, SDL_Texture* spritesheet) 
 }
 
 
-std::pair<std::string, int> TextRenderer::makeFormattedMessage(int maxLettersPerLine, std::string message) {
+std::pair<std::string, int> TextRenderer::makeFormattedMessage(TextRenderingSpecifications& specs, std::string message) {
 	int lines = 1;
-	int index = maxLettersPerLine - 1;
+	int index = specs.maxLettersPerLine - 1;
 
 	while (index < (int)message.size()) {
 
@@ -34,7 +34,7 @@ std::pair<std::string, int> TextRenderer::makeFormattedMessage(int maxLettersPer
 					lines++;
 					break;
 				}
-				else if (prevIndex - index == maxLettersPerLine) {
+				else if (prevIndex - index == specs.maxLettersPerLine) {
 					message.insert(message.begin() + prevIndex + 1, '\n');
 					lines++;
 					index = prevIndex + 1;
@@ -48,30 +48,32 @@ std::pair<std::string, int> TextRenderer::makeFormattedMessage(int maxLettersPer
 			}
 		}
 
-		index += maxLettersPerLine;
+		index += specs.maxLettersPerLine;
 	}
 
-	return std::make_pair(message, lines);
+	int height = lines * specs.fontSizePixels + (lines - 1) * specs.lineSpacing;
+
+	return std::make_pair(message, height);
 }
 
 
-void TextRenderer::renderMessage(TextRenderingSpecifications specs, GameText message, SDL_Rect& destinationRect) {
+void TextRenderer::renderMessage(TextRenderingSpecifications& specs, GameText message, SDL_Rect& destinationRect) {
 
 	SDL_Rect sourceRect;
 	sourceRect.w = sourceRect.h = 8;
 
 	std::pair<std::string, int> messageTextAndNumberOfLines;
-	messageTextAndNumberOfLines = makeFormattedMessage(specs.maxLettersPerLine, message.getText());
+	messageTextAndNumberOfLines = makeFormattedMessage(specs, message.getText());
 
 	std::string formattedText = messageTextAndNumberOfLines.first;
-	int lines = messageTextAndNumberOfLines.second;
+	int height = messageTextAndNumberOfLines.second;
 
 	int unformattedIndex = 0;
 	MyColor currentColor;
 
 	destinationRect.x = specs.margin;
 
-	destinationRect.y -= lines * specs.fontSizePixels + (lines - 1) * specs.lineSpacing;
+	destinationRect.y -= height;
 
 	int startY = destinationRect.y;
 

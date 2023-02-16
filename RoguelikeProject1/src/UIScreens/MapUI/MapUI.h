@@ -41,12 +41,13 @@ public:
 	MapUI(LocalMap* map) : map(map), renderer(NULL), spritesheet(NULL),
 		mapTexture(NULL), mapDisplay(mapDisplay = map->getMapDisplay().get()),
 		rData(MapRenderingData()) {}
+	~MapUI();
 
 	void initialize(SDL_Renderer* renderer, SDL_Texture* spritesheet);
 
 	void render(SDL_Rect& viewport);
 
-	void processMouseScroll(int offset); //changes scale 
+	void processMouseScroll(int offset, bool ctrlDown); //changes scale 
 
 	TileCoordinates findMapTileFromScreenCoords(int x, int y);
 };

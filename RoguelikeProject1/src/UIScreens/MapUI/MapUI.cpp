@@ -10,6 +10,11 @@ void MapUI::initialize(SDL_Renderer* renderer, SDL_Texture* spritesheet) {
 		textureWidth, textureHeight);
 }
 
+MapUI::~MapUI() {
+	SDL_DestroyTexture(mapTexture);
+	mapTexture = NULL;
+}
+
 
 void MapUI::render(SDL_Rect& viewport) {
 	SDL_SetRenderTarget(renderer, mapTexture);
@@ -210,7 +215,7 @@ void MapUI::fillRectImproved(SDL_Rect& destination, MyColor color) {
 }
 
 
-void MapUI::processMouseScroll(int offset) {
+void MapUI::processMouseScroll(int offset, bool ctrlDown) {
 	rData.scale += offset;
 	if (rData.scale < 1) { rData.scale = 1; }
 	else if (rData.scale > 20) { rData.scale = 20; }

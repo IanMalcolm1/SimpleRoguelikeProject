@@ -28,12 +28,12 @@ private:
 	SDL_Renderer* renderer;
 	SDL_Texture* spritesheet;
 
-	std::pair<std::string, int> makeFormattedMessage(int maxLettersPerLine, std::string message);
+	std::pair<std::string, int> makeFormattedMessage(TextRenderingSpecifications& specs, std::string message);
 
 public:
 	TextRenderer() : renderer(NULL), spritesheet(NULL) {};
 
 	void initialize(SDL_Renderer* renderer, SDL_Texture* spriteSheet);
 
-	void renderMessage(TextRenderingSpecifications specs, GameText message, SDL_Rect& destinationRect);
+	void renderMessage(TextRenderingSpecifications& specs, GameText message, SDL_Rect& destinationRect);
 };

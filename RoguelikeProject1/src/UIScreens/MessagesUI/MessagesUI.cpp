@@ -8,6 +8,12 @@ void MessagesUI::initialize(SDL_Renderer* renderer, SDL_Texture* spritesheet) {
 	textRenderer.initialize(renderer, spritesheet);
 }
 
+void MessagesUI::makeFormattedMessages() {
+	textSpecs.maxLettersPerLine = (currViewport.w - 2 * textSpecs.margin) / textSpecs.fontSizePixels;
+
+}
+
+
 
 void MessagesUI::render(SDL_Rect& viewport) {
 	SDL_RenderSetViewport(renderer, &viewport);
@@ -16,7 +22,16 @@ void MessagesUI::render(SDL_Rect& viewport) {
 		return;
 	}
 
-	textSpecs.maxLettersPerLine = (viewport.w - 2 * textSpecs.margin) / textSpecs.fontSizePixels;
+	//if saved viewport specs are dirty, remake the formatted messages
+	if (currViewport.w != viewport.w || currViewport.h != viewport.h) {
+		currViewport.w = viewport.w;
+		currViewport.h = viewport.h;
+		makeFormattedMessages();
+	}
+
+	if (messageLog->getRecentMessages()->size() != formattedMessages.size()) {
+		makeFormattedMessages();
+	}
 
 	SDL_Rect destinationRect;
 	destinationRect.w = textSpecs.fontSizePixels;
@@ -26,7 +41,7 @@ void MessagesUI::render(SDL_Rect& viewport) {
 
 	std::vector<GameText>* recentMessages = messageLog->getRecentMessages();
 
-	for (int i = 0; i < recentMessages->size(); i++) {
+	for (int i = recentMessages->size()-1; i >= 0; i--) {
 		if (destinationRect.y < -textSpecs.fontSizePixels) {
 			break;
 		}
@@ -35,11 +50,13 @@ void MessagesUI::render(SDL_Rect& viewport) {
 	}
 }
 
-void MessagesUI::processMouseScroll(int offset) {
-	textSpecs.scrollOffset += offset * textSpecs.fontSizePixels;
-	textSpecs.scrollOffset = (textSpecs.scrollOffset > 0) ? textSpecs.scrollOffset : 0;
-}
-
-void MessagesUI::modifyFontSize(int modification) {
-	textSpecs.modifyFontSize(modification);
+void MessagesUI::processMouseScroll(int offset, bool ctrlDown) {
+	if (!ctrlDown) {
+		textSpecs.scrollOffset += offset * textSpecs.fontSizePixels;
+		textSpecs.scrollOffset = (textSpecs.scrollOffset > 0) ? textSpecs.scrollOffset : 0;
+	}
+	else {
+		textSpecs.modifyFontSize(offset);
+		makeFormattedMessages();
+	}
 }

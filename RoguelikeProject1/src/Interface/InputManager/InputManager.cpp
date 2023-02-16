@@ -40,6 +40,7 @@ void InputManager::setScene(std::shared_ptr<Scene> scene) {
 bool InputManager::processInput() {
 	bool returner = true;
 	SDL_Event sdlEvent;
+	bool controlDown = testControlDown();
 
 	int x, y;
 	SDL_GetMouseState(&x, &y);
@@ -55,7 +56,7 @@ bool InputManager::processInput() {
 
 		case SDL_MOUSEWHEEL:
 			//zooming in/out
-			gameWindow->processMouseScroll(x, y, sdlEvent.wheel.y);
+			gameWindow->processMouseScroll(x, y, sdlEvent.wheel.y, controlDown);
 			break;
 
 		case SDL_QUIT: //user closes window using the red x
@@ -87,4 +88,13 @@ void InputManager::processKeyPress(SDL_Keycode keycode, Uint16 modification) {
 			scene->processCommand(command, modification);
 		}
 	}
+}
+
+bool InputManager::testControlDown() {
+	const Uint8* state = SDL_GetKeyboardState(nullptr);
+
+	if (state[SDL_SCANCODE_LCTRL] || state[SDL_SCANCODE_RCTRL]) {
+		return true;
+	}
+	return false;
 }

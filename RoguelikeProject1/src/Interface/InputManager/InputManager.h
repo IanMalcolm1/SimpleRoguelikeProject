@@ -18,6 +18,7 @@ private:
 	std::unordered_map<SDL_Keycode, PlayerCommand> keyMappings;
 
 	void processKeyPress(SDL_Keycode keycode, Uint16 modification);
+	bool testControlDown();
 
 public:
 	InputManager(std::shared_ptr<GameWindow> window, std::shared_ptr<Scene> scene);

@@ -7,7 +7,6 @@ void TextRenderer::initialize(SDL_Renderer* renderer, SDL_Texture* spritesheet) 
 	this->spritesheet = spritesheet;
 }
 
-
 std::pair<std::string, int> TextRenderer::makeFormattedMessage(TextRenderingSpecifications& specs, std::string message) {
 	int lines = 1;
 	int index = specs.maxLettersPerLine - 1;
@@ -30,7 +29,8 @@ std::pair<std::string, int> TextRenderer::makeFormattedMessage(TextRenderingSpec
 			while (index > 0) {
 				index--;
 				if (message[index] == ASYM_SPACE) {
-					message[index] = '\n';
+					message.insert(message.begin() + index + 1, '\n');
+					index+=2;
 					lines++;
 					break;
 				}
@@ -57,10 +57,19 @@ std::pair<std::string, int> TextRenderer::makeFormattedMessage(TextRenderingSpec
 }
 
 
-void TextRenderer::renderMessage(TextRenderingSpecifications& specs, GameText message, SDL_Rect& destinationRect) {
+int TextRenderer::renderMessageDown(TextRenderingSpecifications& specs, GameText message, int startY) {
+	return renderMessage(false, specs, message, startY, 0);
+}
 
-	SDL_Rect sourceRect;
-	sourceRect.w = sourceRect.h = 8;
+
+int TextRenderer::renderMessageUp(TextRenderingSpecifications& specs, GameText message, int startY, int limitY) {
+	return renderMessage(true, specs, message, startY, limitY);
+}
+
+
+int TextRenderer::renderMessage(bool up, TextRenderingSpecifications& specs, GameText message, int startY, int limitY) {
+	SDL_Rect sourceRect = { 0,0,8,8 };
+	SDL_Rect destinationRect = { specs.margin, startY, specs.fontSizePixels, specs.fontSizePixels };
 
 	std::pair<std::string, int> messageTextAndNumberOfLines;
 	messageTextAndNumberOfLines = makeFormattedMessage(specs, message.getText());
@@ -71,11 +80,18 @@ void TextRenderer::renderMessage(TextRenderingSpecifications& specs, GameText me
 	int unformattedIndex = 0;
 	MyColor currentColor;
 
-	destinationRect.x = specs.margin;
-
-	destinationRect.y -= height;
-
-	int startY = destinationRect.y;
+	//in part, this if-else checks the message would have any screen time if rendered
+	if (up) {
+		destinationRect.y -= height;
+		if (destinationRect.y > limitY) {
+			return destinationRect.y;
+		}
+	}
+	else {
+		if (startY + height < 0) {
+			return startY + height;
+		}
+	}
 
 	for (int i = 0; i < formattedText.size(); i++) {
 		char test = formattedText[i];
@@ -99,8 +115,14 @@ void TextRenderer::renderMessage(TextRenderingSpecifications& specs, GameText me
 		unformattedIndex++;
 	}
 
-	destinationRect.y = startY - specs.messageSpacing - specs.lineSpacing;
+	if (up) {
+		return startY - height;
+	}
+	else {
+		return startY + height;
+	}
 }
+
 
 
 void TextRenderingSpecifications::modifyFontSize(int modification) {

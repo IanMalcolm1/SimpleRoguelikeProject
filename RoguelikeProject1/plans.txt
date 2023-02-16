@@ -1,7 +1,11 @@
 _____________________________________________________________________________________________
 TODOS:
 Current:
-
+Make TextRenderer.RenderMessage not affect the destination rectangle it is passed, and instead
+return the height (in pixels) of the message as it was rendered, so that the calling function
+can do formatting as it wants.
+Maybe split it into different functions that render from bottom to top or from top to bottom.
+	means only need to pass starting y, not an entire destination rect.
 
 Later:
 Remove all (or most) printf statements

@@ -29,11 +29,15 @@ private:
 	SDL_Texture* spritesheet;
 
 	std::pair<std::string, int> makeFormattedMessage(TextRenderingSpecifications& specs, std::string message);
+	int renderMessage(bool up, TextRenderingSpecifications& specs, GameText message, int startY, int limitY);
 
 public:
 	TextRenderer() : renderer(NULL), spritesheet(NULL) {};
 
 	void initialize(SDL_Renderer* renderer, SDL_Texture* spriteSheet);
 
-	void renderMessage(TextRenderingSpecifications& specs, GameText message, SDL_Rect& destinationRect);
+	//Renders a message down from startY. Returns the ending y coordinate.
+	int renderMessageDown(TextRenderingSpecifications& specs, GameText message, int startY);
+	//Renders a message up from startY. Returns the ending y coordinate.
+	int renderMessageUp(TextRenderingSpecifications& specs, GameText message, int startY, int limitY);
 };

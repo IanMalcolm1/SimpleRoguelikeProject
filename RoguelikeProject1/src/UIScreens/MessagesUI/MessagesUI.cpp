@@ -8,55 +8,43 @@ void MessagesUI::initialize(SDL_Renderer* renderer, SDL_Texture* spritesheet) {
 	textRenderer.initialize(renderer, spritesheet);
 }
 
-void MessagesUI::makeFormattedMessages() {
-	textSpecs.maxLettersPerLine = (currViewport.w - 2 * textSpecs.margin) / textSpecs.fontSizePixels;
 
-}
-
-
-
-void MessagesUI::render(SDL_Rect& viewport) {
+void MessagesUI::render(const SDL_Rect viewport) {
 	SDL_RenderSetViewport(renderer, &viewport);
 
 	if (messageLog->getRecentMessages()->size() == 0) {
 		return;
 	}
 
-	//if saved viewport specs are dirty, remake the formatted messages
-	if (currViewport.w != viewport.w || currViewport.h != viewport.h) {
-		currViewport.w = viewport.w;
-		currViewport.h = viewport.h;
-		makeFormattedMessages();
-	}
+	textSpecs.maxLettersPerLine = (viewport.w - 2 * textSpecs.margin) / textSpecs.fontSizePixels;
 
-	if (messageLog->getRecentMessages()->size() != formattedMessages.size()) {
-		makeFormattedMessages();
-	}
 
-	SDL_Rect destinationRect;
-	destinationRect.w = textSpecs.fontSizePixels;
-	destinationRect.h = textSpecs.fontSizePixels;
-	destinationRect.x = textSpecs.margin;
-	destinationRect.y = viewport.h - (textSpecs.margin) + textSpecs.scrollOffset;
+	int startY = viewport.h - textSpecs.margin + textSpecs.scrollOffset;
 
 	std::vector<GameText>* recentMessages = messageLog->getRecentMessages();
 
 	for (int i = recentMessages->size()-1; i >= 0; i--) {
-		if (destinationRect.y < -textSpecs.fontSizePixels) {
+		if (startY < 0) {
 			break;
 		}
 
-		textRenderer.renderMessage(textSpecs, recentMessages->at(i), destinationRect);
+		startY = textRenderer.renderMessageUp(textSpecs, recentMessages->at(i), startY, viewport.h);
+		startY -= textSpecs.messageSpacing;
 	}
+	
+	startY += textSpecs.messageSpacing;
+	if (startY > textSpecs.margin) {
+		textSpecs.scrollOffset += (textSpecs.margin-startY);
+	}
+
 }
 
 void MessagesUI::processMouseScroll(int offset, bool ctrlDown) {
 	if (!ctrlDown) {
 		textSpecs.scrollOffset += offset * textSpecs.fontSizePixels;
-		textSpecs.scrollOffset = (textSpecs.scrollOffset > 0) ? textSpecs.scrollOffset : 0;
+		textSpecs.scrollOffset = (textSpecs.scrollOffset < 0) ? 0 : textSpecs.scrollOffset;
 	}
 	else {
 		textSpecs.modifyFontSize(offset);
-		makeFormattedMessages();
 	}
 }

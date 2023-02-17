@@ -7,20 +7,22 @@ void TextRenderer::initialize(SDL_Renderer* renderer, SDL_Texture* spritesheet) 
 	this->spritesheet = spritesheet;
 }
 
-std::pair<std::string, int> TextRenderer::makeFormattedMessage(TextRenderingSpecifications& specs, std::string message) {
+std::pair<std::string, int> TextRenderer::formatGameText(TextRenderingSpecs& specs, GameText& gameText) {
 	int lines = 1;
 	int index = specs.maxLettersPerLine - 1;
 
-	while (index < (int)message.size()) {
+	std::string text = gameText.getText();
 
-		if (message[index] == ASYM_SPACE) {
-			message[index] = '\n';
+	while (index < (int)text.size()) {
+
+		if (text[index] == ASYM_SPACE) {
+			text[index] = '\n';
 			lines++;
 		}
 
-		else if (message[index + 1] == ASYM_SPACE) {
+		else if (text[index + 1] == ASYM_SPACE) {
 			index++;
-			message[index] = '\n';
+			text[index] = '\n';
 			lines++;
 		}
 
@@ -28,21 +30,21 @@ std::pair<std::string, int> TextRenderer::makeFormattedMessage(TextRenderingSpec
 			int prevIndex = index;
 			while (index > 0) {
 				index--;
-				if (message[index] == ASYM_SPACE) {
-					message.insert(message.begin() + index + 1, '\n');
+				if (text[index] == ASYM_SPACE) {
+					text.insert(text.begin() + index + 1, '\n');
 					index+=2;
 					lines++;
 					break;
 				}
 				else if (prevIndex - index == specs.maxLettersPerLine) {
-					message.insert(message.begin() + prevIndex + 1, '\n');
+					text.insert(text.begin() + prevIndex + 1, '\n');
 					lines++;
 					index = prevIndex + 1;
 					break;
 				}
 			}
 			if (index == 0) {
-				message.insert(message.begin() + prevIndex + 1, '\n');
+				text.insert(text.begin() + prevIndex + 1, '\n');
 				lines++;
 				index = prevIndex + 1;
 			}
@@ -53,59 +55,66 @@ std::pair<std::string, int> TextRenderer::makeFormattedMessage(TextRenderingSpec
 
 	int height = lines * specs.fontSizePixels + (lines - 1) * specs.lineSpacing;
 
-	return std::make_pair(message, height);
+	return std::make_pair(text, height);
 }
 
 
-int TextRenderer::renderMessageDown(TextRenderingSpecifications& specs, GameText message, int startY) {
-	return renderMessage(false, specs, message, startY, 0);
+int TextRenderer::renderGameTextDown(TextRenderingSpecs& specs, GameText& gameText, int startY, int limit) {
+	std::pair<std::string, int> formattedText;
+	formattedText = formatGameText(specs, gameText);
+
+	int height = formattedText.second;
+
+	startY += height;
+
+	if (startY < 0) {
+		return startY;
+	}
+
+
+	renderFormattedText(specs, formattedText.first, gameText, startY);
+
+	return startY;
 }
 
 
-int TextRenderer::renderMessageUp(TextRenderingSpecifications& specs, GameText message, int startY, int limitY) {
-	return renderMessage(true, specs, message, startY, limitY);
+int TextRenderer::renderGameTextUp(TextRenderingSpecs& specs, GameText& gameText, int startY, int limitY) {
+	std::pair<std::string, int> formattedText;
+	formattedText = formatGameText(specs, gameText);
+
+	startY -= formattedText.second;
+
+	if (startY > limitY) {
+		return startY;
+	}
+	renderFormattedText(specs, formattedText.first, gameText, startY);
+
+	return startY;
 }
 
 
-int TextRenderer::renderMessage(bool up, TextRenderingSpecifications& specs, GameText message, int startY, int limitY) {
+void TextRenderer::renderFormattedText(TextRenderingSpecs& specs, std::string fText, GameText& gameText, int startY) {
 	SDL_Rect sourceRect = { 0,0,8,8 };
 	SDL_Rect destinationRect = { specs.margin, startY, specs.fontSizePixels, specs.fontSizePixels };
-
-	std::pair<std::string, int> messageTextAndNumberOfLines;
-	messageTextAndNumberOfLines = makeFormattedMessage(specs, message.getText());
-
-	std::string formattedText = messageTextAndNumberOfLines.first;
-	int height = messageTextAndNumberOfLines.second;
 
 	int unformattedIndex = 0;
 	MyColor currentColor;
 
-	//in part, this if-else checks the message would have any screen time if rendered
-	if (up) {
-		destinationRect.y -= height;
-		if (destinationRect.y > limitY) {
-			return destinationRect.y;
-		}
-	}
-	else {
-		if (startY + height < 0) {
-			return startY + height;
-		}
-	}
+	char currChar;
 
-	for (int i = 0; i < formattedText.size(); i++) {
-		char test = formattedText[i];
+	for (int i = 0; i < fText.size(); i++) {
+		currChar = fText[i];
 
-		if (test == '\n') {
+		if (currChar == '\n') {
 			destinationRect.y += specs.fontSizePixels + specs.lineSpacing;
 			destinationRect.x = specs.margin;
 			continue;
 		}
 
-		sourceRect.x = formattedText[i] % 16 * 8;
-		sourceRect.y = formattedText[i] / 16 * 8;
+		sourceRect.x = currChar % 16 * 8;
+		sourceRect.y = currChar / 16 * 8;
 
-		currentColor = message.getColorAtIndex(unformattedIndex);
+		currentColor = gameText.getColorAtIndex(unformattedIndex);
 
 		SDL_SetTextureColorMod(spritesheet, currentColor.r, currentColor.g, currentColor.b);
 		SDL_RenderCopy(renderer, spritesheet, &sourceRect, &destinationRect);
@@ -114,18 +123,11 @@ int TextRenderer::renderMessage(bool up, TextRenderingSpecifications& specs, Gam
 
 		unformattedIndex++;
 	}
-
-	if (up) {
-		return startY - height;
-	}
-	else {
-		return startY + height;
-	}
 }
 
 
 
-void TextRenderingSpecifications::modifyFontSize(int modification) {
+void TextRenderingSpecs::modifyFontSize(int modification) {
 	int temporary = fontSize + modification;
 
 	if (temporary < 1 || temporary > 10) {

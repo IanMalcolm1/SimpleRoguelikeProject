@@ -13,14 +13,19 @@ private:
 	SDL_Renderer* renderer;
 	SDL_Texture* spritesheet;
 
+	int currWidth;
+	std::vector<std::pair<std::string, int>> formattedMsgs;
+
 	TextRenderer textRenderer;
-	TextRenderingSpecifications textSpecs;
+	TextRenderingSpecs textSpecs;
+
+	void makeFormattedMessages();
 
 public:
 	MessagesUI(std::shared_ptr<GameLog> messageLog,
 		int fontSize = 2) :
-		renderer(NULL), spritesheet(NULL), messageLog(messageLog), textRenderer(TextRenderer()),
-		textSpecs(TextRenderingSpecifications(fontSize)) {};
+		renderer(NULL), spritesheet(NULL), currWidth(0), messageLog(messageLog), textRenderer(TextRenderer()),
+		textSpecs(TextRenderingSpecs(fontSize)) {};
 
 	void initialize(SDL_Renderer* renderer, SDL_Texture* spritesheet);
 

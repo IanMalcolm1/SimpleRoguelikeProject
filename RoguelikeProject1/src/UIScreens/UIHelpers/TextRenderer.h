@@ -6,7 +6,7 @@
 #include "../../GraphicsThings/GameText/GameText.h"
 
 
-struct TextRenderingSpecifications {
+struct TextRenderingSpecs {
 	int fontSize;
 	int fontSizePixels;
 	int margin;
@@ -15,7 +15,7 @@ struct TextRenderingSpecifications {
 	int maxLettersPerLine;
 	int scrollOffset;
 
-	TextRenderingSpecifications(int fontSize = 2, int margin = 16) : fontSize(fontSize),
+	TextRenderingSpecs(int fontSize = 2, int margin = 16) : fontSize(fontSize),
 		fontSizePixels(8 * fontSize), margin(margin), lineSpacing(fontSizePixels / 4),
 		messageSpacing(fontSizePixels / 2), scrollOffset(0), maxLettersPerLine(0) {};
 
@@ -28,16 +28,20 @@ private:
 	SDL_Renderer* renderer;
 	SDL_Texture* spritesheet;
 
-	std::pair<std::string, int> makeFormattedMessage(TextRenderingSpecifications& specs, std::string message);
-	int renderMessage(bool up, TextRenderingSpecifications& specs, GameText message, int startY, int limitY);
+	void renderFormattedText(TextRenderingSpecs& specs, std::string fText, GameText& gameText, int startY);
 
 public:
 	TextRenderer() : renderer(NULL), spritesheet(NULL) {};
 
 	void initialize(SDL_Renderer* renderer, SDL_Texture* spriteSheet);
 
-	//Renders a message down from startY. Returns the ending y coordinate.
-	int renderMessageDown(TextRenderingSpecifications& specs, GameText message, int startY);
-	//Renders a message up from startY. Returns the ending y coordinate.
-	int renderMessageUp(TextRenderingSpecifications& specs, GameText message, int startY, int limitY);
+	//Renders a GameText object down from startY. Returns the ending y coordinate.
+	int renderGameTextDown(TextRenderingSpecs& specs, GameText& gameText, int startY, int limitY);
+	//Renders a GameText object up from startY. Returns the ending y coordinate.
+	int renderGameTextUp(TextRenderingSpecs& specs, GameText& gameText, int startY, int limitY);
+
+	int renderFormattedTextDown(TextRenderingSpecs& specs, std::string fText, GameText& gameText, int startY, int limitY);
+	int renderFormattedTextUp(TextRenderingSpecs& specs, std::string fText, GameText& gameText, int startY, int limitY);
+
+	std::pair<std::string, int> formatGameText(TextRenderingSpecs& specs, GameText& gameText);
 };

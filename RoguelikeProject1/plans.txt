@@ -1,8 +1,8 @@
 _____________________________________________________________________________________________
 TODOS:
 Current:
-Fix thing where zooming out in the message log makes it render from the top.
-Maybe I should just render from the top by default, actually.
+I want to put game processing and rendering on different threads so I can have confirmation
+popup windows. (Also performance, not that that's actually a problem here)
 
 Later:
 Remove all (or most) printf statements

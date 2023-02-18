@@ -13,7 +13,8 @@ private:
 	SDL_Renderer* renderer;
 	SDL_Texture* spritesheet;
 
-	int currWidth;
+	int viewportWidth, viewportHeight;
+	int totalHeight;
 	std::vector<std::pair<std::string, int>> formattedMsgs;
 
 	TextRenderer textRenderer;
@@ -24,8 +25,8 @@ private:
 public:
 	MessagesUI(std::shared_ptr<GameLog> messageLog,
 		int fontSize = 2) :
-		renderer(NULL), spritesheet(NULL), currWidth(0), messageLog(messageLog), textRenderer(TextRenderer()),
-		textSpecs(TextRenderingSpecs(fontSize)) {};
+		renderer(NULL), spritesheet(NULL), viewportWidth(0), viewportHeight(0), totalHeight(0),
+		messageLog(messageLog), textRenderer(TextRenderer()), textSpecs(TextRenderingSpecs(fontSize)) {};
 
 	void initialize(SDL_Renderer* renderer, SDL_Texture* spritesheet);
 

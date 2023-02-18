@@ -59,41 +59,63 @@ std::pair<std::string, int> TextRenderer::formatGameText(TextRenderingSpecs& spe
 }
 
 
-int TextRenderer::renderGameTextDown(TextRenderingSpecs& specs, GameText& gameText, int startY, int limit) {
+int TextRenderer::renderGameTextDown(TextRenderingSpecs& specs, GameText& gameText, int startY) {
 	std::pair<std::string, int> formattedText;
 	formattedText = formatGameText(specs, gameText);
 
 	int height = formattedText.second;
 
-	startY += height;
-
-	if (startY < 0) {
-		return startY;
+	if (startY + height < 0) {
+		return startY + height;
 	}
-
 
 	renderFormattedText(specs, formattedText.first, gameText, startY);
 
-	return startY;
+	return startY+height;
 }
 
 
-int TextRenderer::renderGameTextUp(TextRenderingSpecs& specs, GameText& gameText, int startY, int limitY) {
+int TextRenderer::renderGameTextUp(TextRenderingSpecs& specs, GameText& gameText, int startY) {
 	std::pair<std::string, int> formattedText;
 	formattedText = formatGameText(specs, gameText);
 
+	if (startY < 0) {
+		return startY - formattedText.second;
+	}
+
 	startY -= formattedText.second;
 
-	if (startY > limitY) {
-		return startY;
-	}
 	renderFormattedText(specs, formattedText.first, gameText, startY);
 
 	return startY;
 }
 
+int TextRenderer::renderFormattedTextDown(TextRenderingSpecs& specs, std::pair<std::string, int>& fText, GameText& gameText, int startY) {
+	int height = fText.second;
 
-void TextRenderer::renderFormattedText(TextRenderingSpecs& specs, std::string fText, GameText& gameText, int startY) {
+	if (startY + height < 0) {
+		return startY + height;
+	}
+
+	renderFormattedText(specs, fText.first, gameText, startY);
+
+	return startY + height;
+}
+
+int TextRenderer::renderFormattedTextUp(TextRenderingSpecs& specs, std::pair<std::string, int>& fText, GameText& gameText, int startY) {
+	if (startY < 0) {
+		return startY - fText.second;
+	}
+
+	startY -= fText.second;
+
+	renderFormattedText(specs, fText.first, gameText, startY);
+
+	return startY;
+}
+
+
+void TextRenderer::renderFormattedText(TextRenderingSpecs& specs, std::string& fText, GameText& gameText, int startY) {
 	SDL_Rect sourceRect = { 0,0,8,8 };
 	SDL_Rect destinationRect = { specs.margin, startY, specs.fontSizePixels, specs.fontSizePixels };
 

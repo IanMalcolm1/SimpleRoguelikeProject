@@ -28,7 +28,7 @@ private:
 	SDL_Renderer* renderer;
 	SDL_Texture* spritesheet;
 
-	void renderFormattedText(TextRenderingSpecs& specs, std::string fText, GameText& gameText, int startY);
+	void renderFormattedText(TextRenderingSpecs& specs, std::string& fText, GameText& gameText, int startY);
 
 public:
 	TextRenderer() : renderer(NULL), spritesheet(NULL) {};
@@ -36,12 +36,14 @@ public:
 	void initialize(SDL_Renderer* renderer, SDL_Texture* spriteSheet);
 
 	//Renders a GameText object down from startY. Returns the ending y coordinate.
-	int renderGameTextDown(TextRenderingSpecs& specs, GameText& gameText, int startY, int limitY);
+	int renderGameTextDown(TextRenderingSpecs& specs, GameText& gameText, int startY);
 	//Renders a GameText object up from startY. Returns the ending y coordinate.
-	int renderGameTextUp(TextRenderingSpecs& specs, GameText& gameText, int startY, int limitY);
+	int renderGameTextUp(TextRenderingSpecs& specs, GameText& gameText, int startY);
 
-	int renderFormattedTextDown(TextRenderingSpecs& specs, std::string fText, GameText& gameText, int startY, int limitY);
-	int renderFormattedTextUp(TextRenderingSpecs& specs, std::string fText, GameText& gameText, int startY, int limitY);
+	//Renders a formatted GameText (a string and a height) down from startY. Returns ending y coordinate.
+	int renderFormattedTextDown(TextRenderingSpecs& specs, std::pair<std::string, int>& fText, GameText& gameText, int startY);
+	//Renders a formatted GameText (a string and a height) up from startY. Returns ending y coordinate.
+	int renderFormattedTextUp(TextRenderingSpecs& specs, std::pair<std::string, int>& fText, GameText& gameText, int startY);
 
 	std::pair<std::string, int> formatGameText(TextRenderingSpecs& specs, GameText& gameText);
 };

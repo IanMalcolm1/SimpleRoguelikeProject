@@ -157,7 +157,7 @@ void GameWindow::update() {
 	messagesTime -= mapTime;
 	mapTime -= startTime;
 
-	//printf("Map: %i\nMessages: %i\nPlayer: %i\nRendering: %i\n", mapTime, messagesTime, playerTime, renderingTime);
+	printf("Map: %i\nMessages: %i\nPlayer: %i\nRendering: %i\n", mapTime, messagesTime, playerTime, renderingTime);
 }
 
 

@@ -68,7 +68,7 @@ void MessagesUI::makeFormattedMessages() {
 	std::vector<GameText>* recentMessages = messageLog->getRecentMessages();
 	int i, entriesAdded;
 
-	textSpecs.maxLettersPerLine = (viewportWidth - 2 * textSpecs.margin) / textSpecs.fontSizePixels;
+	textSpecs.calcMaxLettersPerLine(viewportWidth);
 
 	entriesAdded = recentMessages->size() - formattedMsgs.size();
 	if (entriesAdded>0) {

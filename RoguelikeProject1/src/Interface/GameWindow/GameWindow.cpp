@@ -15,6 +15,11 @@ GameWindow::GameWindow(LocalMap* map, std::shared_ptr<GameLog> log,
 	viewports.map.w = 4 * screenDimensions.w / 5;
 
 	updateMapViewports();
+	
+	confirmExit = ConfirmationUI();
+	//TODO: remove this
+	confirmExit.setStateAndMessage(new InputState, "Confirm quit?");
+	confirmExit.hidden = false;
 
 	window = NULL;
 	renderer = NULL;
@@ -68,6 +73,7 @@ bool GameWindow::initialize() {
 	//UI screens
 	messagesUI.initialize(renderer, spritesheet);
 	mapUI.initialize(renderer, spritesheet);
+	confirmExit.initialize(renderer, spritesheet);
 
 	return success;
 }
@@ -149,6 +155,11 @@ void GameWindow::update() {
 	renderPlayerInfo();
 	playerTime = SDL_GetTicks();
 
+	if (!confirmExit.hidden) {
+		confirmExit.render(screenDimensions);
+		resetRendererAndDrawBorder(screenDimensions);
+	}
+
 	SDL_RenderPresent(renderer);
 	renderingTime = SDL_GetTicks();
 
@@ -162,6 +173,10 @@ void GameWindow::update() {
 
 
 void GameWindow::processScroll(int x, int y, int scrollOffset, bool ctrlDown) {
+	if (!confirmExit.hidden) {
+		return;
+	}
+
 	SDL_Point point = { x,y };
 	if (SDL_PointInRect(&point, &viewports.map)) {
 		mapUI.processScroll(scrollOffset, ctrlDown);
@@ -182,7 +197,11 @@ void GameWindow::updateWindowDimensions(int width, int height) {
 
 void GameWindow::processCursorLocation(int x, int y) {
 	SDL_Point point = { x,y };
-	if (SDL_PointInRect(&point, &viewports.map)) {
+
+	if (!confirmExit.hidden) {
+		confirmExit.processMouseLocation(x, y);
+	}
+	else if (SDL_PointInRect(&point, &viewports.map)) {
 		x -= viewports.map.x;
 		y -= viewports.map.y;
 		mapUI.processCursorLocation(x, y);

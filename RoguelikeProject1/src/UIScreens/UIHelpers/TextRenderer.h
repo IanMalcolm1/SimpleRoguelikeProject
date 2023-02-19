@@ -20,6 +20,7 @@ struct TextRenderingSpecs {
 		messageSpacing(fontSizePixels / 2), scrollOffset(0), maxLettersPerLine(0) {};
 
 	void modifyFontSize(int modification);
+	void calcMaxLettersPerLine(int viewportWidth);
 };
 
 

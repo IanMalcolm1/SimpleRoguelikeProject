@@ -11,5 +11,7 @@ public:
 
 		SDL_SetTextureColorMod(spritesheet, color.r, color.g, color.b);
 		SDL_RenderCopy(renderer, spritesheet, &sourcePixel, &destination);
+
+		SDL_SetTextureColorMod(spritesheet, 255, 255, 255);
 	}
 };

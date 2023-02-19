@@ -8,6 +8,7 @@
 #include "../../DebugLogger/DebugLogger.h"
 #include "../../UIScreens/MessagesUI/MessagesUI.h"
 #include "../../UIScreens/MapUI/MapUI.h"
+#include "../../UIScreens/ConfirmationUI/ConfirmationUI.h"
 
 
 enum GameWindowState {
@@ -39,6 +40,7 @@ private:
 
 	MapUI mapUI;
 	MessagesUI messagesUI;
+	ConfirmationUI confirmExit;
 
 
 	void renderMap();

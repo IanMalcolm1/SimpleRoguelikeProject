@@ -161,3 +161,7 @@ void TextRenderingSpecs::modifyFontSize(int modification) {
 	lineSpacing = fontSizePixels / 4;
 	messageSpacing = fontSizePixels / 2;
 }
+
+void TextRenderingSpecs::calcMaxLettersPerLine(int viewportWidth) {
+	maxLettersPerLine = (viewportWidth - 2 * margin) / fontSizePixels;
+}

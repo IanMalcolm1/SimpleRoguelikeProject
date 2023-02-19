@@ -24,7 +24,7 @@ private:
 
 public:
 	MessagesUI(std::shared_ptr<GameLog> messageLog,
-		int fontSize = 2) :
+		int fontSize = 3) :
 		renderer(NULL), spritesheet(NULL), viewportWidth(0), viewportHeight(0), totalHeight(0),
 		messageLog(messageLog), textRenderer(TextRenderer()), textSpecs(TextRenderingSpecs(fontSize)) {};
 
@@ -32,5 +32,5 @@ public:
 
 	void render(const SDL_Rect viewport);
 
-	void processMouseScroll(int offset, bool ctrlDown);
+	void processScroll(int offset, bool ctrlDown);
 };

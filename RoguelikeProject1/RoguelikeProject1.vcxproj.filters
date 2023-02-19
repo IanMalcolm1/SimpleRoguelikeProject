@@ -93,6 +93,12 @@
     <ClCompile Include="src\UIScreens\PlayerUI\PlayerUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Interface\InputManager\InputState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UIScreens\ConfirmationUI\ConfirmationUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Game.h">
@@ -197,10 +203,13 @@
     <ClInclude Include="src\UIScreens\PlayerUI\PlayerUI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\UIScreens\UIScreen.h">
+    <ClInclude Include="src\UIScreens\ConfirmationUI\ConfirmationUI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\UIScreens\UIBase.h">
+    <ClInclude Include="src\Interface\InputManager\InputState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UIScreens\UIHelpers\RectFiller.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

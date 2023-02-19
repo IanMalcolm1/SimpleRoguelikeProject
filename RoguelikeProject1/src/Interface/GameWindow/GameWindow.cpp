@@ -161,13 +161,13 @@ void GameWindow::update() {
 }
 
 
-void GameWindow::processMouseScroll(int x, int y, int scrollOffset, bool ctrlDown) {
+void GameWindow::processScroll(int x, int y, int scrollOffset, bool ctrlDown) {
 	SDL_Point point = { x,y };
 	if (SDL_PointInRect(&point, &viewports.map)) {
-		mapUI.processMouseScroll(scrollOffset, ctrlDown);
+		mapUI.processScroll(scrollOffset, ctrlDown);
 	}
 	else if (SDL_PointInRect(&point, &viewports.messages)) {
-		messagesUI.processMouseScroll(scrollOffset, ctrlDown);
+		messagesUI.processScroll(scrollOffset, ctrlDown);
 	}
 }
 
@@ -180,13 +180,11 @@ void GameWindow::updateWindowDimensions(int width, int height) {
 }
 
 
-TileCoordinates GameWindow::processMouseLocation(int x, int y) {
+void GameWindow::processCursorLocation(int x, int y) {
 	SDL_Point point = { x,y };
 	if (SDL_PointInRect(&point, &viewports.map)) {
 		x -= viewports.map.x;
 		y -= viewports.map.y;
-		return mapUI.findMapTileFromScreenCoords(x,y);
+		mapUI.processCursorLocation(x, y);
 	}
-
-	return TileCoordinates(-1, -1);
 }

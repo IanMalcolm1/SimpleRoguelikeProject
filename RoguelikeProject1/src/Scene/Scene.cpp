@@ -34,10 +34,6 @@ void Scene::processCommand(PlayerCommand command, Uint16 modification) {
 	}
 }
 
-void Scene::setMouseTile(TileCoordinates location) {
-	map.setMouseTile(location);
-}
-
 void Scene::updateMapDisplay() {
 	map.updateMapDisplay();
 }

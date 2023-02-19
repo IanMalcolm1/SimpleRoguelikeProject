@@ -4,11 +4,14 @@
 #include "../GameWindow/GameWindow.h"
 #include "../../Enums/PlayerCommands.h"
 #include "../../Scene/Scene.h"
+#include "InputState.h"
 #include <unordered_map>
 #include <SDL_events.h>
 
 class InputManager {
 private:
+	InputState inputState;
+
 	std::shared_ptr<GameWindow> gameWindow;
 
 	std::shared_ptr<Scene> scene;

@@ -47,7 +47,7 @@ void MessagesUI::render(const SDL_Rect viewport) {
 	}
 }
 
-void MessagesUI::processMouseScroll(int offset, bool ctrlDown) {
+void MessagesUI::processScroll(int offset, bool ctrlDown) {
 	if (ctrlDown) {
 		textSpecs.modifyFontSize(offset);
 		makeFormattedMessages();

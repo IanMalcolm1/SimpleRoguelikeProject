@@ -59,10 +59,10 @@ public:
 	bool initialize();
 	void update();
 
-	void processMouseScroll(int x, int y, int scrollOffset, bool ctrlDown);
+	void processScroll(int x, int y, int scrollOffset, bool ctrlDown);
 	void updateWindowDimensions(int width, int height);
 
-	TileCoordinates processMouseLocation(int x, int y);
+	void processCursorLocation(int x, int y);
 };
 
 #endif

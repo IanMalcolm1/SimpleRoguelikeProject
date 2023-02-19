@@ -8,6 +8,7 @@ struct GameTextColorNode {
 	MyColor color;
 	uint16_t endIndex;
 
+	GameTextColorNode() : color({ 0,0,0 }), endIndex(0) {};
 	GameTextColorNode(MyColor color, uint16_t endIndex) : color(color), endIndex(endIndex) {};
 };
 
@@ -18,6 +19,7 @@ private:
 	std::string text;
 
 public:
+	GameText() : colorNodes(NULL), text("") {};
 	GameText(std::string text, std::vector<GameTextColorNode> colorNodes) : text(text),
 		colorNodes(colorNodes) {};
 

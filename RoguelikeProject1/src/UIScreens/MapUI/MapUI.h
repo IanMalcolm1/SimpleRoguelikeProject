@@ -34,8 +34,6 @@ private:
 	void calcDataForAxis(SDL_Rect& viewport, char axis);
 
 	void renderTile(int index, SDL_Rect dstrect);
-	//Uses SDL_RenderCopy() rather than normal SDL_RenderFillRect which is incredibly slow
-	void fillRectImproved(SDL_Rect& destination, MyColor color);
 
 	TileCoordinates findMapTileFromScreenCoords(int x, int y);
 
@@ -49,5 +47,7 @@ public:
 
 	void render(SDL_Rect& viewport);
 
-	void processMouseScroll(int offset, bool ctrlDown); //changes scale 
+	void processScroll(int offset, bool ctrlDown); //changes scale
+	void processCursorLocation(int x, int y);
+	void processClick(int x, int y, bool ctrlDown);
 };

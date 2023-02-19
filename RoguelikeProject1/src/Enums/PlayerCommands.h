@@ -20,7 +20,7 @@ enum PlayerCommand {
 	PC_WEST,
 	PC_WAIT, //To wait 1 turn
 	PC_REST, //To wait until healed
-	PC_GET, //To begin get dialogue
+	PC_PICKUP, //To begin pickup dialogue
 	PC_SHOOT, //To begin shoot dialogue
 	PC_THROW, //To begin throw dialogue
 	PC_TOGGLE_LOOK, //To begin/end looking around
@@ -30,6 +30,8 @@ enum PlayerCommand {
 	//General Commands
 
 	PC_ESCAPEKEY,
+	PC_Y, //Pressed the y key
+	PC_N, //Pressed the n key
 
 	//UI Commands
 	PC_START_OF_UI_COMMANDS,
@@ -38,6 +40,8 @@ enum PlayerCommand {
 	PC_LOG, //To highlight/unhighlight the message log from the keyboard (for scrolling)
 	PC_CHARACTER_SHEET, //To open character sheet
 	PC_ACTION_MENU, //To open actions pop-up menu
+
+	PC_NULL
 };
 
 #endif

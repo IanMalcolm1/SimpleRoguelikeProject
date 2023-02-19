@@ -1,4 +1,5 @@
 #include "MapUI.h"
+#include "../UIHelpers/RectFiller.h"
 
 void MapUI::initialize(SDL_Renderer* renderer, SDL_Texture* spritesheet) {
 	this->renderer = renderer;
@@ -170,13 +171,13 @@ void MapUI::renderTile(int index, SDL_Rect dstrect) {
 
 	//unseen tiles are rendered black
 	if (!mapDisplay->hasBeenSeen(index)) {
-		fillRectImproved(dstrect, { 0,0,0 });
+		RectFiller::fill(renderer, spritesheet, dstrect, { 0,0,0 });
 		return;
 	}
 
 	//remembered but not visible tiles are faded
 	if (!mapDisplay->isVisible(index)) {
-		fillRectImproved(dstrect, { 0,0,0 });
+		RectFiller::fill(renderer, spritesheet, dstrect, { 0,0,0 });
 		SDL_SetTextureAlphaMod(spritesheet, 64);
 	}
 	else {
@@ -184,7 +185,7 @@ void MapUI::renderTile(int index, SDL_Rect dstrect) {
 	}
 
 	//tile background
-	fillRectImproved(dstrect, tile->backColor);
+	RectFiller::fill(renderer, spritesheet, dstrect, tile->backColor);
 
 	//tile foreground
 	SDL_SetTextureColorMod(spritesheet, tile->symbolColor.r, tile->symbolColor.g, tile->symbolColor.b);
@@ -207,20 +208,16 @@ void MapUI::renderTile(int index, SDL_Rect dstrect) {
 }
 
 
-void MapUI::fillRectImproved(SDL_Rect& destination, MyColor color) {
-	SDL_Rect sourcePixel = {88, 104, 1, 1}; //this is just a random pixel from the spritesheet
-
-	SDL_SetTextureColorMod(spritesheet, color.r, color.g, color.b);
-	SDL_RenderCopy(renderer, spritesheet, &sourcePixel, &destination);
-}
-
-
-void MapUI::processMouseScroll(int offset, bool ctrlDown) {
+void MapUI::processScroll(int offset, bool ctrlDown) {
 	rData.scale += offset;
 	if (rData.scale < 1) { rData.scale = 1; }
 	else if (rData.scale > 20) { rData.scale = 20; }
 
 	rData.scaleSize = rData.scale * 8;
+}
+
+void MapUI::processCursorLocation(int x, int y) {
+	map->setMouseTile(findMapTileFromScreenCoords(x, y));
 }
 
 

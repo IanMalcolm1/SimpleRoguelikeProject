@@ -28,7 +28,7 @@ InputManager::InputManager(std::shared_ptr<GameWindow> window, std::shared_ptr<S
 	/* Unimplemented
 	keyMappings.insert({ SDLK_i, PI_INV });
 	keyMappings.insert({ SDLK_PERIOD, PI_WAIT });
-	keyMappings.insert({ SDLK_COMMA, PI_INV });
+	keyMappings.insert({ SDLK_COMMA, PI_PICKUP });
 	*/
 
 }
@@ -45,7 +45,7 @@ bool InputManager::processInput() {
 	int x, y;
 	SDL_GetMouseState(&x, &y);
 
-	scene->setMouseTile(gameWindow->processMouseLocation(x, y));
+	gameWindow->processCursorLocation(x, y);
 	
 
 	while (SDL_PollEvent(&sdlEvent)) {
@@ -56,17 +56,17 @@ bool InputManager::processInput() {
 
 		case SDL_MOUSEWHEEL:
 			//zooming in/out
-			gameWindow->processMouseScroll(x, y, sdlEvent.wheel.y, controlDown);
-			break;
-
-		case SDL_QUIT: //user closes window using the red x
-			returner = false;
+			gameWindow->processScroll(x, y, sdlEvent.wheel.y, controlDown);
 			break;
 
 		case SDL_WINDOWEVENT:
 			if (sdlEvent.window.event == SDL_WINDOWEVENT_RESIZED) {
 				gameWindow->updateWindowDimensions(sdlEvent.window.data1, sdlEvent.window.data2);
 			}
+			break;
+
+		case SDL_QUIT: //user closes window using the red x
+			returner = false;
 			break;
 		}
 	}
@@ -76,12 +76,11 @@ bool InputManager::processInput() {
 
 void InputManager::processKeyPress(SDL_Keycode keycode, Uint16 modification) {
 	PlayerCommand command;
-	try {
-		command = keyMappings.at(keycode);
-	}
-	catch (std::out_of_range e) {
+	if (keyMappings.find(keycode) == keyMappings.end()) {
 		return;
 	}
+
+	command = keyMappings.at(keycode);
 
 	if (gameWindow->getState() == WINDOW_STATE_MAP) {
 		if (command < PC_END_OF_PLAYER_ACTIONS) {

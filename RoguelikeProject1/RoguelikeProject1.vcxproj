@@ -193,7 +193,9 @@
     <ClInclude Include="src\UIScreens\MapUI\MapUI.h" />
     <ClInclude Include="src\UIScreens\MessagesUI\MessagesUI.h" />
     <ClInclude Include="src\UIScreens\PlayerUI\PlayerUI.h" />
+    <ClInclude Include="src\UIScreens\UIBase.h" />
     <ClInclude Include="src\UIScreens\UIHelpers\TextRenderer.h" />
+    <ClInclude Include="src\UIScreens\UIScreen.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\CGA8x8thin.png" />
@@ -201,6 +203,7 @@
   <ItemGroup>
     <Text Include="game_files\debug_log.txt" />
     <Text Include="game_files\message_log.txt" />
+    <Text Include="PopupAndUiPlans.txt" />
     <Text Include="plans.txt" />
   </ItemGroup>
   <ItemGroup>

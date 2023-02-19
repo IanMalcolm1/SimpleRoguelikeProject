@@ -1,0 +1,15 @@
+First:
+Follow through with modular UI plan.
+a.) Make UI screens inherit from a UI template class. Make the classes they depend on inherit from
+	a UIBase template class so I can normalize initialization and construction. Make GameWindow store
+	an array of UI screens that it can loop through when rendering or processing mouse input.
+	Also should probably give UI screens hidden/shown states while I'm at it.
+	Remember to change GameWindow::processMouseLocation
+b.) Popups should just be of UI screens just placing a viewport over their normal content. On rendering
+	update the UI classes will look at their connected UI Bases to see if they are in a confirmation state.
+	Could be an inherited function that all UI classes share, or just something for interactions between
+	Scene and the GameWindow.
+c.) While I'm at it I can make a menu screen.
+d.) Also tooltips could be a function inherited for all UIs (or from a PopupMaker class so I can pick and
+	choose). Don't wanna do that today aswell, though. Seems like a lot of work, and I don't have descriptions
+	for tiles yet, which is what it would be used for.

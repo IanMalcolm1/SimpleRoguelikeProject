@@ -9,8 +9,6 @@
 
 class InputManager {
 private:
-	InputManagerState state = INPUT_STATE_MAP;
-
 	std::shared_ptr<GameWindow> gameWindow;
 
 	std::shared_ptr<Scene> scene;

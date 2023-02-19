@@ -2,13 +2,6 @@
 #define PLAYERCOMMANDS_H
 
 
-enum InputManagerState {
-	INPUT_STATE_UI,
-	INPUT_STATE_MAP,
-	INPUT_STATE_MAP_SELECTION
-};
-
-
 /*
 Commands a player might use.
 Generally processed along with an SDL_keymod

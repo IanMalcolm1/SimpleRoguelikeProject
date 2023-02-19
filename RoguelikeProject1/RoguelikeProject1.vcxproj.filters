@@ -197,6 +197,12 @@
     <ClInclude Include="src\UIScreens\PlayerUI\PlayerUI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\UIScreens\UIScreen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\UIScreens\UIBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\CGA8x8thin.png">
@@ -207,6 +213,7 @@
     <Text Include="plans.txt" />
     <Text Include="game_files\message_log.txt" />
     <Text Include="game_files\debug_log.txt" />
+    <Text Include="PopupAndUiPlans.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SDL2.dll" />

@@ -37,6 +37,8 @@ private:
 	//Uses SDL_RenderCopy() rather than normal SDL_RenderFillRect which is incredibly slow
 	void fillRectImproved(SDL_Rect& destination, MyColor color);
 
+	TileCoordinates findMapTileFromScreenCoords(int x, int y);
+
 public:
 	MapUI(LocalMap* map) : map(map), renderer(NULL), spritesheet(NULL),
 		mapTexture(NULL), mapDisplay(mapDisplay = map->getMapDisplay().get()),
@@ -48,6 +50,4 @@ public:
 	void render(SDL_Rect& viewport);
 
 	void processMouseScroll(int offset, bool ctrlDown); //changes scale 
-
-	TileCoordinates findMapTileFromScreenCoords(int x, int y);
 };

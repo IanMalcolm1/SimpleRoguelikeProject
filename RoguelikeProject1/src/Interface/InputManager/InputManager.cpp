@@ -91,9 +91,9 @@ void InputManager::processKeyPress(SDL_Keycode keycode, Uint16 modification) {
 }
 
 bool InputManager::testControlDown() {
-	const Uint8* state = SDL_GetKeyboardState(nullptr);
+	const Uint8* keyStates = SDL_GetKeyboardState(nullptr);
 
-	if (state[SDL_SCANCODE_LCTRL] || state[SDL_SCANCODE_RCTRL]) {
+	if (keyStates[SDL_SCANCODE_LCTRL] || keyStates[SDL_SCANCODE_RCTRL]) {
 		return true;
 	}
 	return false;

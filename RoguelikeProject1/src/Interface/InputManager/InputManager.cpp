@@ -2,14 +2,12 @@
 #include <stdexcept>
 
 
-InputManager::InputManager(std::shared_ptr<GameWindow> window, std::shared_ptr<Scene> scene) {
-	gameWindow = window;
-	this->scene = scene;
+InputManager::InputManager(std::shared_ptr<GameWindow> window, std::shared_ptr<Scene> scene) :
+	gameWindow(window), scene(scene), inputState(InputState()) {
 
 	keyMappings = std::unordered_map<SDL_Keycode, PlayerCommand>();
 
 	//TODO: move these defaults to a settings file
-
 	keyMappings.insert({ SDLK_UP, PC_NORTH });
 	keyMappings.insert({ SDLK_DOWN, PC_SOUTH });
 	keyMappings.insert({ SDLK_RIGHT, PC_EAST });
@@ -38,7 +36,18 @@ void InputManager::setScene(std::shared_ptr<Scene> scene) {
 }
 
 bool InputManager::processInput() {
-	bool returner = true;
+	if (inputState.isAwaiting()) {
+		if (inputState.confirmation == 1) {
+			if (inputState.command == PC_QUITGAME) {
+				return false;
+			}
+			inputState.clear();
+		}
+		else if (inputState.confirmation == 0) {
+			inputState.clear();
+		}
+	}
+
 	SDL_Event sdlEvent;
 	bool controlDown = testControlDown();
 
@@ -65,16 +74,26 @@ bool InputManager::processInput() {
 			}
 			break;
 
+		case SDL_MOUSEBUTTONDOWN:
+			gameWindow->processClick(x, y);
+			break;
+
 		case SDL_QUIT: //user closes window using the red x
-			returner = false;
+			inputState.awaitConfirmation(PC_QUITGAME);
+			gameWindow->showQuitDialogue(&inputState);
 			break;
 		}
 	}
 
-	return returner;
+	return true;
 }
 
 void InputManager::processKeyPress(SDL_Keycode keycode, Uint16 modification) {
+	if (inputState.isAwaiting() && inputState.command == PC_QUITGAME) {
+		gameWindow->processKeyPress(keycode);
+		return;
+	}
+
 	PlayerCommand command;
 	if (keyMappings.find(keycode) == keyMappings.end()) {
 		return;

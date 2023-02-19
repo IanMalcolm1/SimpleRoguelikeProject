@@ -40,5 +40,5 @@ public:
 
 	void processMouseLocation(int x, int y);
 	void processMouseClick(int x, int y);
-	void processPlayerCommand(PlayerCommand command);
+	void processKeyPress(SDL_Keycode keycode);
 };

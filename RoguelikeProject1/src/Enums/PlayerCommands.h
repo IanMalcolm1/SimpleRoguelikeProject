@@ -29,10 +29,6 @@ enum PlayerCommand {
 
 	//General Commands
 
-	PC_ESCAPEKEY,
-	PC_Y, //Pressed the y key
-	PC_N, //Pressed the n key
-
 	//UI Commands
 	PC_START_OF_UI_COMMANDS,
 
@@ -41,6 +37,12 @@ enum PlayerCommand {
 	PC_CHARACTER_SHEET, //To open character sheet
 	PC_ACTION_MENU, //To open actions pop-up menu
 
+	//other
+	PC_START_OF_OTHER,
+	
+	PC_ESCAPEKEY,
+
+	PC_QUITGAME,
 	PC_NULL
 };
 

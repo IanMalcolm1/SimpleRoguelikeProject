@@ -15,7 +15,8 @@ enum GameWindowState {
 	WINDOW_STATE_MAP,
 	WINDOW_STATE_MAIN_MENU,
 	WINDOW_STATE_INVENTORY,
-	WINDOW_STATE_CHARACTER_SHEET
+	WINDOW_STATE_CHARACTER_SHEET,
+	EXIT_DIALOGUE
 };
 
 struct MapViewports {
@@ -61,10 +62,14 @@ public:
 	bool initialize();
 	void update();
 
-	void processScroll(int x, int y, int scrollOffset, bool ctrlDown);
 	void updateWindowDimensions(int width, int height);
 
 	void processCursorLocation(int x, int y);
+	void processClick(int x, int y);
+	void processScroll(int x, int y, int scrollOffset, bool ctrlDown);
+	void processKeyPress(SDL_Keycode keycode);
+
+	void showQuitDialogue(InputState* inputManagerState);
 };
 
 #endif

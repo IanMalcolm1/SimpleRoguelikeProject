@@ -88,18 +88,22 @@ void ConfirmationUI::processMouseClick(int x, int y) {
 	SDL_Point point = { x,y };
 	if (SDL_PointInRect(&point, &yesViewport)) {
 		state->confirmation = 1;
+		hidden = true;
 	}
-	else if (SDL_PointInRect(&point, &yesViewport)) {
+	else if (SDL_PointInRect(&point, &noViewport)) {
 		state->confirmation = 0;
+		hidden = true;
 	}
 }
 
-void ConfirmationUI::processPlayerCommand(PlayerCommand command) {
-	if (command == PC_Y) {
+void ConfirmationUI::processKeyPress(SDL_Keycode keycode) {
+	if (keycode == SDLK_y) {
 		state->confirmation = 1;
+		hidden = true;
 	}
-	else if (command == PC_N) {
+	else if (keycode == SDLK_n || keycode == SDLK_ESCAPE) {
 		state->confirmation = 0;
+		hidden = true;
 	}
 }
 

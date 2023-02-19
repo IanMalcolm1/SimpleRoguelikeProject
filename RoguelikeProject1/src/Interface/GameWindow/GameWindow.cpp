@@ -17,9 +17,6 @@ GameWindow::GameWindow(LocalMap* map, std::shared_ptr<GameLog> log,
 	updateMapViewports();
 	
 	confirmExit = ConfirmationUI();
-	//TODO: remove this
-	confirmExit.setStateAndMessage(new InputState, "Confirm quit?");
-	confirmExit.hidden = false;
 
 	window = NULL;
 	renderer = NULL;
@@ -172,21 +169,6 @@ void GameWindow::update() {
 }
 
 
-void GameWindow::processScroll(int x, int y, int scrollOffset, bool ctrlDown) {
-	if (!confirmExit.hidden) {
-		return;
-	}
-
-	SDL_Point point = { x,y };
-	if (SDL_PointInRect(&point, &viewports.map)) {
-		mapUI.processScroll(scrollOffset, ctrlDown);
-	}
-	else if (SDL_PointInRect(&point, &viewports.messages)) {
-		messagesUI.processScroll(scrollOffset, ctrlDown);
-	}
-}
-
-
 void GameWindow::updateWindowDimensions(int width, int height) {
 	screenDimensions.w = width;
 	screenDimensions.h = height;
@@ -206,4 +188,35 @@ void GameWindow::processCursorLocation(int x, int y) {
 		y -= viewports.map.y;
 		mapUI.processCursorLocation(x, y);
 	}
+}
+
+void GameWindow::processClick(int x, int y) {
+	if (!confirmExit.hidden) {
+		confirmExit.processMouseClick(x,y);
+	}
+}
+
+void GameWindow::processScroll(int x, int y, int scrollOffset, bool ctrlDown) {
+	if (!confirmExit.hidden) {
+		return;
+	}
+
+	SDL_Point point = { x,y };
+	if (SDL_PointInRect(&point, &viewports.map)) {
+		mapUI.processScroll(scrollOffset, ctrlDown);
+	}
+	else if (SDL_PointInRect(&point, &viewports.messages)) {
+		messagesUI.processScroll(scrollOffset, ctrlDown);
+	}
+}
+
+void GameWindow::processKeyPress(SDL_Keycode keycode) {
+	if (!confirmExit.hidden) {
+		confirmExit.processKeyPress(keycode);
+	}
+}
+
+void GameWindow::showQuitDialogue(InputState* inputManagerState) {
+	confirmExit.setStateAndMessage(inputManagerState, "Quit Game?");
+	confirmExit.hidden = false;
 }

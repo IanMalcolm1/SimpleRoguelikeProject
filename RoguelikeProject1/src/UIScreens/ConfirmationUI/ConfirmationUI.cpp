@@ -1,4 +1,5 @@
 #include "ConfirmationUI.h"
+#include "../UIHelpers/RectFiller.h"
 
 
 void ConfirmationUI::initialize(SDL_Renderer* renderer, SDL_Texture* spritesheet) {
@@ -20,6 +21,8 @@ void ConfirmationUI::render(SDL_Rect& viewport) {
 	}
 
 	SDL_RenderSetViewport(renderer, &viewport);
+
+	RectFiller::fill(renderer, spritesheet, viewport, { 255,255,255 });
 
 
 

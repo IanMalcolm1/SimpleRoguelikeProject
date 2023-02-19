@@ -1,7 +1,7 @@
 _____________________________________________________________________________________________
 TODOS:
 Current:
-Making ConfirmationUI
+Standardize UI screens?
 
 Later:
 Remove all (or most) printf statements

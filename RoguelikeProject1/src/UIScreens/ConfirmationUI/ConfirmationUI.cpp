@@ -2,9 +2,11 @@
 #include "../UIHelpers/RectFiller.h"
 
 
-void ConfirmationUI::initialize(SDL_Renderer* renderer, SDL_Texture* spritesheet) {
+void ConfirmerUI::initialize(InputConfirmer* signaller, SDL_Renderer* renderer, SDL_Texture* spritesheet) {
 	this->renderer = renderer;
 	this->spritesheet = spritesheet;
+
+	this->signaller = signaller;
 
 	textRenderer.initialize(renderer, spritesheet);
 
@@ -12,12 +14,14 @@ void ConfirmationUI::initialize(SDL_Renderer* renderer, SDL_Texture* spritesheet
 	no = textMaker.makeGameText("No");
 }
 
-void ConfirmationUI::setStateAndMessage(InputState* state, std::string message) {
-	this->state = state;
-	this->message = textMaker.makeGameText(message);
-}
+void ConfirmerUI::render(SDL_Rect& viewport) {
+	if (!signaller->isAwaiting()) {
+		return;
+	}
+	else {
+		hidden = false;
+	}
 
-void ConfirmationUI::render(SDL_Rect& viewport) {
 	if (viewport.w != parentViewport.w || viewport.h != parentViewport.h) {
 		calcDimensions(viewport);
 	}
@@ -47,6 +51,7 @@ void ConfirmationUI::render(SDL_Rect& viewport) {
 	//main message
 	SDL_RenderSetViewport(renderer, &screenViewport);
 	textSpecs.calcMaxLettersPerLine(screenViewport.w);
+	GameText message = textMaker.makeGameText(signaller->message);
 	textRenderer.renderGameTextDown(textSpecs, message, textSpecs.margin);
 
 	//yes
@@ -70,7 +75,7 @@ void ConfirmationUI::render(SDL_Rect& viewport) {
 	highlightNo = highlightYes = false;
 }
 
-void ConfirmationUI::processMouseLocation(int x, int y) {
+void ConfirmerUI::processMouseLocation(int x, int y) {
 	SDL_Point point = { x,y };
 	if (!SDL_PointInRect(&point, &screenViewport)) {
 		return;
@@ -84,31 +89,31 @@ void ConfirmationUI::processMouseLocation(int x, int y) {
 	}
 }
 
-void ConfirmationUI::processMouseClick(int x, int y) {
+void ConfirmerUI::processMouseClick(int x, int y) {
 	SDL_Point point = { x,y };
 	if (SDL_PointInRect(&point, &yesViewport)) {
-		state->confirmation = 1;
+		signaller->setConfirmation(1);
 		hidden = true;
 	}
 	else if (SDL_PointInRect(&point, &noViewport)) {
-		state->confirmation = 0;
+		signaller->setConfirmation(0);
 		hidden = true;
 	}
 }
 
-void ConfirmationUI::processKeyPress(SDL_Keycode keycode) {
+void ConfirmerUI::processKeyPress(SDL_Keycode keycode) {
 	if (keycode == SDLK_y) {
-		state->confirmation = 1;
+		signaller->setConfirmation(1);
 		hidden = true;
 	}
 	else if (keycode == SDLK_n || keycode == SDLK_ESCAPE) {
-		state->confirmation = 0;
+		signaller->setConfirmation(0);
 		hidden = true;
 	}
 }
 
 
-void ConfirmationUI::calcDimensions(SDL_Rect& viewport) {
+void ConfirmerUI::calcDimensions(SDL_Rect& viewport) {
 	//TODO: Make these dimensions constant. No point in them being dynamic.
 	parentViewport.w = viewport.w;
 	parentViewport.h = viewport.h;
@@ -118,11 +123,11 @@ void ConfirmationUI::calcDimensions(SDL_Rect& viewport) {
 	screenViewport.x = (parentViewport.w - screenViewport.w) / 2;
 	screenViewport.y = (parentViewport.h - screenViewport.h) / 2;
 
-	yesViewport.h = noViewport.h = screenViewport.w / 5;
-	yesViewport.w = noViewport.w = (screenViewport.w - 3 * 16) / 2;
+	yesViewport.h = noViewport.h = textSpecs.fontSizePixels + 2 * textSpecs.margin;
+	yesViewport.w = noViewport.w = textSpecs.fontSizePixels*3 + 2*textSpecs.margin;
 
-	yesViewport.x = screenViewport.x + 16;
-	noViewport.x = yesViewport.x + yesViewport.w + 16;
+	yesViewport.x = screenViewport.x + screenViewport.w/3 - yesViewport.w/2;
+	noViewport.x = screenViewport.x + 2*screenViewport.w/3 - noViewport.w/2;
 
 	yesViewport.y = noViewport.y = screenViewport.y + screenViewport.h - (16 + yesViewport.h);
 }

@@ -5,31 +5,22 @@
 
 /* Local Map Functions */
 
-LocalMap::LocalMap(int width, int height) {
+LocalMap::LocalMap(int width, int height) : mapDisplay(MapDisplay(width, height)),
+	terrainMap(TerrainMap(width, height)), actors(width*height, nullptr),
+	items(width*height, std::vector<Item*>()), pathToMouseTile(PathfindingRoute()) {
 	this->width = width;
 	this->height = height;
-
-	movementState = MOVEMENT_PLAYER;
 
 	needToUpdateDisplay = true;
 
 	mouseTile.x = mouseTile.y = -1;
-	playerTile.x = playerTile.y = 0;
-
-	mapDisplay = std::make_shared<MapDisplay>(width, height);
-
-	terrainMap = std::make_unique<TerrainMap>(width, height);
-
-	actors = std::make_unique<Actor*[]>(width * height);
-
-	items = std::make_unique<std::vector<Item>[]>(width * height);
 }
 
 
 /* Graphics */
 
-std::shared_ptr<MapDisplay> LocalMap::getMapDisplay() {
-	return mapDisplay;
+MapDisplay* LocalMap::getMapDisplay() {
+	return &mapDisplay;
 }
 
 
@@ -47,7 +38,7 @@ void LocalMap::updateMapDisplay() {
 	needToUpdateDisplay = false;
 }
 
-
+//TODO: move path to a player manager
 void LocalMap::updateHighlightedTiles() {
 	pathToMouseTile.resetProgress();
 	while (pathToMouseTile.hasNextTile()) {
@@ -106,37 +97,63 @@ TileDisplay* LocalMap::getDisplayAt(int index) {
 	}
 
 	if (items[index].size() > 0) {
-		return items[index][0].getDisplay();
+		return items[index][0]->getDisplay();
 	}
 
-	return terrainMap->getDisplayAtIndex(index);
+	return terrainMap.getDisplayAtIndex(index);
 }
 TileDisplay* LocalMap::getDisplayAt(TileCoordinates location) {
 	return getDisplayAt(coordsToTileIndex(location));
 }
 void LocalMap::setDisplayAt(int index, TileDisplay* display) {
-	mapDisplay->setDisplayAt(index, display);
+	mapDisplay.setDisplayAt(index, display);
 }
 void LocalMap::setDisplayAt(TileCoordinates location, TileDisplay* display) {
-	mapDisplay->setDisplayAt(coordsToTileIndex(location), display);
+	mapDisplay.setDisplayAt(coordsToTileIndex(location), display);
 }
 
-bool LocalMap::hasReticle(int index) { return mapDisplay->hasReticle(index); }
-bool LocalMap::hasReticle(TileCoordinates tile) { return mapDisplay->hasReticle(coordsToTileIndex(tile)); }
-void LocalMap::setHasReticle(int index, bool value) { mapDisplay->setHasReticle(index, value); }
+bool LocalMap::hasReticle(int index) { return mapDisplay.hasReticle(index); }
+bool LocalMap::hasReticle(TileCoordinates tile) { return mapDisplay.hasReticle(coordsToTileIndex(tile)); }
+void LocalMap::setHasReticle(int index, bool value) { mapDisplay.setHasReticle(index, value); }
 void LocalMap::setHasReticle(TileCoordinates tile, bool value) {
-	mapDisplay->setHasReticle(coordsToTileIndex(tile), value);
+	mapDisplay.setHasReticle(coordsToTileIndex(tile), value);
 }
 
 void LocalMap::setPlayerLocation(Actor* player, TileCoordinates newLocation) {
-	actors[coordsToTileIndex(player->getLocation())] = nullptr;
+	if (player->getLocation().x != -1) {
+		actors[coordsToTileIndex(player->getLocation())] = nullptr;
+	}
 
 	player->setLocation(newLocation);
 
 	playerTile = newLocation;
 	
 	actors[coordsToTileIndex(newLocation)] = player;
-	mapDisplay->setFocusTile(newLocation);
+	mapDisplay.setFocusTile(newLocation);
+}
+
+TileCoordinates LocalMap::getFocusTileLocation() {
+	return mapDisplay.getFocusTile();
+}
+
+void LocalMap::setFocusTileLocation(TileCoordinates location) {
+	mapDisplay.setFocusTile(location);
+}
+
+void LocalMap::stopLooking() {
+	setHasReticle(mapDisplay.getFocusTile(), false);
+	mapDisplay.setFocusTile(playerTile);
+}
+
+void LocalMap::setLookTile(TileCoordinates newCoords) {
+	setHasReticle(newCoords, true);
+	mapDisplay.setFocusTile(newCoords);
+}
+
+void LocalMap::setLookTile(TileCoordinates oldCoords, TileCoordinates newCoords) {
+	setHasReticle(oldCoords, false);
+	setHasReticle(newCoords, true);
+	mapDisplay.setFocusTile(newCoords);
 }
 
 
@@ -145,7 +162,7 @@ bool LocalMap::isInMapBounds(TileCoordinates location) {
 }
 
 void LocalMap::setTerrainAt(int index, TileDisplay* display, bool traversible, bool opaque) {
-	terrainMap->setTile(index, display, traversible, opaque);
+	terrainMap.setTile(index, display, traversible, opaque);
 }
 void LocalMap::setTerrainAt(TileCoordinates location, TileDisplay* display, bool traversible, bool opaque) {
 	if (!isInMapBounds(location)) {
@@ -156,23 +173,23 @@ void LocalMap::setTerrainAt(TileCoordinates location, TileDisplay* display, bool
 }
 
 bool LocalMap::isTraversibleAt(int index) {
-	return (terrainMap->isTraversibleAtIndex(index) && actors[index]==nullptr);
+	return (terrainMap.isTraversibleAtIndex(index) && actors[index]==nullptr);
 }
 bool LocalMap::isTraversibleAt(TileCoordinates location) {
 	if (!isInMapBounds(location)) {
 		printf("isTraversibleAt() coordinates out of bounds!\n");
 		return false;
 	}
-	return terrainMap->isTraversibleAtIndex(coordsToTileIndex(location));
+	return terrainMap.isTraversibleAtIndex(coordsToTileIndex(location));
 }
 
-bool LocalMap::isOpaqueAt(int index) { return terrainMap->isOpaqueAtIndex(index); }
+bool LocalMap::isOpaqueAt(int index) { return terrainMap.isOpaqueAtIndex(index); }
 bool LocalMap::isOpaqueAt(TileCoordinates location) {
 	if (!isInMapBounds(location)) {
 		printf("isOpaqueAt() coordinates out of bounds!\n");
 		return false;
 	}
-	return terrainMap->isOpaqueAtIndex(coordsToTileIndex(location));
+	return terrainMap.isOpaqueAtIndex(coordsToTileIndex(location));
 }
 
 bool LocalMap::thereIsAnActorAt(int index) { return actors[index] != nullptr; }
@@ -210,18 +227,18 @@ void LocalMap::makeVisible(TileCoordinates location) {
 
 	int index = coordsToTileIndex(location);
 
-	mapDisplay->setVisibility(index, true);
-	mapDisplay->setSeen(index, true);
+	mapDisplay.setVisibility(index, true);
+	mapDisplay.setSeen(index, true);
 
 	visibleIndices.push_back(index);
 }
 
 void LocalMap::resetVisibleTileDisplays() {
 	for (int index : visibleIndices) {
-		mapDisplay->setVisibility(index, false);
+		mapDisplay.setVisibility(index, false);
 
 		//reset to view of terrain
-		mapDisplay->setDisplayAt(index, terrainMap->getDisplayAtIndex(index));
+		mapDisplay.setDisplayAt(index, terrainMap.getDisplayAtIndex(index));
 	}
 
 	visibleIndices.clear();
@@ -229,7 +246,7 @@ void LocalMap::resetVisibleTileDisplays() {
 
 void LocalMap::updateVisibleTileDisplays() {
 	for (int index : visibleIndices) {
-		mapDisplay->setDisplayAt(index, getDisplayAt(index));
+		mapDisplay.setDisplayAt(index, getDisplayAt(index));
 	}
 }
 
@@ -238,61 +255,10 @@ void LocalMap::setMouseTile(TileCoordinates location) {
 	mouseTile = location;
 }
 
+PathfindingRoute LocalMap::getRouteToMouseTile() {
+	return pathToMouseTile;
+}
+
 void LocalMap::flagNeedToUpdateDisplay() {
 	needToUpdateDisplay = true;
-}
-
-
-bool LocalMap::attemptPlayerMovement(Actor* player, PlayerCommand direction) {
-	TileCoordinates newCoordinates;
-
-	if (movementState == MOVEMENT_PLAYER) {
-		newCoordinates = playerTile;
-	}
-	else {
-		newCoordinates = mapDisplay->getFocusTile();
-		mapDisplay->setHasReticle(coordsToTileIndex(newCoordinates), false);
-	}
-
-	if (direction < 3) {
-		newCoordinates.y--;
-	}
-	else if (direction < 6) {
-		newCoordinates.y++;
-	}
-	if (direction % 3 == 1) {
-		newCoordinates.x++;
-	}
-	else if (direction % 3 == 2) {
-		newCoordinates.x--;
-	}
-
-	if (!isInMapBounds(newCoordinates)) {
-		return false;
-	}
-
-	if (movementState == MOVEMENT_PLAYER) {
-		if (isTraversibleAt(newCoordinates) && !thereIsAnActorAt(newCoordinates)) {
-			setPlayerLocation(player, newCoordinates);
-			return true;
-		}
-	}
-	else if (movementState == MOVEMENT_FOCUSTILE) {
-		mapDisplay->setFocusTile(newCoordinates);
-		mapDisplay->setHasReticle(coordsToTileIndex(newCoordinates), true);
-		return false;
-	}
-}
-
-
-void LocalMap::switchMovementState() {
-	if (movementState == MOVEMENT_PLAYER) {
-		movementState = MOVEMENT_FOCUSTILE;
-		setHasReticle(playerTile, true);
-	}
-	else {
-		movementState = MOVEMENT_PLAYER;
-		setHasReticle(mapDisplay->getFocusTile(), false);
-		mapDisplay->setFocusTile(playerTile);
-	}
 }

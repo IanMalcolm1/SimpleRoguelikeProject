@@ -4,14 +4,28 @@
 
 LocalMap* Scene::getMap() {	return &map; }
 
+InputConfirmer* Scene::presentConfirmationSignaller() {
+	return &confirmer;
+}
+
 void Scene::processCommand(PlayerCommand command, Uint16 modification) {
+	if (confirmer.isAwaiting()) {
+		int confirmationCode = confirmer.getConfirmation();
+		if (confirmationCode == CONF_WAITING) {
+			return;
+		}
+		else if (confirmationCode == CONF_CONFIRMED) {
+			command = confirmer.getCommand();
+		}
+	}
+
 	bool needToRunTurn = false;
 
 	//process player move
 	if (command < 9) {
-		Actor* player = actorPool.getPlayer();
+		needToRunTurn = playerManager.processDirectionalCommand(command);
 
-		needToRunTurn = map.attemptPlayerMovement(player, command);
+		Actor* player = playerManager.getPlayer();
 
 		if (needToRunTurn) {
 			turnQueue.insert(player, player->getStats()->baseMoveSpeed);
@@ -25,7 +39,7 @@ void Scene::processCommand(PlayerCommand command, Uint16 modification) {
 	}
 
 	else if (command == PC_TOGGLE_LOOK) {
-		map.switchMovementState();
+		playerManager.updateInputState(command);
 	}
 
 
@@ -52,17 +66,8 @@ void Scene::runTurn() {
 	map.flagNeedToUpdateDisplay();
 }
 
-void Scene::createPlayerAt(TileCoordinates location) {
-	TileDisplay actorDisplay;
-	actorDisplay.backColor.set(0, 0, 0);
-	actorDisplay.symbolColor.set(255, 255, 255);
-	actorDisplay.symbol = ASYM_AT;
-
-	Actor player = Actor(location, actorDisplay, AI(), true);
-
-	actorPool.setPlayer(player);
-
-	map.setPlayerLocation(actorPool.getPlayer(), location);
+void Scene::setPlayerAt(TileCoordinates location) {
+	playerManager.placePlayer(location);
 }
 
 void Scene::createActorAt(TileCoordinates location) {

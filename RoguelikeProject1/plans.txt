@@ -1,7 +1,13 @@
 _____________________________________________________________________________________________
 TODOS:
 Current:
+PlayerHandler class to deal with the player
+Item manager like ActorManager
+Move movement processing from localmap to scene
+Add confirmation screen to Scene
 Standardize UI screens?
+Centered text
+More concrete confirmerUI dimensions
 
 Later:
 Remove all (or most) printf statements

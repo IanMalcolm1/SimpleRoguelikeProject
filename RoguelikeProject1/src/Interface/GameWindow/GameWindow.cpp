@@ -4,7 +4,8 @@
 #include <stdio.h>
 
 GameWindow::GameWindow(LocalMap* map, std::shared_ptr<GameLog> log,
-	int windowWidth, int windowHeight) : mapUI(map), messagesUI(log) {
+	int windowWidth, int windowHeight) : mapUI(map), messagesUI(log),
+	exitConfirmerUI(ConfirmerUI(4)), sceneConfirmerUI(ConfirmerUI(3)) {
 	screenDimensions.x = screenDimensions.y = 0;
 	screenDimensions.w = windowWidth;
 	screenDimensions.h = windowHeight;
@@ -15,8 +16,6 @@ GameWindow::GameWindow(LocalMap* map, std::shared_ptr<GameLog> log,
 	viewports.map.w = 4 * screenDimensions.w / 5;
 
 	updateMapViewports();
-	
-	confirmExit = ConfirmationUI();
 
 	window = NULL;
 	renderer = NULL;
@@ -36,7 +35,7 @@ GameWindow::~GameWindow() {
 	SDL_Quit();
 }
 
-bool GameWindow::initialize() {
+bool GameWindow::initialize(InputConfirmer* inputSignaller, InputConfirmer* sceneSignaller) {
 	bool success = true;
 
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -70,7 +69,8 @@ bool GameWindow::initialize() {
 	//UI screens
 	messagesUI.initialize(renderer, spritesheet);
 	mapUI.initialize(renderer, spritesheet);
-	confirmExit.initialize(renderer, spritesheet);
+	exitConfirmerUI.initialize(inputSignaller, renderer, spritesheet);
+	sceneConfirmerUI.initialize(sceneSignaller, renderer, spritesheet);
 
 	return success;
 }
@@ -152,10 +152,12 @@ void GameWindow::update() {
 	renderPlayerInfo();
 	playerTime = SDL_GetTicks();
 
-	if (!confirmExit.hidden) {
-		confirmExit.render(screenDimensions);
-		resetRendererAndDrawBorder(screenDimensions);
-	}
+	exitConfirmerUI.render(screenDimensions);
+	resetRendererAndDrawBorder(screenDimensions);
+
+	sceneConfirmerUI.render(screenDimensions);
+	resetRendererAndDrawBorder(screenDimensions);
+
 
 	SDL_RenderPresent(renderer);
 	renderingTime = SDL_GetTicks();
@@ -180,8 +182,11 @@ void GameWindow::updateWindowDimensions(int width, int height) {
 void GameWindow::processCursorLocation(int x, int y) {
 	SDL_Point point = { x,y };
 
-	if (!confirmExit.hidden) {
-		confirmExit.processMouseLocation(x, y);
+	if (!exitConfirmerUI.hidden) {
+		exitConfirmerUI.processMouseLocation(x, y);
+	}
+	else if (!sceneConfirmerUI.hidden) {
+		sceneConfirmerUI.processMouseLocation(x, y);
 	}
 	else if (SDL_PointInRect(&point, &viewports.map)) {
 		x -= viewports.map.x;
@@ -191,13 +196,16 @@ void GameWindow::processCursorLocation(int x, int y) {
 }
 
 void GameWindow::processClick(int x, int y) {
-	if (!confirmExit.hidden) {
-		confirmExit.processMouseClick(x,y);
+	if (!exitConfirmerUI.hidden) {
+		exitConfirmerUI.processMouseClick(x,y);
+	}
+	else if (!sceneConfirmerUI.hidden) {
+		sceneConfirmerUI.processMouseClick(x, y);
 	}
 }
 
 void GameWindow::processScroll(int x, int y, int scrollOffset, bool ctrlDown) {
-	if (!confirmExit.hidden) {
+	if (!exitConfirmerUI.hidden || !sceneConfirmerUI.hidden) {
 		return;
 	}
 
@@ -211,12 +219,10 @@ void GameWindow::processScroll(int x, int y, int scrollOffset, bool ctrlDown) {
 }
 
 void GameWindow::processKeyPress(SDL_Keycode keycode) {
-	if (!confirmExit.hidden) {
-		confirmExit.processKeyPress(keycode);
+	if (!exitConfirmerUI.hidden) {
+		exitConfirmerUI.processKeyPress(keycode);
 	}
-}
-
-void GameWindow::showQuitDialogue(InputState* inputManagerState) {
-	confirmExit.setStateAndMessage(inputManagerState, "Quit Game?");
-	confirmExit.hidden = false;
+	else if (!sceneConfirmerUI.hidden) {
+		sceneConfirmerUI.processKeyPress(keycode);
+	}
 }

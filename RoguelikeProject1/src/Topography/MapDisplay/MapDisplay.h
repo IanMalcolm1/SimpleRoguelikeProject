@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 #include "../../GraphicsThings/TileDisplay.h"
 #include "../../GameObjects/TileCoordinates.h"
 
@@ -21,10 +22,11 @@ private:
 
 	TileCoordinates focusTile;
 
-	std::unique_ptr<MapDisplayTile[]> tiles;
+	std::vector<MapDisplayTile> tiles;
 
 public:
-	MapDisplay(int width, int height);
+	MapDisplay(int width, int height) : width(width), height(height), focusTile({ 0,0 }),
+		tiles(width* height, { false, false, false }) {};
 	~MapDisplay();
 
 	int getWidth();

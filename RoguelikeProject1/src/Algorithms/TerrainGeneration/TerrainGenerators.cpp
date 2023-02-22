@@ -75,6 +75,6 @@ void TerrainGenerators::rectangleRooms(Scene* scene, int numRectangles, int maxS
 		prevCenterY = currCenterY;
 	}
 
-	scene->createPlayerAt({ prevCenterX, prevCenterY });
+	scene->setPlayerAt({ prevCenterX, prevCenterY });
 	scene->createActorAt({prevCenterX-1, prevCenterY});
 }

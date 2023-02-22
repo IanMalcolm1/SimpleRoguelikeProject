@@ -42,13 +42,13 @@
     <ClCompile Include="src\GameObjects\Actors\Actor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Scene\TurnQueue\TurnQueue.cpp">
+    <ClCompile Include="src\Scene\ActorManagement\TurnQueue\TurnQueue.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\GameObjects\Items\Item.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Scene\ActorPool\ActorPool.cpp">
+    <ClCompile Include="src\Scene\ActorManagement\ActorPool\ActorPool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Algorithms\TerrainGeneration\TerrainGenerators.cpp">
@@ -93,10 +93,13 @@
     <ClCompile Include="src\UIScreens\PlayerUI\PlayerUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Interface\InputManager\InputState.cpp">
+    <ClCompile Include="src\UIScreens\ConfirmationUI\ConfirmationUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\UIScreens\ConfirmationUI\ConfirmationUI.cpp">
+    <ClCompile Include="src\UIScreens\ConfirmationUI\InputConfirmer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PlayerManager\PlayerManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -146,10 +149,10 @@
     <ClInclude Include="src\GameObjects\Items\Item.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Scene\ActorPool\ActorPool.h">
+    <ClInclude Include="src\Scene\ActorManagement\ActorPool\ActorPool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Scene\TurnQueue\TurnQueue.h">
+    <ClInclude Include="src\Scene\ActorManagement\TurnQueue\TurnQueue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Enums\TurnTime.h">
@@ -206,10 +209,13 @@
     <ClInclude Include="src\UIScreens\ConfirmationUI\ConfirmationUI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Interface\InputManager\InputState.h">
+    <ClInclude Include="src\UIScreens\UIHelpers\RectFiller.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\UIScreens\UIHelpers\RectFiller.h">
+    <ClInclude Include="src\UIScreens\ConfirmationUI\InputConfirmer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PlayerManager\PlayerManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -9,33 +9,25 @@
 #include "../../Algorithms/Pathfinding/PathfindingRoute.h"
 
 
-enum MovementState {
-	MOVEMENT_PLAYER,
-	MOVEMENT_FOCUSTILE
-};
-
 /* Class for Local Maps */
 class LocalMap {
 private:
 	int width;
 	int height;
 
-	MovementState movementState;
-
-	PathfindingRoute pathToMouseTile;
-
 	TileCoordinates mouseTile;
 	TileCoordinates playerTile;
+
+	PathfindingRoute pathToMouseTile;
 	
-	std::shared_ptr<MapDisplay> mapDisplay;
+	MapDisplay mapDisplay;
 	std::vector<int16_t> visibleIndices;
 	bool needToUpdateDisplay;
 
-	std::unique_ptr<TerrainMap> terrainMap;
+	TerrainMap terrainMap;
 
-	std::unique_ptr<Actor*[]> actors;
-
-	std::unique_ptr<std::vector<Item>[]> items;
+	std::vector<Actor*> actors;
+	std::vector<std::vector<Item*>> items;
 
 	void updateHighlightedTiles();
 
@@ -55,7 +47,7 @@ private:
 public:
 	LocalMap(int width, int height);
 
-	std::shared_ptr<MapDisplay> getMapDisplay();
+	MapDisplay* getMapDisplay();
 	void updateMapDisplay();
 
 	int coordsToTileIndex(TileCoordinates coordinates);
@@ -80,13 +72,16 @@ public:
 	void setActorAt(TileCoordinates location, Actor* actor);
 	void setPlayerLocation(Actor* player, TileCoordinates newLocation);
 
+	TileCoordinates getFocusTileLocation();
+	void setFocusTileLocation(TileCoordinates location);
+	void stopLooking();
+	void setLookTile(TileCoordinates newCoords);
+	void setLookTile(TileCoordinates oldCoords, TileCoordinates newCoords);
+
 	void makeVisible(TileCoordinates location);
 
-	//Return value indicates whether a turn needs to be run
-	bool attemptPlayerMovement(Actor* player, PlayerCommand direction);
-	void switchMovementState();
-
 	void setMouseTile(TileCoordinates coordinates);
+	PathfindingRoute getRouteToMouseTile();
 
 	void flagNeedToUpdateDisplay();
 };

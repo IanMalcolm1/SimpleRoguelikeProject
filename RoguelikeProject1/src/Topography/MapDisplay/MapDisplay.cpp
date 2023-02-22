@@ -1,20 +1,5 @@
 #include "MapDisplay.h"
 
-MapDisplay::MapDisplay(int width, int height) {
-	this->width = width;
-	this->height = height;
-
-	focusTile = { 0,0 };
-
-	tiles = std::make_unique<MapDisplayTile[]>(width * height);
-
-	for (int i = 0; i < width * height; i++) {
-		tiles[i].isVisible = false;
-		tiles[i].hasBeenSeen = false;
-		tiles[i].hasReticle = false;
-	}
-}
-
 MapDisplay::~MapDisplay() {
 	printf("Buffer map destructor called\n");
 }

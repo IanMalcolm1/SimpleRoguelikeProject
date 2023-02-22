@@ -3,7 +3,7 @@
 
 
 InputManager::InputManager(std::shared_ptr<GameWindow> window, std::shared_ptr<Scene> scene) :
-	gameWindow(window), scene(scene), inputState(InputState()) {
+	gameWindow(window), scene(scene), confirmer(InputConfirmer()) {
 
 	keyMappings = std::unordered_map<SDL_Keycode, PlayerCommand>();
 
@@ -35,16 +35,16 @@ void InputManager::setScene(std::shared_ptr<Scene> scene) {
 	this->scene = scene;
 }
 
+InputConfirmer* InputManager::presentConfirmer() {
+	return &confirmer;
+}
+
 bool InputManager::processInput() {
-	if (inputState.isAwaiting()) {
-		if (inputState.confirmation == 1) {
-			if (inputState.command == PC_QUITGAME) {
+	if (confirmer.isAwaiting()) {
+		if (confirmer.getConfirmation() == CONF_CONFIRMED) {
+			if (confirmer.commandEquals(PC_QUITGAME)) {
 				return false;
 			}
-			inputState.clear();
-		}
-		else if (inputState.confirmation == 0) {
-			inputState.clear();
 		}
 	}
 
@@ -79,8 +79,7 @@ bool InputManager::processInput() {
 			break;
 
 		case SDL_QUIT: //user closes window using the red x
-			inputState.awaitConfirmation(PC_QUITGAME);
-			gameWindow->showQuitDialogue(&inputState);
+			confirmer.signalPopup(PC_QUITGAME, "Quit Game?");
 			break;
 		}
 	}
@@ -89,8 +88,9 @@ bool InputManager::processInput() {
 }
 
 void InputManager::processKeyPress(SDL_Keycode keycode, Uint16 modification) {
-	if (inputState.isAwaiting() && inputState.command == PC_QUITGAME) {
-		gameWindow->processKeyPress(keycode);
+	gameWindow->processKeyPress(keycode);
+
+	if (confirmer.isAwaiting()) {
 		return;
 	}
 

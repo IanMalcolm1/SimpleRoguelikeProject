@@ -74,6 +74,7 @@ public:
 	void addVisibleTile(TileCoordinates tile);
 	void addVisibleActorLocation(TileCoordinates location);
 
+	void makePlayer();
 	bool isPlayer();
 
 	void addIdleSubstate(AIState state);

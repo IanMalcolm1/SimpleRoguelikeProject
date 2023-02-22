@@ -40,7 +40,9 @@ bool Game::Initialize() {
 
 	terrainGenerator.rectangleRooms(scene.get(), 20, 20);
 
-	success = gameWindow->initialize();
+	InputConfirmer* inputConfirmer = inputManager->presentConfirmer();
+	InputConfirmer* sceneConfirmer = scene->presentConfirmationSignaller();
+	success = gameWindow->initialize(inputConfirmer, sceneConfirmer);
 
 	return success;
 }

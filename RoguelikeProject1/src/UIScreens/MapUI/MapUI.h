@@ -39,7 +39,7 @@ private:
 
 public:
 	MapUI(LocalMap* map) : map(map), renderer(NULL), spritesheet(NULL),
-		mapTexture(NULL), mapDisplay(mapDisplay = map->getMapDisplay().get()),
+		mapTexture(NULL), mapDisplay(map->getMapDisplay()),
 		rData(MapRenderingData()) {}
 	~MapUI();
 

@@ -45,6 +45,10 @@ void Actor::setState(AIStateID stateID) {
 	currentState = stateID;
 }
 
+void Actor::makePlayer() {
+	player = true;
+}
+
 bool Actor::isPlayer() { return player;  }
 
 void Actor::addIdleSubstate(AIState state) {

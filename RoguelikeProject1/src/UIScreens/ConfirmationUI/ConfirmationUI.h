@@ -1,12 +1,12 @@
 #pragma once
 
-#include "../../Interface/InputManager/InputState.h"
 #include "../UIHelpers/TextRenderer.h"
+#include "InputConfirmer.h"
 #include <SDL.h>
 
-class ConfirmationUI {
+class ConfirmerUI {
 private:
-	InputState* state;
+	InputConfirmer* signaller;
 
 	SDL_Renderer* renderer;
 	SDL_Texture* spritesheet;
@@ -15,7 +15,7 @@ private:
 	TextRenderer textRenderer;
 	TextRenderingSpecs textSpecs;
 
-	GameText message, yes, no;
+	GameText yes, no;
 	SDL_Rect parentViewport;
 	SDL_Rect screenViewport, yesViewport, noViewport;
 
@@ -26,15 +26,13 @@ private:
 public:
 	bool hidden;
 
-	ConfirmationUI() : state(NULL), renderer(NULL), spritesheet(NULL), parentViewport({ 0,0,0,0 }),
+	ConfirmerUI(int fontSize) : signaller(NULL), renderer(NULL), spritesheet(NULL), parentViewport({ 0,0,0,0 }),
 		yesViewport({ 0,0,0,0 }), noViewport({ 0,0,0,0 }), screenViewport({ 0,0,0,0 }),
 		highlightYes(false), highlightNo(false), textRenderer(TextRenderer()),
-		textSpecs(TextRenderingSpecs(4)), message(GameText()), yes(GameText()), no(GameText()),
+		textSpecs(TextRenderingSpecs(fontSize)), yes(GameText()), no(GameText()),
 		textMaker(GameTextMaker()), hidden(true) {};
 
-	void initialize(SDL_Renderer* renderer, SDL_Texture* spritesheet);
-
-	void setStateAndMessage(InputState* state, std::string message);
+	void initialize(InputConfirmer* signaller, SDL_Renderer* renderer, SDL_Texture* spritesheet);
 
 	void render(SDL_Rect& viewport);
 

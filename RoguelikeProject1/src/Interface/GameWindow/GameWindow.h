@@ -41,7 +41,8 @@ private:
 
 	MapUI mapUI;
 	MessagesUI messagesUI;
-	ConfirmationUI confirmExit;
+	ConfirmerUI exitConfirmerUI;
+	ConfirmerUI sceneConfirmerUI;
 
 
 	void renderMap();
@@ -59,7 +60,7 @@ public:
 	GameWindowState getState();
 	void setState(GameWindowState state);
 
-	bool initialize();
+	bool initialize(InputConfirmer* inputSignaller, InputConfirmer* sceneSignaller);
 	void update();
 
 	void updateWindowDimensions(int width, int height);
@@ -68,8 +69,6 @@ public:
 	void processClick(int x, int y);
 	void processScroll(int x, int y, int scrollOffset, bool ctrlDown);
 	void processKeyPress(SDL_Keycode keycode);
-
-	void showQuitDialogue(InputState* inputManagerState);
 };
 
 #endif

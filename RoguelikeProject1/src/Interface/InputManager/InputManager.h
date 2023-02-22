@@ -3,14 +3,14 @@
 
 #include "../GameWindow/GameWindow.h"
 #include "../../Enums/PlayerCommands.h"
+#include "../../UIScreens/ConfirmationUI/InputConfirmer.h"
 #include "../../Scene/Scene.h"
-#include "InputState.h"
 #include <unordered_map>
 #include <SDL_events.h>
 
 class InputManager {
 private:
-	InputState inputState;
+	InputConfirmer confirmer;
 
 	std::shared_ptr<GameWindow> gameWindow;
 
@@ -26,6 +26,8 @@ public:
 
 	//Returns false if game needs to be closed
 	bool processInput();
+
+	InputConfirmer* presentConfirmer();
 
 	void setScene(std::shared_ptr<Scene> scene);
 };

@@ -27,8 +27,8 @@ void MapUI::render(SDL_Rect& viewport) {
 
 	int index;
 
-	for (int x = rData.startTile.x; x <= rData.endTile.x; x++) {
-		for (int y = rData.startTile.y; y <= rData.endTile.y; y++) {
+	for (int x = rData.startTile.x; x < rData.endTile.x; x++) {
+		for (int y = rData.startTile.y; y < rData.endTile.y; y++) {
 			index = y * mapDisplay->getWidth() + x;
 
 			if (mapDisplay->isDirty(index)) {

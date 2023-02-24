@@ -135,9 +135,9 @@
     <ClCompile Include="src\Algorithms\Pathfinding\Pathfinding.cpp" />
     <ClCompile Include="src\Algorithms\Pathfinding\PathfindingRoute.cpp" />
     <ClCompile Include="src\Algorithms\TerrainGeneration\TerrainGenerators.cpp" />
-    <ClCompile Include="src\DebugLogger\DebugLogger.cpp" />
+    <ClCompile Include="src\Logs\DebugLogger\DebugLogger.cpp" />
     <ClCompile Include="src\GameObjects\Actors\AI.cpp" />
-    <ClCompile Include="src\GameLog\GameLog.cpp" />
+    <ClCompile Include="src\Logs\GameLog\GameLog.cpp" />
     <ClCompile Include="src\GraphicsThings\GameText\GameText.cpp" />
     <ClCompile Include="src\GraphicsThings\GraphicsThings.cpp" />
     <ClCompile Include="src\PlayerManager\PlayerManager.cpp" />
@@ -168,9 +168,9 @@
     <ClInclude Include="src\Algorithms\TerrainGeneration\TerrainGenerators.h" />
     <ClInclude Include="src\GraphicsThings\ColorMap.h" />
     <ClInclude Include="src\Enums\TurnTime.h" />
-    <ClInclude Include="src\DebugLogger\DebugLogger.h" />
+    <ClInclude Include="src\Logs\DebugLogger\DebugLogger.h" />
     <ClInclude Include="src\GameObjects\TileCoordinates.h" />
-    <ClInclude Include="src\GameLog\GameLog.h" />
+    <ClInclude Include="src\Logs\GameLog\GameLog.h" />
     <ClInclude Include="src\GraphicsThings\GameText\GameText.h" />
     <ClInclude Include="src\GraphicsThings\MyColor.h" />
     <ClInclude Include="src\GraphicsThings\Palette.h" />

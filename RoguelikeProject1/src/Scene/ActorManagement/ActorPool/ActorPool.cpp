@@ -1,15 +1,5 @@
 #include "ActorPool.h"
 
-
-void ActorPool::setPlayer(Actor player) {
-	player.setPoolIndex(0);
-	actors[0] = player;
-}
-
-Actor* ActorPool::getPlayer() {
-	return &actors[0];
-}
-
 Actor* ActorPool::insert(Actor actor) {
 	int index;
 	if (reusableIndices.size() == 0) {

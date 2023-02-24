@@ -11,8 +11,11 @@ void PathfindingRoute::addTile(TileCoordinates tile) { route.push_back(tile); }
 
 TileCoordinates PathfindingRoute::getNextTile() {
 	int temp = progress;
-	progress++;
 	return route[temp];
+}
+
+void PathfindingRoute::incrementProgress() {
+	progress++;
 }
 
 int PathfindingRoute::size() { return route.size(); }

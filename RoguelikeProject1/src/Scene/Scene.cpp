@@ -33,7 +33,7 @@ void Scene::processCommand(PlayerCommand command, Uint16 modification) {
 	}
 
 	else if (command == PC_WAIT) {
-		Actor* player = actorPool.getPlayer();
+		Actor* player = playerManager.getPlayer();
 		turnQueue.insert(player, FULL_TURN_TIME);
 		needToRunTurn = true;
 	}

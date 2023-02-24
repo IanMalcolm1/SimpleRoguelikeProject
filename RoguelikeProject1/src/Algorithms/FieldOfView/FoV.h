@@ -67,7 +67,7 @@ private:
 	static void calcFoV(LocalMap* localMap, TileCoordinates origin, Actor* actor, void (Quadrant::*makeVisible)(int, int, int));
 
 public:
-	static void calcPlayerFoV(LocalMap* localMap, TileCoordinates origin);
+	static void calcPlayerFoV(LocalMap* localMap, TileCoordinates playerLocation);
 	
 	static void calcActorFoV(LocalMap* localMap, Actor* actor);
 };

@@ -4,8 +4,8 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include "../../Topography/LocalMap/LocalMap.h"
-#include "../../GameLog/GameLog.h"
-#include "../../DebugLogger/DebugLogger.h"
+#include "../../Logs/GameLog/GameLog.h"
+#include "../../Logs/DebugLogger/DebugLogger.h"
 #include "../../UIScreens/MessagesUI/MessagesUI.h"
 #include "../../UIScreens/MapUI/MapUI.h"
 #include "../../UIScreens/ConfirmationUI/ConfirmationUI.h"

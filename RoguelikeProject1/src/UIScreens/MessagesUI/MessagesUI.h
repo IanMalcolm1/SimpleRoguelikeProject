@@ -3,7 +3,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include "../UIHelpers/TextRenderer.h"
-#include "../../GameLog/GameLog.h"
+#include "../../Logs/GameLog/GameLog.h"
 
 
 class MessagesUI {

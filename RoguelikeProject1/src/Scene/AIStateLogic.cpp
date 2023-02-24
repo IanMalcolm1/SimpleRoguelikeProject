@@ -25,15 +25,14 @@ int Scene::testerLogic(Actor* actor) {
 		TileCoordinates newTile = currentRoute->getNextTile();
 		if (map.isTraversibleAt(newTile)) {
 			moveActor(actor, newTile);
+			currentRoute->incrementProgress();
 			return FULL_TURN_TIME;
 		}
 	}
 
-
 	if (rand() % 50 > 2) {
 		return FULL_TURN_TIME;
 	}
-
 
 	std::vector<TileCoordinates>* visibleTiles = actor->getVisibleTiles();
 	
@@ -46,10 +45,6 @@ int Scene::testerLogic(Actor* actor) {
 	} while (!map.isTraversibleAt(newLocation));
 
 	Pathfinding::bresenhamLine(actor->getLocation(), visibleTiles->at(newTileIndex), &map, actor->getCurrentRoute());
-
-	if (currentRoute->hasNextTile()) {
-		moveActor(actor, currentRoute->getNextTile());
-	}
 
 	return actor->getStats()->baseMoveSpeed;
 }

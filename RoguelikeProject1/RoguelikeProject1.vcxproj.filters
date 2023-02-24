@@ -69,10 +69,10 @@
     <ClCompile Include="src\Algorithms\Pathfinding\PathfindingRoute.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameLog\GameLog.cpp">
+    <ClCompile Include="src\Logs\GameLog\GameLog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\DebugLogger\DebugLogger.cpp">
+    <ClCompile Include="src\Logs\DebugLogger\DebugLogger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\GraphicsThings\GraphicsThings.cpp">
@@ -173,10 +173,10 @@
     <ClInclude Include="src\GameObjects\TileCoordinates.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\GameLog\GameLog.h">
+    <ClInclude Include="src\Logs\GameLog\GameLog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\DebugLogger\DebugLogger.h">
+    <ClInclude Include="src\Logs\DebugLogger\DebugLogger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\GraphicsThings\ColorMap.h">

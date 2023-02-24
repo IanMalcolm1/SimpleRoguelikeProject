@@ -3,7 +3,7 @@
 #include <unordered_map>
 #include <string>
 #include <memory>
-#include "../DebugLogger/DebugLogger.h"
+#include "../Logs/DebugLogger/DebugLogger.h"
 #include "MyColor.h"
 
 class ColorMap {

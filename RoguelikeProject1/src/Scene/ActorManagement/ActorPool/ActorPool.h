@@ -16,10 +16,8 @@ private:
 	std::vector<int16_t> reusableIndices;
 	
 public:
-	ActorPool() : dirtySlots(1) {};
+	ActorPool() : dirtySlots(0) {};
 
-	void setPlayer(Actor player);
-	Actor* getPlayer();
 	Actor* insert(Actor actor);
 	void kill(Actor* actor);
 };

@@ -230,8 +230,8 @@ void FoV::calcFoV(LocalMap* localMap, TileCoordinates origin, Actor* actor, void
 }
 
 
-void FoV::calcPlayerFoV(LocalMap* localMap, TileCoordinates origin) {
-	FoV::calcFoV(localMap, origin, nullptr, &Quadrant::makeVisibleToPlayer);
+void FoV::calcPlayerFoV(LocalMap* localMap, TileCoordinates playerLocation) {
+	FoV::calcFoV(localMap, playerLocation, nullptr, &Quadrant::makeVisibleToPlayer);
 }
 
 

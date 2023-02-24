@@ -44,6 +44,7 @@ void LocalMap::updateHighlightedTiles() {
 	while (pathToMouseTile.hasNextTile()) {
 		TileCoordinates tile = pathToMouseTile.getNextTile();
 		setHasReticle(tile, false);
+		pathToMouseTile.incrementProgress();
 	}
 
 	if (mouseTile.x == -1 || mouseTile.y == -1) {
@@ -55,6 +56,7 @@ void LocalMap::updateHighlightedTiles() {
 	while (pathToMouseTile.hasNextTile()) {
 		TileCoordinates tile = pathToMouseTile.getNextTile();
 		setHasReticle(tile, true);
+		pathToMouseTile.incrementProgress();
 	}
 }
 
@@ -180,7 +182,7 @@ bool LocalMap::isTraversibleAt(TileCoordinates location) {
 		printf("isTraversibleAt() coordinates out of bounds!\n");
 		return false;
 	}
-	return terrainMap.isTraversibleAtIndex(coordsToTileIndex(location));
+	return isTraversibleAt(coordsToTileIndex(location));
 }
 
 bool LocalMap::isOpaqueAt(int index) { return terrainMap.isOpaqueAtIndex(index); }

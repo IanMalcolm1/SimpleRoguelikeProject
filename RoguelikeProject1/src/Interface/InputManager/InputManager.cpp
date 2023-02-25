@@ -76,6 +76,7 @@ bool InputManager::processInput() {
 
 		case SDL_MOUSEBUTTONDOWN:
 			gameWindow->processClick(x, y);
+			scene->processMouseClick(x, y, controlDown);
 			break;
 
 		case SDL_QUIT: //user closes window using the red x

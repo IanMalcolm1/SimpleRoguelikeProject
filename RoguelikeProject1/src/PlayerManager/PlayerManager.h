@@ -25,6 +25,8 @@ private:
 
 
 public:
+	bool autoActing;
+
 	PlayerManager() : player(Actor()),
 		inputState(PLAYER_INPUT_MOVE), map(nullptr), sceneConfirmer(nullptr) {};
 	void initialize(LocalMap* map, InputConfirmer* sceneConfirmer, TurnQueue* queue);

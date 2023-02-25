@@ -18,6 +18,9 @@ int InputConfirmer::getConfirmation() {
 
 void InputConfirmer::setConfirmation(int con) {
 	confirmation = con;
+	if (confirmation == 0) {
+		command = PC_NULL;
+	}
 }
 
 bool InputConfirmer::isAwaiting() {

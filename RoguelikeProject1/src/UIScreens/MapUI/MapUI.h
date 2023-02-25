@@ -14,8 +14,8 @@ struct MapRenderingData {
 	int scale; //Scale mulitiplier
 	int scaleSize; //Actual number of pixels to a side of a tile
 
-	MapRenderingData() : srcRect({0,0,0,0}), dstRect({0,0,0,0}), scale(12), scaleSize(12*8),
-		startTile(), endTile() {};
+	MapRenderingData() :  srcRect({ 0,0,0,0 }), dstRect({ 0,0,0,0 }),
+		scale(12), scaleSize(12 * 8), startTile(), endTile() {};
 };
 
 
@@ -30,7 +30,9 @@ private:
 	SDL_Renderer* renderer;
 	SDL_Texture* spritesheet;
 
-	void calculateMapRenderingData(SDL_Rect& viewport);
+	SDL_Rect mainViewport;
+
+	void calculateMapRenderingData();
 	void calcDataForAxis(SDL_Rect& viewport, char axis);
 
 	void renderTile(int index, SDL_Rect dstrect);
@@ -40,7 +42,7 @@ private:
 public:
 	MapUI(LocalMap* map) : map(map), renderer(NULL), spritesheet(NULL),
 		mapTexture(NULL), mapDisplay(map->getMapDisplay()),
-		rData(MapRenderingData()) {}
+		rData(MapRenderingData()), mainViewport({ 0,0,0,0 }) {}
 	~MapUI();
 
 	void initialize(SDL_Renderer* renderer, SDL_Texture* spritesheet);

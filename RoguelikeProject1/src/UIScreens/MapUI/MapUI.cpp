@@ -20,7 +20,12 @@ MapUI::~MapUI() {
 void MapUI::render(SDL_Rect& viewport) {
 	SDL_SetRenderTarget(renderer, mapTexture);
 
-	calculateMapRenderingData(viewport);
+	mainViewport.h = viewport.h;
+	mainViewport.w = viewport.w;
+	mainViewport.x = viewport.x;
+	mainViewport.y = viewport.y;
+
+	calculateMapRenderingData();
 
 	//for SDL_RenderCopy()
 	SDL_Rect dstrect = { 0,0, 8, 8 };
@@ -47,9 +52,9 @@ void MapUI::render(SDL_Rect& viewport) {
 }
 
 
-void MapUI::calculateMapRenderingData(SDL_Rect& viewport) {
-	calcDataForAxis(viewport, 'x');
-	calcDataForAxis(viewport, 'y');
+void MapUI::calculateMapRenderingData() {
+	calcDataForAxis(mainViewport, 'x');
+	calcDataForAxis(mainViewport, 'y');
 
 	rData.srcRect.x = rData.startTile.x * 8;
 	rData.srcRect.y = rData.startTile.y * 8;
@@ -217,6 +222,16 @@ void MapUI::processScroll(int offset, bool ctrlDown) {
 }
 
 void MapUI::processCursorLocation(int x, int y) {
+	SDL_Point point = { x,y };
+
+	if (!SDL_PointInRect(&point, &mainViewport)) {
+		map->setMouseTile({ -1,-1 });
+		return;
+	}
+
+	x -= mainViewport.x;
+	y -= mainViewport.y;
+
 	map->setMouseTile(findMapTileFromScreenCoords(x, y));
 }
 

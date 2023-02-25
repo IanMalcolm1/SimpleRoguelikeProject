@@ -180,17 +180,13 @@ void GameWindow::updateWindowDimensions(int width, int height) {
 
 
 void GameWindow::processCursorLocation(int x, int y) {
-	SDL_Point point = { x,y };
-
 	if (!exitConfirmerUI.hidden) {
 		exitConfirmerUI.processMouseLocation(x, y);
 	}
 	else if (!sceneConfirmerUI.hidden) {
 		sceneConfirmerUI.processMouseLocation(x, y);
 	}
-	else if (SDL_PointInRect(&point, &viewports.map)) {
-		x -= viewports.map.x;
-		y -= viewports.map.y;
+	else {
 		mapUI.processCursorLocation(x, y);
 	}
 }

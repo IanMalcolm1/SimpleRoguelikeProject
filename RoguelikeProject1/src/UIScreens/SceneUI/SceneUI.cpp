@@ -8,6 +8,9 @@ void SceneUI::initialize(SDL_Renderer* renderer, SDL_Texture* spritesheet) {
 }
 
 void SceneUI::render(const SDL_Rect& mapViewport, const SDL_Rect& playerViewport) {
+	this->mapViewport = mapViewport;
+	this->playerViewport = playerViewport;
+
 	mapUI.render(mapViewport);
 	playerUI.render(playerViewport);
 	confirmerUI.render(mapViewport);
@@ -23,7 +26,13 @@ void SceneUI::processScroll(int x, int y, int offset, bool ctrlDown) {
 }
 
 void SceneUI::processClick(int x, int y, bool ctrlDown) {
+	SDL_Point point = { x,y };
+	if (ctrlDown && SDL_PointInRect(&point, &mapViewport)) {
+		x -= mapViewport.x;
+		y -= mapViewport.y;
 
+		scene->startAutoMove();
+	}
 }
 
 void SceneUI::processKeyPress(SDL_Keycode keycode) {

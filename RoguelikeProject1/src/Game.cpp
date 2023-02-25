@@ -67,5 +67,6 @@ void Game::Update() {
 
 	isRunning = inputManager->processInput();
 
+	scene->runTurnIfAutoMoving();
 	scene->updateMapDisplay();
 }

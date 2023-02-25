@@ -75,3 +75,35 @@ void PlayerManager::updateInputState(PlayerCommand command) {
 		inputState = PLAYER_INPUT_MOVE;
 	}
 }
+
+int PlayerManager::doAutoAct() {
+	if (!autoMoveRoute.hasNextTile()) {
+		autoActing = false;
+		autoMoveRoute.clear();
+		return 0;
+	}
+
+	TileCoordinates newTile = autoMoveRoute.getNextTile();
+
+	if (map->isTraversibleAt(newTile)) {
+		map->setPlayerLocation(&player, newTile);
+		autoMoveRoute.incrementProgress();
+	}
+	else {
+		autoActing = false;
+		autoMoveRoute.clear();
+	}
+
+	return FULL_TURN_TIME;
+}
+
+void PlayerManager::clearAutoAct() {
+	autoMoveRoute.clear();
+	autoActing = false;
+}
+
+void PlayerManager::startAutoMove() {
+	autoMoveRoute = map->getRouteToMouseTile();
+	autoMoveRoute.resetProgress();
+	autoActing = true;
+}

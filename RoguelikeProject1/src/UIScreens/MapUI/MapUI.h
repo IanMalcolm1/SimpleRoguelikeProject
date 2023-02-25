@@ -37,8 +37,6 @@ private:
 
 	void renderTile(int index, SDL_Rect dstrect);
 
-	TileCoordinates findMapTileFromScreenCoords(int x, int y);
-
 public:
 	bool hidden;
 
@@ -54,4 +52,5 @@ public:
 	void processScroll(int x, int y, int offset, bool ctrlDown); //changes scale
 	void processCursorLocation(int x, int y);
 	void processClick(int x, int y, bool ctrlDown);
+	TileCoordinates findMapTileFromScreenCoords(int x, int y);
 };

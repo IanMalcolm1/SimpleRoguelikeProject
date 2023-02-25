@@ -23,6 +23,15 @@ void Scene::processCommand(PlayerCommand command, Uint16 modification) {
 		}
 	}
 
+	if (playerManager.autoActing) {
+		if (command == PC_ESCAPEKEY) {
+			playerManager.clearAutoAct();
+			return;
+		}
+		playerManager.doAutoAct();
+		return;
+	}
+
 	bool needToRunTurn = false;
 
 	//process player move
@@ -56,7 +65,13 @@ void Scene::updateMapDisplay() {
 	map.updateMapDisplay();
 }
 
-
+void Scene::runTurnIfAutoMoving() {
+	if (!alreadyRanTurn && playerManager.autoActing) {
+		turnQueue.insert(playerManager.getPlayer(), playerManager.doAutoAct());
+		runTurn();
+	}
+	alreadyRanTurn = false;
+}
 
 void Scene::runTurn() {
 	Actor* currentActor = turnQueue.pop();
@@ -67,6 +82,7 @@ void Scene::runTurn() {
 		currentActor = turnQueue.pop();
 	}
 
+	alreadyRanTurn = true;
 	map.flagNeedToUpdateDisplay();
 }
 
@@ -99,4 +115,8 @@ void Scene::moveActor(Actor* actor, TileCoordinates newLocation) {
 	actor->setLocation(newLocation);
 
 	map.setActorAt(newLocation, actor);
+}
+
+void Scene::startAutoMove() {
+	playerManager.startAutoMove();
 }

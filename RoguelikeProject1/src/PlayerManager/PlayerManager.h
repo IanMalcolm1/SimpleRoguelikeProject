@@ -23,6 +23,8 @@ private:
 
 	InputConfirmer* sceneConfirmer;
 
+	PathfindingRoute autoMoveRoute;
+
 
 public:
 	bool autoActing;
@@ -39,4 +41,7 @@ public:
 	void placePlayer(TileCoordinates location);
 
 	void updateInputState(PlayerCommand command);
+	int doAutoAct();
+	void clearAutoAct();
+	void startAutoMove();
 };

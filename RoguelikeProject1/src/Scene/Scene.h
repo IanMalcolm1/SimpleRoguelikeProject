@@ -19,13 +19,17 @@ private:
 
 	InputConfirmer confirmer;
 
+	bool alreadyRanTurn;
+
 	int performAction(Actor* actor);
 	int testerLogic(Actor* actor);
+
+	void runTurn();
 
 
 public:
 	Scene() : map(LocalMap(100, 100)), actorPool(ActorPool()), turnQueue(TurnQueue()), 
-		confirmer(InputConfirmer()), playerManager(PlayerManager()) {
+		confirmer(InputConfirmer()), playerManager(PlayerManager()), alreadyRanTurn(false) {
 		playerManager.initialize(&map, &confirmer, &turnQueue);
 	};
 
@@ -36,9 +40,11 @@ public:
 	void processCommand(PlayerCommand command, Uint16 modification);
 	void updateMapDisplay();
 
-	void runTurn();
 	void setPlayerAt(TileCoordinates location);
 	void createActorAt(TileCoordinates location);
 	void destroyActor(Actor* actor);
 	void moveActor(Actor* actor, TileCoordinates newLocation);
+
+	void startAutoMove();
+	void runTurnIfAutoMoving();
 };

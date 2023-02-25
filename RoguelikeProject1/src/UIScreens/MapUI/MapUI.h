@@ -33,23 +33,25 @@ private:
 	SDL_Rect mainViewport;
 
 	void calculateMapRenderingData();
-	void calcDataForAxis(SDL_Rect& viewport, char axis);
+	void calcDataForAxis(const SDL_Rect& viewport, char axis);
 
 	void renderTile(int index, SDL_Rect dstrect);
 
 	TileCoordinates findMapTileFromScreenCoords(int x, int y);
 
 public:
-	MapUI(LocalMap* map) : map(map), renderer(NULL), spritesheet(NULL),
-		mapTexture(NULL), mapDisplay(map->getMapDisplay()),
-		rData(MapRenderingData()), mainViewport({ 0,0,0,0 }) {}
+	bool hidden;
+
+	MapUI() : map(NULL), renderer(NULL), spritesheet(NULL),	mapTexture(NULL),
+		mapDisplay(NULL),rData(MapRenderingData()),
+		mainViewport({ 0,0,0,0 }), hidden(false) {}
 	~MapUI();
 
-	void initialize(SDL_Renderer* renderer, SDL_Texture* spritesheet);
+	void initialize(LocalMap* map, SDL_Renderer* renderer, SDL_Texture* spritesheet);
 
-	void render(SDL_Rect& viewport);
+	void render(const SDL_Rect& viewport);
 
-	void processScroll(int offset, bool ctrlDown); //changes scale
+	void processScroll(int x, int y, int offset, bool ctrlDown); //changes scale
 	void processCursorLocation(int x, int y);
 	void processClick(int x, int y, bool ctrlDown);
 };

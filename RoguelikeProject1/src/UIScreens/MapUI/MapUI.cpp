@@ -1,7 +1,9 @@
 #include "MapUI.h"
 #include "../UIHelpers/RectFiller.h"
 
-void MapUI::initialize(SDL_Renderer* renderer, SDL_Texture* spritesheet) {
+void MapUI::initialize(LocalMap* map, SDL_Renderer* renderer, SDL_Texture* spritesheet) {
+	this->map = map;
+	this->mapDisplay = map->getMapDisplay();
 	this->renderer = renderer;
 	this->spritesheet = spritesheet;
 
@@ -17,7 +19,11 @@ MapUI::~MapUI() {
 }
 
 
-void MapUI::render(SDL_Rect& viewport) {
+void MapUI::render(const SDL_Rect& viewport) {
+	if (hidden) {
+		return;
+	}
+
 	SDL_SetRenderTarget(renderer, mapTexture);
 
 	mainViewport.h = viewport.h;
@@ -63,7 +69,7 @@ void MapUI::calculateMapRenderingData() {
 }
 
 
-void MapUI::calcDataForAxis(SDL_Rect& viewport, char axis) {
+void MapUI::calcDataForAxis(const SDL_Rect& viewport, char axis) {
 	/*
 	Intent:
 	The below algorithm ensures we see as many tiles as possible given the scale of the
@@ -213,7 +219,17 @@ void MapUI::renderTile(int index, SDL_Rect dstrect) {
 }
 
 
-void MapUI::processScroll(int offset, bool ctrlDown) {
+void MapUI::processScroll(int x, int y, int offset, bool ctrlDown) {
+	if (hidden) {
+		return;
+	}
+
+	SDL_Point point = { x,y };
+
+	if (!SDL_PointInRect(&point, &mainViewport)) {
+		return;
+	}
+
 	rData.scale += offset;
 	if (rData.scale < 1) { rData.scale = 1; }
 	else if (rData.scale > 20) { rData.scale = 20; }
@@ -222,6 +238,10 @@ void MapUI::processScroll(int offset, bool ctrlDown) {
 }
 
 void MapUI::processCursorLocation(int x, int y) {
+	if (hidden) {
+		return;
+	}
+
 	SDL_Point point = { x,y };
 
 	if (!SDL_PointInRect(&point, &mainViewport)) {

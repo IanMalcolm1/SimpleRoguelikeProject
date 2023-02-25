@@ -2,7 +2,7 @@
 #include <stdexcept>
 
 
-InputManager::InputManager(std::shared_ptr<GameWindow> window, std::shared_ptr<Scene> scene) :
+InputManager::InputManager(GameWindow* window, Scene* scene) :
 	gameWindow(window), scene(scene), confirmer(InputConfirmer()) {
 
 	keyMappings = std::unordered_map<SDL_Keycode, PlayerCommand>();
@@ -31,7 +31,7 @@ InputManager::InputManager(std::shared_ptr<GameWindow> window, std::shared_ptr<S
 
 }
 
-void InputManager::setScene(std::shared_ptr<Scene> scene) {
+void InputManager::setScene(Scene* scene) {
 	this->scene = scene;
 }
 
@@ -75,8 +75,7 @@ bool InputManager::processInput() {
 			break;
 
 		case SDL_MOUSEBUTTONDOWN:
-			gameWindow->processClick(x, y);
-			scene->processMouseClick(x, y, controlDown);
+			gameWindow->processClick(x, y, controlDown);
 			break;
 
 		case SDL_QUIT: //user closes window using the red x

@@ -155,11 +155,12 @@
     <ClCompile Include="src\Topography\LocalMap\LocalMap.cpp" />
     <ClCompile Include="src\Topography\MapDisplay\MapDisplay.cpp" />
     <ClCompile Include="src\Topography\TerrainMap\TerrainMap.cpp" />
-    <ClCompile Include="src\UIScreens\ConfirmationUI\InputConfirmer.cpp" />
-    <ClCompile Include="src\UIScreens\ConfirmationUI\ConfirmationUI.cpp" />
+    <ClCompile Include="src\UIScreens\ConfirmerUI\InputConfirmer.cpp" />
+    <ClCompile Include="src\UIScreens\ConfirmerUI\ConfirmerUI.cpp" />
     <ClCompile Include="src\UIScreens\MapUI\MapUI.cpp" />
     <ClCompile Include="src\UIScreens\MessagesUI\MessagesUI.cpp" />
     <ClCompile Include="src\UIScreens\PlayerUI\PlayerUI.cpp" />
+    <ClCompile Include="src\UIScreens\SceneUI\SceneUI.cpp" />
     <ClCompile Include="src\UIScreens\UIHelpers\TextRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -194,11 +195,12 @@
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\Interface\GameWindow\GameWindow.h" />
     <ClInclude Include="src\Interface\InputManager\InputManager.h" />
-    <ClInclude Include="src\UIScreens\ConfirmationUI\InputConfirmer.h" />
+    <ClInclude Include="src\UIScreens\ConfirmerUI\InputConfirmer.h" />
     <ClInclude Include="src\UIScreens\MapUI\MapUI.h" />
     <ClInclude Include="src\UIScreens\MessagesUI\MessagesUI.h" />
     <ClInclude Include="src\UIScreens\PlayerUI\PlayerUI.h" />
-    <ClInclude Include="src\UIScreens\ConfirmationUI\ConfirmationUI.h" />
+    <ClInclude Include="src\UIScreens\ConfirmerUI\ConfirmerUI.h" />
+    <ClInclude Include="src\UIScreens\SceneUI\SceneUI.h" />
     <ClInclude Include="src\UIScreens\UIHelpers\RectFiller.h" />
     <ClInclude Include="src\UIScreens\UIHelpers\TextRenderer.h" />
   </ItemGroup>

@@ -4,7 +4,7 @@
 #include "ActorManagement/ActorPool/ActorPool.h"
 #include "ActorManagement/TurnQueue/TurnQueue.h"
 #include <SDL_stdinc.h>
-#include "../UIScreens/ConfirmationUI/InputConfirmer.h"
+#include "../UIScreens/ConfirmerUI/InputConfirmer.h"
 #include "../PlayerManager/PlayerManager.h"
 
 
@@ -30,6 +30,7 @@ public:
 	};
 
 	LocalMap* getMap();
+	PlayerManager* getPlayerManager();
 	InputConfirmer* presentConfirmationSignaller();
 
 	void processCommand(PlayerCommand command, Uint16 modification);

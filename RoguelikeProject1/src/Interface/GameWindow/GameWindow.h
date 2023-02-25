@@ -8,7 +8,8 @@
 #include "../../Logs/DebugLogger/DebugLogger.h"
 #include "../../UIScreens/MessagesUI/MessagesUI.h"
 #include "../../UIScreens/MapUI/MapUI.h"
-#include "../../UIScreens/ConfirmationUI/ConfirmationUI.h"
+#include "../../UIScreens/ConfirmerUI/ConfirmerUI.h"
+#include "../../UIScreens/SceneUI/SceneUI.h"
 
 
 enum GameWindowState {
@@ -39,21 +40,20 @@ private:
 	SDL_Renderer* renderer;
 	SDL_Texture* spritesheet;
 
-	MapUI mapUI;
+	SceneUI sceneUI;
 	MessagesUI messagesUI;
 	ConfirmerUI exitConfirmerUI;
-	ConfirmerUI sceneConfirmerUI;
 
 
-	void renderMap();
+	void renderScene();
 	void renderRecentMessages();
-	void renderPlayerInfo();
+	void renderExitConfirmer();
 
 	void updateMapViewports();
 	void resetRendererAndDrawBorder(SDL_Rect& currentViewport);
 
 public:
-	GameWindow(LocalMap* map, std::shared_ptr<GameLog> log,
+	GameWindow(Scene* map, GameLog* log,
 		int windowWidth = 1600, int windowHeight = 1200);
 	~GameWindow();
 
@@ -66,7 +66,7 @@ public:
 	void updateWindowDimensions(int width, int height);
 
 	void processCursorLocation(int x, int y);
-	void processClick(int x, int y);
+	void processClick(int x, int y, bool ctrlDown);
 	void processScroll(int x, int y, int scrollOffset, bool ctrlDown);
 	void processKeyPress(SDL_Keycode keycode);
 };

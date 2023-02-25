@@ -9,23 +9,23 @@ Game::Game() {
 	isRunning = false;
 	millisecsPrevFrame = 0;
 
-	messageLog = std::make_shared<GameLog>();
-	messageLog->sendMessage("Hi, I'm </000255000:Ian/>. Te</000255000:eeeeeeeee/>est. Another </red:test/>. Now I have more </lightblue:colors/>!");
-	messageLog->sendMessage("</red:Message 2. Going to make this reeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaallllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllly loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong!!!!!!!!!!!!!!!!!!/>");
-	messageLog->sendMessage("</orange:Message 3/>");
-	messageLog->sendMessage("</yellow:Message 4/>");
-	messageLog->sendMessage("</green:Message 5/>");
-	messageLog->sendMessage("</blue:Message 6/>");
-	messageLog->sendMessage("</purple:Message 7/>");
-	messageLog->sendMessage("</gold:The golden message/>");
+	gameLog = std::make_unique<GameLog>();
+	gameLog->sendMessage("Hi, I'm </000255000:Ian/>. Te</000255000:eeeeeeeee/>est. Another </red:test/>. Now I have more </lightblue:colors/>!");
+	gameLog->sendMessage("</red:Message 2. Going to make this reeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaallllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllly loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong!!!!!!!!!!!!!!!!!!/>");
+	gameLog->sendMessage("</orange:Message 3/>");
+	gameLog->sendMessage("</yellow:Message 4/>");
+	gameLog->sendMessage("</green:Message 5/>");
+	gameLog->sendMessage("</blue:Message 6/>");
+	gameLog->sendMessage("</purple:Message 7/>");
+	gameLog->sendMessage("</gold:The golden message/>");
 
 	terrainGenerator = TerrainGenerators();
 
-	scene = std::make_shared<Scene>();
+	scene = std::make_unique<Scene>();
 
-	gameWindow = std::make_shared<GameWindow>(scene->getMap(), messageLog);
+	gameWindow = std::make_unique<GameWindow>(scene.get(), gameLog.get());
 
-	inputManager = std::make_unique<InputManager>(gameWindow, scene);
+	inputManager = std::make_unique<InputManager>(gameWindow.get(), scene.get());
 
 	printf("Game constructor called.\n");
 }

@@ -8,12 +8,12 @@
 
 class MessagesUI {
 private:
-	std::shared_ptr<GameLog> messageLog;
+	GameLog* log;
 
 	SDL_Renderer* renderer;
 	SDL_Texture* spritesheet;
 
-	int viewportWidth, viewportHeight;
+	SDL_Rect mainViewport;
 	int totalHeight;
 	std::vector<std::pair<std::string, int>> formattedMsgs;
 
@@ -23,14 +23,13 @@ private:
 	void makeFormattedMessages();
 
 public:
-	MessagesUI(std::shared_ptr<GameLog> messageLog,
-		int fontSize = 3) :
-		renderer(NULL), spritesheet(NULL), viewportWidth(0), viewportHeight(0), totalHeight(0),
-		messageLog(messageLog), textRenderer(TextRenderer()), textSpecs(TextRenderingSpecs(fontSize)) {};
+	MessagesUI(GameLog* log, int fontSize = 3) :
+		renderer(NULL), spritesheet(NULL), mainViewport({0,0,0,0}), totalHeight(0),
+		log(log), textRenderer(TextRenderer()), textSpecs(TextRenderingSpecs(fontSize)) {};
 
 	void initialize(SDL_Renderer* renderer, SDL_Texture* spritesheet);
 
-	void render(const SDL_Rect viewport);
+	void render(const SDL_Rect& viewport);
 
-	void processScroll(int offset, bool ctrlDown);
+	void processScroll(int x, int y, int offset, bool ctrlDown);
 };

@@ -21,7 +21,7 @@ private:
 
 	bool highlightYes, highlightNo;
 
-	void calcDimensions(SDL_Rect& viewport);
+	void calcDimensions(const SDL_Rect& viewport);
 
 public:
 	bool hidden;
@@ -34,7 +34,7 @@ public:
 
 	void initialize(InputConfirmer* signaller, SDL_Renderer* renderer, SDL_Texture* spritesheet);
 
-	void render(SDL_Rect& viewport);
+	void render(const SDL_Rect& viewport);
 
 	void processMouseLocation(int x, int y);
 	void processMouseClick(int x, int y);

@@ -3,7 +3,7 @@
 
 #include "../GameWindow/GameWindow.h"
 #include "../../Enums/PlayerCommands.h"
-#include "../../UIScreens/ConfirmationUI/InputConfirmer.h"
+#include "../../UIScreens/ConfirmerUI/InputConfirmer.h"
 #include "../../Scene/Scene.h"
 #include <unordered_map>
 #include <SDL_events.h>
@@ -12,9 +12,8 @@ class InputManager {
 private:
 	InputConfirmer confirmer;
 
-	std::shared_ptr<GameWindow> gameWindow;
-
-	std::shared_ptr<Scene> scene;
+	GameWindow* gameWindow;
+	Scene* scene;
 
 	std::unordered_map<SDL_Keycode, PlayerCommand> keyMappings;
 
@@ -22,14 +21,14 @@ private:
 	bool testControlDown();
 
 public:
-	InputManager(std::shared_ptr<GameWindow> window, std::shared_ptr<Scene> scene);
+	InputManager(GameWindow* window, Scene* scene);
 
 	//Returns false if game needs to be closed
 	bool processInput();
 
 	InputConfirmer* presentConfirmer();
 
-	void setScene(std::shared_ptr<Scene> scene);
+	void setScene(Scene* scene);
 };
 
 

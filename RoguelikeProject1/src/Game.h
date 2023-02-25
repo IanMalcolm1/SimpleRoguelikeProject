@@ -19,10 +19,10 @@ private:
 	bool isRunning;
 	int millisecsPrevFrame;
 
-	std::shared_ptr<GameWindow> gameWindow;
+	std::unique_ptr<GameWindow> gameWindow;
 	std::unique_ptr<InputManager> inputManager;
-	std::shared_ptr<Scene> scene;
-	std::shared_ptr<GameLog> messageLog;
+	std::unique_ptr<Scene> scene;
+	std::unique_ptr<GameLog> gameLog;
 
 	TerrainGenerators terrainGenerator;
 

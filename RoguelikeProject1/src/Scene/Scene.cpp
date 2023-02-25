@@ -4,6 +4,10 @@
 
 LocalMap* Scene::getMap() {	return &map; }
 
+PlayerManager* Scene::getPlayerManager() {
+	return &playerManager;
+}
+
 InputConfirmer* Scene::presentConfirmationSignaller() {
 	return &confirmer;
 }

@@ -1,4 +1,4 @@
-#include "ConfirmationUI.h"
+#include "ConfirmerUI.h"
 #include "../UIHelpers/RectFiller.h"
 
 
@@ -14,7 +14,7 @@ void ConfirmerUI::initialize(InputConfirmer* signaller, SDL_Renderer* renderer, 
 	no = textMaker.makeGameText("No");
 }
 
-void ConfirmerUI::render(SDL_Rect& viewport) {
+void ConfirmerUI::render(const SDL_Rect& viewport) {
 	if (!signaller->isAwaiting()) {
 		return;
 	}
@@ -76,6 +76,10 @@ void ConfirmerUI::render(SDL_Rect& viewport) {
 }
 
 void ConfirmerUI::processMouseLocation(int x, int y) {
+	if (hidden) {
+		return;
+	}
+
 	SDL_Point point = { x,y };
 	if (!SDL_PointInRect(&point, &screenViewport)) {
 		return;
@@ -90,6 +94,10 @@ void ConfirmerUI::processMouseLocation(int x, int y) {
 }
 
 void ConfirmerUI::processMouseClick(int x, int y) {
+	if (hidden) {
+		return;
+	}
+
 	SDL_Point point = { x,y };
 	if (SDL_PointInRect(&point, &yesViewport)) {
 		signaller->setConfirmation(1);
@@ -102,6 +110,10 @@ void ConfirmerUI::processMouseClick(int x, int y) {
 }
 
 void ConfirmerUI::processKeyPress(SDL_Keycode keycode) {
+	if (hidden) {
+		return;
+	}
+
 	if (keycode == SDLK_y) {
 		signaller->setConfirmation(1);
 		hidden = true;
@@ -113,7 +125,7 @@ void ConfirmerUI::processKeyPress(SDL_Keycode keycode) {
 }
 
 
-void ConfirmerUI::calcDimensions(SDL_Rect& viewport) {
+void ConfirmerUI::calcDimensions(const SDL_Rect& viewport) {
 	//TODO: Make these dimensions constant. No point in them being dynamic.
 	parentViewport.w = viewport.w;
 	parentViewport.h = viewport.h;

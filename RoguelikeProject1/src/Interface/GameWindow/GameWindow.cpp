@@ -3,9 +3,9 @@
 #include <SDL_image.h>
 #include <stdio.h>
 
-GameWindow::GameWindow(LocalMap* map, std::shared_ptr<GameLog> log,
-	int windowWidth, int windowHeight) : mapUI(map), messagesUI(log),
-	exitConfirmerUI(ConfirmerUI(4)), sceneConfirmerUI(ConfirmerUI(3)) {
+GameWindow::GameWindow(Scene* scene, GameLog* log,
+	int windowWidth, int windowHeight) : sceneUI(scene), messagesUI(log),
+	exitConfirmerUI(ConfirmerUI(4)) {
 	screenDimensions.x = screenDimensions.y = 0;
 	screenDimensions.w = windowWidth;
 	screenDimensions.h = windowHeight;
@@ -67,10 +67,9 @@ bool GameWindow::initialize(InputConfirmer* inputSignaller, InputConfirmer* scen
 	}
 
 	//UI screens
+	sceneUI.initialize(renderer, spritesheet);
 	messagesUI.initialize(renderer, spritesheet);
-	mapUI.initialize(renderer, spritesheet);
 	exitConfirmerUI.initialize(inputSignaller, renderer, spritesheet);
-	sceneConfirmerUI.initialize(sceneSignaller, renderer, spritesheet);
 
 	return success;
 }
@@ -79,11 +78,6 @@ bool GameWindow::initialize(InputConfirmer* inputSignaller, InputConfirmer* scen
 GameWindowState GameWindow::getState() { return state; }
 void GameWindow::setState(GameWindowState state) { this->state = state; }
 
-void GameWindow::renderMap() {
-	mapUI.render(viewports.map);
-
-	resetRendererAndDrawBorder(viewports.map);
-}
 
 void GameWindow::renderRecentMessages() {
 	messagesUI.render(viewports.messages);
@@ -91,9 +85,14 @@ void GameWindow::renderRecentMessages() {
 	resetRendererAndDrawBorder(viewports.messages);
 }
 
-void GameWindow::renderPlayerInfo() {
-	//TODO: draw player info, lol
+void GameWindow::renderExitConfirmer() {
+	exitConfirmerUI.render(screenDimensions);
+	resetRendererAndDrawBorder(screenDimensions);
+}
 
+void GameWindow::renderScene() {
+	sceneUI.render(viewports.map, viewports.playerInfo);
+	resetRendererAndDrawBorder(viewports.map);
 	resetRendererAndDrawBorder(viewports.playerInfo);
 }
 
@@ -136,38 +135,14 @@ void GameWindow::resetRendererAndDrawBorder(SDL_Rect& currentViewport) {
 }
 
 
-//TODO: remove tests
 void GameWindow::update() {
 	SDL_RenderClear(renderer);
 
-	int startTime, mapTime, messagesTime, playerTime, renderingTime;
-	startTime = SDL_GetTicks();
-
-	renderMap();
-	mapTime = SDL_GetTicks();
-
 	renderRecentMessages();
-	messagesTime = SDL_GetTicks();
-
-	renderPlayerInfo();
-	playerTime = SDL_GetTicks();
-
-	exitConfirmerUI.render(screenDimensions);
-	resetRendererAndDrawBorder(screenDimensions);
-
-	sceneConfirmerUI.render(screenDimensions);
-	resetRendererAndDrawBorder(screenDimensions);
-
+	renderScene();
+	renderExitConfirmer();
 
 	SDL_RenderPresent(renderer);
-	renderingTime = SDL_GetTicks();
-
-	renderingTime -= playerTime;
-	playerTime -= messagesTime;
-	messagesTime -= mapTime;
-	mapTime -= startTime;
-
-	printf("Map: %i\nMessages: %i\nPlayer: %i\nRendering: %i\n", mapTime, messagesTime, playerTime, renderingTime);
 }
 
 
@@ -180,45 +155,25 @@ void GameWindow::updateWindowDimensions(int width, int height) {
 
 
 void GameWindow::processCursorLocation(int x, int y) {
-	if (!exitConfirmerUI.hidden) {
-		exitConfirmerUI.processMouseLocation(x, y);
-	}
-	else if (!sceneConfirmerUI.hidden) {
-		sceneConfirmerUI.processMouseLocation(x, y);
-	}
-	else {
-		mapUI.processCursorLocation(x, y);
-	}
+	exitConfirmerUI.processMouseLocation(x, y);
+	sceneUI.processCursorLocation(x, y);
 }
 
-void GameWindow::processClick(int x, int y) {
-	if (!exitConfirmerUI.hidden) {
-		exitConfirmerUI.processMouseClick(x,y);
-	}
-	else if (!sceneConfirmerUI.hidden) {
-		sceneConfirmerUI.processMouseClick(x, y);
-	}
+void GameWindow::processClick(int x, int y, bool ctrlDown) {
+	exitConfirmerUI.processMouseClick(x,y);
+	sceneUI.processClick(x, y, ctrlDown);
 }
 
 void GameWindow::processScroll(int x, int y, int scrollOffset, bool ctrlDown) {
-	if (!exitConfirmerUI.hidden || !sceneConfirmerUI.hidden) {
-		return;
-	}
-
-	SDL_Point point = { x,y };
-	if (SDL_PointInRect(&point, &viewports.map)) {
-		mapUI.processScroll(scrollOffset, ctrlDown);
-	}
-	else if (SDL_PointInRect(&point, &viewports.messages)) {
-		messagesUI.processScroll(scrollOffset, ctrlDown);
-	}
+	sceneUI.processScroll(x, y, scrollOffset, ctrlDown);
+	messagesUI.processScroll(x, y, scrollOffset, ctrlDown);
 }
 
 void GameWindow::processKeyPress(SDL_Keycode keycode) {
 	if (!exitConfirmerUI.hidden) {
 		exitConfirmerUI.processKeyPress(keycode);
 	}
-	else if (!sceneConfirmerUI.hidden) {
-		sceneConfirmerUI.processKeyPress(keycode);
+	else {
+		sceneUI.processKeyPress(keycode);
 	}
 }

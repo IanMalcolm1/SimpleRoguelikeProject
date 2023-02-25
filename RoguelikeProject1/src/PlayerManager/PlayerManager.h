@@ -3,7 +3,7 @@
 #include "../GameObjects/Actors/Actor.h"
 #include "../Enums/PlayerCommands.h"
 #include "../Topography/LocalMap/LocalMap.h"
-#include "../UIScreens/ConfirmationUI/InputConfirmer.h"
+#include "../UIScreens/ConfirmerUI/InputConfirmer.h"
 #include "../Scene/ActorManagement/TurnQueue/TurnQueue.h"
 
 
@@ -27,8 +27,9 @@ private:
 public:
 	bool autoActing;
 
-	PlayerManager() : player(Actor()),
-		inputState(PLAYER_INPUT_MOVE), map(nullptr), sceneConfirmer(nullptr) {};
+	PlayerManager() : player(Actor()), inputState(PLAYER_INPUT_MOVE), map(nullptr),
+		sceneConfirmer(nullptr), autoActing(false) {};
+
 	void initialize(LocalMap* map, InputConfirmer* sceneConfirmer, TurnQueue* queue);
 
 	//returns whether the turn needs to be run

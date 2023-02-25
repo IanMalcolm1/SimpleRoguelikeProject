@@ -9,21 +9,21 @@ void MessagesUI::initialize(SDL_Renderer* renderer, SDL_Texture* spritesheet) {
 }
 
 
-void MessagesUI::render(const SDL_Rect viewport) {
+void MessagesUI::render(const SDL_Rect& viewport) {
 	SDL_RenderSetViewport(renderer, &viewport);
 
-	std::vector<GameText>* recentMessages = messageLog->getRecentMessages();
+	std::vector<GameText>* recentMessages = log->getRecentMessages();
 
 	if (recentMessages->size() == 0) {
 		return;
 	}
 
-	if (viewport.h != viewportHeight) {
-		viewportHeight = viewport.h;
-	}
+	mainViewport.x = viewport.x;
+	mainViewport.y = viewport.y;
+	mainViewport.h = viewport.h;
 
-	if (viewport.w != viewportWidth) {
-		viewportWidth = viewport.w;
+	if (viewport.w != mainViewport.w) {
+		mainViewport.w = viewport.w;
 		makeFormattedMessages();
 	}
 	else if (recentMessages->size() != formattedMsgs.size()) {
@@ -37,7 +37,7 @@ void MessagesUI::render(const SDL_Rect viewport) {
 			break;
 		}
 
-		if (startY - formattedMsgs.at(i).second > viewportHeight) {
+		if (startY - formattedMsgs.at(i).second > mainViewport.h) {
 			startY -= (formattedMsgs.at(i).second + textSpecs.messageSpacing);
 			continue;
 		}
@@ -47,7 +47,13 @@ void MessagesUI::render(const SDL_Rect viewport) {
 	}
 }
 
-void MessagesUI::processScroll(int offset, bool ctrlDown) {
+void MessagesUI::processScroll(int x, int y, int offset, bool ctrlDown) {
+	SDL_Point point = { x,y };
+
+	if (!SDL_PointInRect(&point, &mainViewport)) {
+		return;
+	}
+
 	if (ctrlDown) {
 		textSpecs.modifyFontSize(offset);
 		makeFormattedMessages();
@@ -56,19 +62,19 @@ void MessagesUI::processScroll(int offset, bool ctrlDown) {
 		textSpecs.scrollOffset += offset * textSpecs.fontSizePixels;
 	}
 
-	if (textSpecs.scrollOffset < 0 || totalHeight < viewportHeight - 2 * textSpecs.margin) {
+	if (textSpecs.scrollOffset < 0 || totalHeight < mainViewport.h - 2 * textSpecs.margin) {
 		textSpecs.scrollOffset = 0;
 	}
-	else if (totalHeight < textSpecs.scrollOffset + viewportHeight - textSpecs.margin) {
-		textSpecs.scrollOffset = totalHeight - (viewportHeight - 2*textSpecs.margin);
+	else if (totalHeight < textSpecs.scrollOffset + mainViewport.h - textSpecs.margin) {
+		textSpecs.scrollOffset = totalHeight - (mainViewport.h - 2*textSpecs.margin);
 	}
 }
 
 void MessagesUI::makeFormattedMessages() {
-	std::vector<GameText>* recentMessages = messageLog->getRecentMessages();
+	std::vector<GameText>* recentMessages = log->getRecentMessages();
 	int i, entriesAdded;
 
-	textSpecs.calcMaxLettersPerLine(viewportWidth);
+	textSpecs.calcMaxLettersPerLine(mainViewport.w);
 
 	entriesAdded = recentMessages->size() - formattedMsgs.size();
 	if (entriesAdded>0) {

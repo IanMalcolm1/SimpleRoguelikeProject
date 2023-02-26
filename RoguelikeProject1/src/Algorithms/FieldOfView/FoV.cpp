@@ -84,7 +84,7 @@ void Row::setEndSlope(int tileColumn) {
 
 /* Quadrant Functions */
 
-TileCoordinates Quadrant::quadrantToAbsolute(int cardinal, int quadDepth, int quadCol) {
+TileCoords Quadrant::quadrantToAbsolute(int cardinal, int quadDepth, int quadCol) {
 	/*
 	Quadrants are treated according to the following diagram:
 
@@ -103,7 +103,7 @@ TileCoordinates Quadrant::quadrantToAbsolute(int cardinal, int quadDepth, int qu
 	*/
 
 
-	TileCoordinates translatedCoordinates;
+	TileCoords translatedCoordinates;
 
 	switch (cardinal) {
 	case 0: //north
@@ -136,7 +136,7 @@ TileCoordinates Quadrant::quadrantToAbsolute(int cardinal, int quadDepth, int qu
 }
 
 bool Quadrant::isOpaque(int cardinal, int tileDepth, int tileCol) {
-	TileCoordinates absoluteCoords = quadrantToAbsolute(cardinal, tileDepth, tileCol);
+	TileCoords absoluteCoords = quadrantToAbsolute(cardinal, tileDepth, tileCol);
 	if (absoluteCoords.x == -1 || absoluteCoords.y == -1) {
 		return true;
 	}
@@ -144,7 +144,7 @@ bool Quadrant::isOpaque(int cardinal, int tileDepth, int tileCol) {
 }
 
 void Quadrant::makeVisibleToPlayer(int cardinal, int tileDepth, int tileCol) {
-	TileCoordinates absoluteCoords = quadrantToAbsolute(cardinal, tileDepth, tileCol);
+	TileCoords absoluteCoords = quadrantToAbsolute(cardinal, tileDepth, tileCol);
 	if (absoluteCoords.x == -1 || absoluteCoords.y == -1) {
 		return;
 	}
@@ -152,7 +152,7 @@ void Quadrant::makeVisibleToPlayer(int cardinal, int tileDepth, int tileCol) {
 }
 
 void Quadrant::makeVisibleToActor(int cardinal, int tileDepth, int tileColumn) {
-	TileCoordinates absoluteCoords = quadrantToAbsolute(cardinal, tileDepth, tileColumn);
+	TileCoords absoluteCoords = quadrantToAbsolute(cardinal, tileDepth, tileColumn);
 	actor->addVisibleTile(absoluteCoords);
 	if (localMap->thereIsAnActorAt(absoluteCoords)) {
 		actor->addVisibleActorLocation(absoluteCoords);
@@ -163,7 +163,7 @@ void Quadrant::makeVisibleToActor(int cardinal, int tileDepth, int tileColumn) {
 
 /* Lighting Functions */
 
-void FoV::calcFoV(LocalMap* localMap, TileCoordinates origin, Actor* actor, void(Quadrant::*makeVisible)(int, int, int)) {
+void FoV::calcFoV(LocalMap* localMap, TileCoords origin, Actor* actor, void(Quadrant::*makeVisible)(int, int, int)) {
 	/*
 	C++ Version of https://www.albertford.com/shadowcasting/
 	*/
@@ -230,7 +230,7 @@ void FoV::calcFoV(LocalMap* localMap, TileCoordinates origin, Actor* actor, void
 }
 
 
-void FoV::calcPlayerFoV(LocalMap* localMap, TileCoordinates playerLocation) {
+void FoV::calcPlayerFoV(LocalMap* localMap, TileCoords playerLocation) {
 	FoV::calcFoV(localMap, playerLocation, nullptr, &Quadrant::makeVisibleToPlayer);
 }
 

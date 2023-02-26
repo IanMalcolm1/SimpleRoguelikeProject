@@ -1,25 +1,29 @@
 #include "PathfindingRoute.h"
 
-void PathfindingRoute::clear() {
+void PathingRoute::clear() {
 	progress = 0;
 	route.clear();
 }
 
-void PathfindingRoute::resetProgress() { progress = 0; }
+void PathingRoute::resetProgress() { progress = 0; }
 
-void PathfindingRoute::addTile(TileCoordinates tile) { route.push_back(tile); }
+void PathingRoute::addTile(TileCoords tile) { route.push_back(tile); }
 
-TileCoordinates PathfindingRoute::getNextTile() {
+TileCoords PathingRoute::getNextTile() {
 	int temp = progress;
 	return route[temp];
 }
 
-void PathfindingRoute::incrementProgress() {
+void PathingRoute::incrementProgress() {
 	progress++;
 }
 
-int PathfindingRoute::size() { return route.size(); }
+int PathingRoute::size() { return route.size(); }
 
-bool PathfindingRoute::hasNextTile() {
+bool PathingRoute::hasNextTile() {
 	return (route.size() > 0 && progress < route.size());
+}
+
+TileCoords PathingRoute::endTile() {
+	return route.back();
 }

@@ -256,8 +256,8 @@ void MapUI::processCursorLocation(int x, int y) {
 }
 
 
-TileCoordinates MapUI::findMapTileFromScreenCoords(int x, int y) {
-	TileCoordinates returnCoords = { -1,-1 };
+TileCoords MapUI::findMapTileFromScreenCoords(int x, int y) {
+	TileCoords returnCoords = { -1,-1 };
 
 	SDL_Point point = { x,y };
 	if (!SDL_PointInRect(&point, &rData.dstRect)) {

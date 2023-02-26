@@ -1,6 +1,7 @@
 #include "Pathfinding.h"
+#include <functional>
 
-void Pathfinding::bresenhamLine(TileCoordinates startTile, TileCoordinates endTile, LocalMap* localMap, PathfindingRoute* route) {
+void Pathfinding::makeLineRoute(TileCoords startTile, TileCoords endTile, LocalMap* localMap, bool (LocalMap::*traversible)(TileCoords), PathingRoute* route) {
 	/*
 	Based on the following article: https://www.cs.helsinki.fi/group/goa/mallinnus/lines/bresenh.html
 	And this: https://github.com/anushaihalapathirana/Bresenham-line-drawing-algorithm/blob/master/src/index.js
@@ -34,7 +35,7 @@ void Pathfinding::bresenhamLine(TileCoordinates startTile, TileCoordinates endTi
 		x += loopIncrement;
 
 		for (x; x != endTile.x + loopIncrement; x += loopIncrement) {
-			if (!localMap->isTraversibleAt({ x,y })) {
+			if ( !std::invoke(traversible, localMap, TileCoords(x,y)) ) {
 				break;
 			}
 			route->addTile({ x,y });
@@ -69,7 +70,7 @@ void Pathfinding::bresenhamLine(TileCoordinates startTile, TileCoordinates endTi
 		
 
 		for (y; y != endTile.y + loopIncrement; y += loopIncrement) {
-			if (!localMap->isTraversibleAt({ x,y })) {
+			if ( !std::invoke(traversible, localMap, TileCoords(x, y)) ) {
 				break;
 			}
 			route->addTile({ x,y });
@@ -84,4 +85,8 @@ void Pathfinding::bresenhamLine(TileCoordinates startTile, TileCoordinates endTi
 		}
 
 	}
+}
+
+void Pathfinding::makeAStarRoute(TileCoords startTile, TileCoords endTile, LocalMap* map, PathingRoute& route) {
+
 }

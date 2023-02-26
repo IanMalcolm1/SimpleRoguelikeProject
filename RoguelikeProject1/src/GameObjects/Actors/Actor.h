@@ -30,16 +30,16 @@ private:
 	int poolIndex;
 
 	TileDisplay display;
-	TileCoordinates location;
+	TileCoords location;
 
 	bool player = false;
 
 	AI ai;
 	AIStateID currentState;
-	std::vector<TileCoordinates> visibleTiles;
-	std::vector<TileCoordinates> visibleActorLocations;
+	std::vector<TileCoords> visibleTiles;
+	std::vector<TileCoords> visibleActorLocations;
 
-	PathfindingRoute currentRoute;
+	PathingRoute currentRoute;
 
 	//std::vector<Ability> _abilities;
 	//std::vector<Item> _items;
@@ -49,30 +49,30 @@ private:
 	StatBlock stats;
 
 public:
-	Actor() : poolIndex(-1), location(TileCoordinates()), display(TileDisplay()), ai(AI()),
+	Actor() : poolIndex(-1), location(TileCoords()), display(TileDisplay()), ai(AI()),
 		currentState(AISTATE_IDLE), player(false) {};
-	Actor(TileCoordinates location, TileDisplay display, AI ai, bool player = false) :
+	Actor(TileCoords location, TileDisplay display, AI ai, bool player = false) :
 		poolIndex(-1), location(location), display(display), ai(ai), player(player),
 		currentState(AISTATE_IDLE) {};
 
 	Item generateCorpse();
 
-	void setLocation(TileCoordinates coordinates);
+	void setLocation(TileCoords coordinates);
 	void setDisplay(TileDisplay* newDisplay);
-	TileCoordinates getLocation();
+	TileCoords getLocation();
 
 	void setPoolIndex(int index);
 	int getPoolIndex();
 	TileDisplay* getDisplay();
 	StatBlock* getStats();
 
-	std::vector<TileCoordinates>* getVisibleTiles();
-	std::vector<TileCoordinates>* getVisibleActorLocations();
-	PathfindingRoute* getCurrentRoute();
+	std::vector<TileCoords>* getVisibleTiles();
+	std::vector<TileCoords>* getVisibleActorLocations();
+	PathingRoute* getCurrentRoute();
 
 	void clearVisibilityArrays();
-	void addVisibleTile(TileCoordinates tile);
-	void addVisibleActorLocation(TileCoordinates location);
+	void addVisibleTile(TileCoords tile);
+	void addVisibleActorLocation(TileCoords location);
 
 	void makePlayer();
 	bool isPlayer();

@@ -12,7 +12,7 @@ void PlayerManager::initialize(LocalMap* map, InputConfirmer* sceneConfirmer, Tu
 }
 
 bool PlayerManager::processDirectionalCommand(PlayerCommand direction) {
-	TileCoordinates oldCoords, newCoords;
+	TileCoords oldCoords, newCoords;
 
 	if (inputState == PLAYER_INPUT_MOVE) {
 		oldCoords = newCoords = player.getLocation();
@@ -54,7 +54,7 @@ Actor* PlayerManager::getPlayer() {
 	return &player;
 }
 
-void PlayerManager::placePlayer(TileCoordinates location) {
+void PlayerManager::placePlayer(TileCoords location) {
 	map->setPlayerLocation(&player, location);
 }
 
@@ -83,7 +83,7 @@ int PlayerManager::doAutoAct() {
 		return 0;
 	}
 
-	TileCoordinates newTile = autoMoveRoute.getNextTile();
+	TileCoords newTile = autoMoveRoute.getNextTile();
 
 	if (map->isTraversibleAt(newTile)) {
 		map->setPlayerLocation(&player, newTile);

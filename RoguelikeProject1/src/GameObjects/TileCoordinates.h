@@ -3,8 +3,8 @@
 #include <stdint.h>
 
 
-struct TileCoordinates {
+struct TileCoords {
 	int16_t x, y;
 
-	TileCoordinates(int x = -1, int y = -1) : x(x), y(y) {};
+	TileCoords(int x = -1, int y = -1) : x(x), y(y) {};
 };

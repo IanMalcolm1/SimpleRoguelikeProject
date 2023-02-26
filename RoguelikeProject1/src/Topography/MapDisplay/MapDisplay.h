@@ -20,7 +20,7 @@ class MapDisplay {
 private:
 	int width, height;
 
-	TileCoordinates focusTile;
+	TileCoords focusTile;
 
 	std::vector<MapDisplayTile> tiles;
 
@@ -35,8 +35,8 @@ public:
 	TileDisplay* getDisplay(int index);
 	void setDisplayAt(int index, TileDisplay* display);
 
-	TileCoordinates getFocusTile();
-	void setFocusTile(TileCoordinates tile);
+	TileCoords getFocusTile();
+	void setFocusTile(TileCoords tile);
 
 	bool isVisible(int index);
 	bool hasBeenSeen(int index);

@@ -15,7 +15,7 @@ private:
 	ActorPool actorPool;
 	TurnQueue turnQueue;
 
-	PathfindingRoute pathToMouseTile;
+	PathingRoute pathToMouseTile;
 
 	InputConfirmer confirmer;
 
@@ -40,10 +40,10 @@ public:
 	void processCommand(PlayerCommand command, Uint16 modification);
 	void updateMapDisplay();
 
-	void setPlayerAt(TileCoordinates location);
-	void createActorAt(TileCoordinates location);
+	void setPlayerAt(TileCoords location);
+	void createActorAt(TileCoords location);
 	void destroyActor(Actor* actor);
-	void moveActor(Actor* actor, TileCoordinates newLocation);
+	void moveActor(Actor* actor, TileCoords newLocation);
 
 	void startAutoMove();
 	void runTurnIfAutoMoving();

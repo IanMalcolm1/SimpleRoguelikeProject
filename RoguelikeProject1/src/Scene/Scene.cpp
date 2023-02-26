@@ -86,11 +86,11 @@ void Scene::runTurn() {
 	map.flagNeedToUpdateDisplay();
 }
 
-void Scene::setPlayerAt(TileCoordinates location) {
+void Scene::setPlayerAt(TileCoords location) {
 	playerManager.placePlayer(location);
 }
 
-void Scene::createActorAt(TileCoordinates location) {
+void Scene::createActorAt(TileCoords location) {
 	Actor newActor = Actor();
 
 	newActor.setLocation(location);
@@ -109,7 +109,7 @@ void Scene::destroyActor(Actor* actor) {
 	actorPool.kill(actor);
 }
 
-void Scene::moveActor(Actor* actor, TileCoordinates newLocation) {
+void Scene::moveActor(Actor* actor, TileCoords newLocation) {
 	map.setActorAt(actor->getLocation(), nullptr);
 
 	actor->setLocation(newLocation);

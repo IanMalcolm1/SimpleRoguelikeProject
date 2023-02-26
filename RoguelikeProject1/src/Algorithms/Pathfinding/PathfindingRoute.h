@@ -3,19 +3,20 @@
 #include <vector>
 #include "../../GameObjects/TileCoordinates.h"
 
-class PathfindingRoute {
+class PathingRoute {
 private:
-	std::vector<TileCoordinates> route;
+	std::vector<TileCoords> route;
 	int progress;
 
 public:
-	PathfindingRoute() : progress(0) {};
+	PathingRoute() : progress(0) {};
 
 	void clear();
 	void resetProgress();
-	void addTile(TileCoordinates tile);
-	TileCoordinates getNextTile();
+	void addTile(TileCoords tile);
+	TileCoords getNextTile();
 	void incrementProgress();
 	int size();
 	bool hasNextTile();
+	TileCoords endTile();
 };

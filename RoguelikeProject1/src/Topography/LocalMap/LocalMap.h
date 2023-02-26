@@ -15,10 +15,10 @@ private:
 	int width;
 	int height;
 
-	TileCoordinates mouseTile;
-	TileCoordinates playerTile;
+	TileCoords mouseTile;
+	TileCoords playerTile;
 
-	PathfindingRoute pathToMouseTile;
+	PathingRoute pathToMouseTile;
 	
 	MapDisplay mapDisplay;
 	std::vector<int16_t> visibleIndices;
@@ -35,14 +35,14 @@ private:
 	void updateVisibleTileDisplays();
 
 	TileDisplay* getDisplayAt(int index);
-	TileDisplay* getDisplayAt(TileCoordinates location);
+	TileDisplay* getDisplayAt(TileCoords location);
 	void setDisplayAt(int index, TileDisplay* display);
-	void setDisplayAt(TileCoordinates location, TileDisplay* display);
+	void setDisplayAt(TileCoords location, TileDisplay* display);
 
 	bool hasReticle(int index);
-	bool hasReticle(TileCoordinates tile);
+	bool hasReticle(TileCoords tile);
 	void setHasReticle(int index, bool hasReticle);
-	void setHasReticle(TileCoordinates tile, bool hasReticle);
+	void setHasReticle(TileCoords tile, bool hasReticle);
 
 public:
 	LocalMap(int width, int height);
@@ -50,38 +50,38 @@ public:
 	MapDisplay* getMapDisplay();
 	void updateMapDisplay();
 
-	int coordsToTileIndex(TileCoordinates coordinates);
-	TileCoordinates tileIndexToCoords(int index);
+	int coordsToTileIndex(TileCoords coordinates);
+	TileCoords tileIndexToCoords(int index);
 
 	int getWidth();
 	int getHeight();
 
-	bool isInMapBounds(TileCoordinates location);
+	bool isInMapBounds(TileCoords location);
 	void setTerrainAt(int index, TileDisplay* display, bool traversible, bool opaque);
-	void setTerrainAt(TileCoordinates location, TileDisplay* display, bool traversible, bool opaque);
+	void setTerrainAt(TileCoords location, TileDisplay* display, bool traversible, bool opaque);
 	bool isTraversibleAt(int index);
-	bool isTraversibleAt(TileCoordinates location);
+	bool isTraversibleAt(TileCoords location);
 	bool isOpaqueAt(int index);
-	bool isOpaqueAt(TileCoordinates location);
+	bool isOpaqueAt(TileCoords location);
 
 	bool thereIsAnActorAt(int index);
-	bool thereIsAnActorAt(TileCoordinates location);
+	bool thereIsAnActorAt(TileCoords location);
 	Actor* getActorAt(int index);
-	Actor* getActorAt(TileCoordinates location);
+	Actor* getActorAt(TileCoords location);
 	void setActorAt(int index, Actor* actor);
-	void setActorAt(TileCoordinates location, Actor* actor);
-	void setPlayerLocation(Actor* player, TileCoordinates newLocation);
+	void setActorAt(TileCoords location, Actor* actor);
+	void setPlayerLocation(Actor* player, TileCoords newLocation);
 
-	TileCoordinates getFocusTileLocation();
-	void setFocusTileLocation(TileCoordinates location);
+	TileCoords getFocusTileLocation();
+	void setFocusTileLocation(TileCoords location);
 	void stopLooking();
-	void setLookTile(TileCoordinates newCoords);
-	void setLookTile(TileCoordinates oldCoords, TileCoordinates newCoords);
+	void setLookTile(TileCoords newCoords);
+	void setLookTile(TileCoords oldCoords, TileCoords newCoords);
 
-	void makeVisible(TileCoordinates location);
+	void makeVisible(TileCoords location);
 
-	void setMouseTile(TileCoordinates coordinates);
-	PathfindingRoute getRouteToMouseTile();
+	void setMouseTile(TileCoords coordinates);
+	PathingRoute getRouteToMouseTile();
 
 	void flagNeedToUpdateDisplay();
 };

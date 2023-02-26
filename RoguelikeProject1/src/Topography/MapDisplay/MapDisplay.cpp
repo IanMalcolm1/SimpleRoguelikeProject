@@ -13,8 +13,8 @@ void MapDisplay::setDisplayAt(int index, TileDisplay* display) {
 	setDirty(index, true);
 }
 
-TileCoordinates MapDisplay::getFocusTile() { return focusTile; }
-void MapDisplay::setFocusTile(TileCoordinates tile) { focusTile = tile; }
+TileCoords MapDisplay::getFocusTile() { return focusTile; }
+void MapDisplay::setFocusTile(TileCoords tile) { focusTile = tile; }
 
 bool MapDisplay::isVisible(int index) { return tiles[index].isVisible; }
 bool MapDisplay::hasBeenSeen(int index) { return tiles[index].hasBeenSeen; }

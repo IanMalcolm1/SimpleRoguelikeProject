@@ -9,7 +9,7 @@ struct MapRenderingData {
 	SDL_Rect srcRect; //The part of the map texture to copy from
 	SDL_Rect dstRect; //The part of the map viewport to paste on to
 
-	TileCoordinates startTile, endTile;
+	TileCoords startTile, endTile;
 
 	int scale; //Scale mulitiplier
 	int scaleSize; //Actual number of pixels to a side of a tile
@@ -52,5 +52,5 @@ public:
 	void processScroll(int x, int y, int offset, bool ctrlDown); //changes scale
 	void processCursorLocation(int x, int y);
 	void processClick(int x, int y, bool ctrlDown);
-	TileCoordinates findMapTileFromScreenCoords(int x, int y);
+	TileCoords findMapTileFromScreenCoords(int x, int y);
 };

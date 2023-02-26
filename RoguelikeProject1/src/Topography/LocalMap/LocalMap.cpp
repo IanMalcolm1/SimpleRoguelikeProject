@@ -38,7 +38,7 @@ void LocalMap::updateMapDisplay() {
 	needToUpdateDisplay = false;
 }
 
-//TODO: move path to a player manager
+
 void LocalMap::updateHighlightedTiles() {
 	pathToMouseTile.resetProgress();
 	while (pathToMouseTile.hasNextTile()) {
@@ -51,7 +51,7 @@ void LocalMap::updateHighlightedTiles() {
 		return;
 	}
 
-	Pathfinding::makeLineRoute(playerTile, mouseTile, this, &LocalMap::isTraversibleAt, &pathToMouseTile);
+	Pathfinding::calcPlayerPathingRoute(playerTile, mouseTile, this, &pathToMouseTile);
 
 	while (pathToMouseTile.hasNextTile()) {
 		TileCoords tile = pathToMouseTile.getNextTile();

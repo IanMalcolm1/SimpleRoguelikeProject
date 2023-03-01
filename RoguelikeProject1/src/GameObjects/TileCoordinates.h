@@ -15,4 +15,8 @@ struct TileCoords {
 	bool operator != (const TileCoords coords) const {
 		return (!(x == coords.x && y == coords.y));
 	}
+
+	TileCoords operator + (const TileCoords coords) const {
+		return TileCoords(x + coords.x, y + coords.y);
+	}
 };

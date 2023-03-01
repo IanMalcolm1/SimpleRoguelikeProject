@@ -71,7 +71,7 @@ int LocalMap::getHeight() { return height; }
 
 int LocalMap::coordsToTileIndex(TileCoords coordinates) {
 	if (coordinates.x < 0 || coordinates.y < 0 || coordinates.x >= width || coordinates.x >= height) {
-		printf("Coords to tile ID out of bounds\n");
+		debugLogger.log("Coords to tile ID out of bounds");
 		return -1;
 	}
 
@@ -192,6 +192,10 @@ bool LocalMap::isOpaqueAt(TileCoords location) {
 		return false;
 	}
 	return terrainMap.isOpaqueAtIndex(coordsToTileIndex(location));
+}
+
+bool LocalMap::hasBeenSeen(TileCoords location) {
+	return mapDisplay.hasBeenSeen(coordsToTileIndex(location));
 }
 
 bool LocalMap::thereIsAnActorAt(int index) { return actors[index] != nullptr; }

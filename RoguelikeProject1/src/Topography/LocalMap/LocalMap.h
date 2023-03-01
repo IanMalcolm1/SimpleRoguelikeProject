@@ -7,6 +7,7 @@
 #include "../../GameObjects/Actors/Actor.h"
 #include "../../Enums/PlayerCommands.h"
 #include "../../Algorithms/Pathfinding/PathfindingRoute.h"
+#include "../../Logs/DebugLogger/DebugLogger.h"
 
 
 /* Class for Local Maps */
@@ -18,8 +19,10 @@ private:
 	TileCoords mouseTile;
 	TileCoords playerTile;
 
+	DebugLogger debugLogger;
+
 	PathingRoute pathToMouseTile;
-	
+
 	MapDisplay mapDisplay;
 	std::vector<int16_t> visibleIndices;
 	bool needToUpdateDisplay;
@@ -63,6 +66,7 @@ public:
 	bool isTraversibleAt(TileCoords location);
 	bool isOpaqueAt(int index);
 	bool isOpaqueAt(TileCoords location);
+	bool hasBeenSeen(TileCoords location);
 
 	bool thereIsAnActorAt(int index);
 	bool thereIsAnActorAt(TileCoords location);

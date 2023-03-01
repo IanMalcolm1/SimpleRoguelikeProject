@@ -28,7 +28,7 @@ private:
 
 
 public:
-	Scene() : map(LocalMap(100, 100)), actorPool(ActorPool()), turnQueue(TurnQueue()), 
+	Scene() : map(100, 100), actorPool(ActorPool()), turnQueue(TurnQueue()), 
 		confirmer(InputConfirmer()), playerManager(PlayerManager()), alreadyRanTurn(false) {
 		playerManager.initialize(&map, &confirmer, &turnQueue);
 	};

@@ -114,6 +114,8 @@ void Pathfinding::makeAStarRoute(TileCoords startTile, TileCoords endTile, Local
 	std::unordered_map<TileCoords, PathingNode, TileCoordsHash> visited;
 	std::unordered_map<TileCoords, TileCoords, TileCoordsHash> cameFrom;
 
+	std::vector<TileCoords> surroundOffsets = { {1,1},{1,-1},{-1,1},{-1,-1},{0,1},{0,-1}, {1,0},{-1,0} };
+
 	PathingNode current = PathingNode(endTile, 0, 0);
 	cameFrom[endTile] = { -1,-1 };
 	visited[endTile] = current;
@@ -127,15 +129,16 @@ void Pathfinding::makeAStarRoute(TileCoords startTile, TileCoords endTile, Local
 			break;
 		}
 
-		std::vector<TileCoords> surroundingTiles = Pathfinding::getSurroundingTiles(current.tile);
-
-		for (TileCoords tile : surroundingTiles) {
-			if (!map->isInMapBounds(tile) || (tile!=startTile && !map->isTraversibleAt(tile))) {
+		for (int i = 0; i < surroundOffsets.size(); i++) {
+			TileCoords tile = current.tile + surroundOffsets[i];
+			if (!map->isInMapBounds(tile) || !map->hasBeenSeen(tile) || (tile != startTile && !map->isTraversibleAt(tile))) {
 				continue;
 			}
 
-			int nextDistance = current.distance + 1;
-			int nextPriority = nextDistance + std::max(abs(startTile.x - tile.x), abs(startTile.y - tile.y));
+			int nextDistance = (i<4) ? current.distance+141 : current.distance + 100;
+
+			int nextPriority = nextDistance + std::max(abs(startTile.x - tile.x), abs(startTile.y - tile.y)) * 100;
+			nextPriority += std::min(abs(startTile.x - tile.x), abs(startTile.y - tile.y)) * 40;
 
 			if (visited.find(tile) == visited.end()) {
 				PathingNode next = PathingNode(tile, nextDistance, nextPriority);
